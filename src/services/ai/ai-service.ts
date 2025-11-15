@@ -3,6 +3,7 @@
  */
 
 import { AIService as IAIService, AIProvider, AIResponse } from '../../interfaces/types';
+import { PROVIDER_MODEL_OPTIONS } from '../../constants/api';
 import { ErrorHandler } from '../../utils/error-handler';
 import { MESSAGES } from '../../constants/messages';
 
@@ -14,6 +15,13 @@ export class AIService implements IAIService {
             throw new Error(MESSAGES.ERRORS.MISSING_API_KEYS);
         }
         this.providers = providers;
+    }
+
+    /**
+     * Return available model options for a provider name (from constants mapping)
+     */
+    getProviderModels(providerName: string): string[] {
+        return PROVIDER_MODEL_OPTIONS[providerName] || [];
     }
 
     /**
@@ -58,6 +66,32 @@ export class AIService implements IAIService {
             : 'All AI providers failed to process the request';
             
         throw new Error(errorMessage);
+    }
+
+    /**
+     * Process prompt using a specific provider name. Optionally override the model if supported.
+     */
+    async processWith(providerName: string, prompt: string, overrideModel?: string): Promise<AIResponse> {
+        const provider = this.providers.find(p => p.name === providerName);
+        if (!provider) {
+            throw new Error(`AI provider not found: ${providerName}`);
+        }
+
+        // If provider supports setModel, apply override
+        try {
+            if (overrideModel && typeof (provider as any).setModel === 'function') {
+                (provider as any).setModel(overrideModel);
+            }
+
+            const content = await provider.process(prompt);
+            if (content && content.trim().length > 0) {
+                return { content, provider: provider.name, model: provider.model };
+            }
+
+            throw new Error('Empty response from AI provider');
+        } catch (error) {
+            throw new Error(MESSAGES.ERRORS.AI_PROCESSING((error as Error).message));
+        }
     }
 
     /**

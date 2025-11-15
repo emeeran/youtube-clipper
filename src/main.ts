@@ -122,16 +122,28 @@ export default class YouTubeProcessorPlugin extends Plugin {
         }
 
         ConflictPrevention.safeOperation(async () => {
+            // Provide available AI providers and model options to the modal for selection
+            const aiService = this.serviceContainer?.aiService;
+            const providers = aiService ? aiService.getProviderNames() : [];
+            const modelOptionsMap: Record<string, string[]> = {};
+            if (aiService) {
+                for (const p of providers) {
+                    modelOptionsMap[p] = aiService.getProviderModels(p) || [];
+                }
+            }
+
             new YouTubeUrlModal(this.app, {
                 onProcess: this.processYouTubeVideo.bind(this),
-                onOpenFile: this.openFileByPath.bind(this)
+                onOpenFile: this.openFileByPath.bind(this),
+                providers,
+                modelOptions: modelOptionsMap
             }).open();
         }, 'YouTube URL Modal').catch((error) => {
             ErrorHandler.handle(error as Error, 'Opening YouTube URL modal');
         });
     }
 
-    private async processYouTubeVideo(url: string, format: OutputFormat = 'detailed-guide'): Promise<string> {
+    private async processYouTubeVideo(url: string, format: OutputFormat = 'detailed-guide', providerName?: string, model?: string): Promise<string> {
         if (this.isUnloading) {
             ConflictPrevention.log('Plugin is unloading, cancelling video processing');
             throw new Error('Plugin is shutting down');
@@ -157,7 +169,13 @@ export default class YouTubeProcessorPlugin extends Plugin {
 
             const videoData = await youtubeService.getVideoData(videoId);
             const prompt = promptService.createAnalysisPrompt(videoData, url, format);
-            const aiResponse = await aiService.process(prompt);
+            let aiResponse;
+            if (providerName) {
+                // Use selected provider and optional model override
+                aiResponse = await (aiService as any).processWith(providerName, prompt, model);
+            } else {
+                aiResponse = await aiService.process(prompt);
+            }
             const formattedContent = promptService.processAIResponse(
                 aiResponse.content,
                 aiResponse.provider,

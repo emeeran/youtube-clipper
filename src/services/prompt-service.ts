@@ -40,9 +40,66 @@ export class AIPromptService implements PromptService {
             .replace('{{DESCRIPTION}}', videoData.description);
 
         // Branchless optimization: ternary instead of if/else
-        return format === 'executive-summary' 
-            ? this.createExecutiveSummaryPrompt(baseContent, videoUrl)
-            : this.createDetailedGuidePrompt(baseContent, videoUrl);
+        if (format === 'executive-summary') {
+            return this.createExecutiveSummaryPrompt(baseContent, videoUrl);
+        }
+
+        if (format === 'brief') {
+            return this.createBriefPrompt(baseContent, videoUrl);
+        }
+
+        return this.createDetailedGuidePrompt(baseContent, videoUrl);
+    }
+
+    /**
+     * Create a brief prompt: short description plus resources list
+     */
+    private createBriefPrompt(baseContent: string, videoUrl: string): string {
+        const videoId = ValidationUtils.extractVideoId(videoUrl);
+        const embedUrl = videoId ? `https://www.youtube-nocookie.com/embed/${videoId}` : videoUrl;
+
+        return `${baseContent}
+
+        OUTPUT FORMAT - BRIEF DESCRIPTION + RESOURCES:
+
+        Use this EXACT template:
+
+        ---
+        title: {Video Title}
+        source: ${videoUrl}
+        created: "${new Date().toISOString().split('T')[0]}"
+        modified: "${new Date().toISOString().split('T')[0]}"
+        description: "One short paragraph (3-4 sentences) summarizing the video"
+        type: youtube-note
+        format: brief
+        tags:
+          - youtube
+          - brief
+        status: processed
+        duration: "[Extract video duration]"
+        channel: "[Extract channel name]"
+        video_id: "${videoId || 'unknown'}"
+        processing_date: "${new Date().toISOString()}"
+    ai_provider: "__AI_PROVIDER__"
+    ai_model: "__AI_MODEL__"
+        ---
+
+        <iframe width="640" height="360" src="${embedUrl}" title="{Video Title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+        ---
+
+        ## Brief Description
+        [Provide a concise 3-4 sentence description that captures the core message of the video]
+
+        ## Resources
+        - **Original Video:** [Watch on YouTube](${videoUrl})
+        - **Channel:** [Creator's Channel](https://youtube.com/channel/[extract-channel-id])
+        - **Top resources mentioned or related (links):**
+          - [Resource 1]
+          - [Resource 2]
+          - [Resource 3]
+
+        IMPORTANT: Keep the Brief Description short and focused. Provide 2-3 high-quality resource links that help the reader explore the topic further.`;
     }
 
     /**

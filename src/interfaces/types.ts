@@ -12,7 +12,7 @@ export interface YouTubePluginSettings {
     environmentPrefix: string;
 }
 
-export type OutputFormat = 'executive-summary' | 'detailed-guide';
+export type OutputFormat = 'executive-summary' | 'detailed-guide' | 'brief';
 
 export interface ProcessingOptions {
     format: OutputFormat;
@@ -39,8 +39,9 @@ export interface ProcessingResult {
 // Service interfaces
 export interface AIProvider {
     readonly name: string;
-    readonly model: string;
+    model: string;
     process(prompt: string): Promise<string>;
+    setModel?(model: string): void;
 }
 
 export interface VideoDataService {
@@ -97,6 +98,9 @@ export interface ServiceContainer {
 
 export interface AIService {
     process(prompt: string): Promise<AIResponse>;
+    processWith(providerName: string, prompt: string, overrideModel?: string): Promise<AIResponse>;
+    getProviderNames(): string[];
+    getProviderModels(providerName: string): string[];
 }
 
 // Event types

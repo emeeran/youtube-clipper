@@ -8,10 +8,9 @@ import { BaseAIProvider } from './base';
 
 export class GroqProvider extends BaseAIProvider {
     readonly name = 'Groq';
-    readonly model = AI_MODELS.GROQ;
 
-    constructor(apiKey: string) {
-        super(apiKey);
+    constructor(apiKey: string, model?: string) {
+        super(apiKey, model || AI_MODELS.GROQ);
     }
 
     async process(prompt: string): Promise<string> {

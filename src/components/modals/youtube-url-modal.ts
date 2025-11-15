@@ -10,9 +10,13 @@ import { ErrorHandler } from '../../utils/error-handler';
 import { OutputFormat } from '../../interfaces/types';
 
 export interface YouTubeUrlModalOptions {
-    onProcess: (url: string, format: OutputFormat) => Promise<string>; // Return file path
+    onProcess: (url: string, format: OutputFormat, provider?: string, model?: string) => Promise<string>; // Return file path
     onOpenFile?: (filePath: string) => Promise<void>;
     initialUrl?: string;
+    providers?: string[]; // available provider names
+    modelOptions?: Record<string, string[]>; // mapping providerName -> models
+    defaultProvider?: string;
+    defaultModel?: string;
 }
 
 type StepState = 'pending' | 'active' | 'complete' | 'error';
@@ -29,6 +33,10 @@ export class YouTubeUrlModal extends BaseModal {
     private thumbnailEl?: HTMLImageElement;
     private metadataContainer?: HTMLDivElement;
     private fetchInProgress = false;
+    private providerSelect?: HTMLSelectElement;
+    private modelSelect?: HTMLSelectElement;
+    private selectedProvider?: string;
+    private selectedModel?: string;
     private progressContainer?: HTMLDivElement;
     private progressBar?: HTMLDivElement;
     private progressText?: HTMLDivElement;
@@ -64,8 +72,104 @@ export class YouTubeUrlModal extends BaseModal {
     this.headerEl = this.createHeader(MESSAGES.MODALS.PROCESS_VIDEO);
         this.createUrlInputSection();
         this.createFormatSelectionSection();
+        this.createProviderSelectionSection();
         this.createProgressSection();
         this.createActionButtons();
+    }
+
+    private createProviderSelectionSection(): void {
+        const container = this.contentEl.createDiv();
+        container.style.marginTop = '10px';
+        container.createEl('label', { text: 'AI Provider & Model:' });
+
+        const row = container.createDiv();
+        row.style.display = 'flex';
+        row.style.gap = '8px';
+        row.style.alignItems = 'center';
+
+        // Provider select
+        this.providerSelect = document.createElement('select');
+        this.providerSelect.style.flex = '1';
+        this.providerSelect.style.padding = '6px';
+        this.providerSelect.style.borderRadius = '6px';
+        this.providerSelect.style.border = '1px solid var(--background-modifier-border)';
+        row.appendChild(this.providerSelect);
+
+        // Model select
+        this.modelSelect = document.createElement('select');
+        this.modelSelect.style.width = '220px';
+        this.modelSelect.style.padding = '6px';
+        this.modelSelect.style.borderRadius = '6px';
+        this.modelSelect.style.border = '1px solid var(--background-modifier-border)';
+        row.appendChild(this.modelSelect);
+
+        // Populate providers if provided via options
+        const providers = this.options.providers || [];
+        const modelOptions = this.options.modelOptions || {};
+
+        // Add an explicit 'Auto (fallback order)' option
+        const autoOpt = document.createElement('option');
+        autoOpt.value = '';
+        autoOpt.text = 'Auto (fallback)';
+        this.providerSelect.appendChild(autoOpt);
+
+        providers.forEach((p) => {
+            const opt = document.createElement('option');
+            opt.value = p;
+            opt.text = p;
+            this.providerSelect!.appendChild(opt);
+        });
+
+        // Wire change handler
+        this.providerSelect.addEventListener('change', () => {
+            this.selectedProvider = this.providerSelect!.value || undefined;
+            this.populateModelsForProvider(this.selectedProvider || '', modelOptions, this.options.defaultModel);
+        });
+
+        // Set defaults
+        if (this.options.defaultProvider) {
+            this.providerSelect.value = this.options.defaultProvider;
+            this.selectedProvider = this.options.defaultProvider;
+        }
+
+        // Populate models for initial provider selection (or empty)
+        this.populateModelsForProvider(this.selectedProvider || '', modelOptions, this.options.defaultModel);
+    }
+
+    private populateModelsForProvider(providerName: string, modelOptions: Record<string, string[]>, defaultModel?: string): void {
+        if (!this.modelSelect) return;
+        // Clear existing
+        this.modelSelect.innerHTML = '';
+
+        const models = modelOptions[providerName] || [];
+        if (models.length === 0) {
+            // Add a single option indicating provider default
+            const opt = document.createElement('option');
+            opt.value = '';
+            opt.text = 'Default model';
+            this.modelSelect.appendChild(opt);
+            this.selectedModel = '';
+            return;
+        }
+
+        models.forEach((m) => {
+            const opt = document.createElement('option');
+            opt.value = m;
+            opt.text = m;
+            this.modelSelect!.appendChild(opt);
+        });
+
+        if (defaultModel && models.includes(defaultModel)) {
+            this.modelSelect.value = defaultModel;
+            this.selectedModel = defaultModel;
+        } else {
+            this.modelSelect.selectedIndex = 0;
+            this.selectedModel = this.modelSelect.value;
+        }
+
+        this.modelSelect.addEventListener('change', () => {
+            this.selectedModel = this.modelSelect!.value;
+        });
     }
 
     /**
@@ -198,6 +302,30 @@ export class YouTubeUrlModal extends BaseModal {
         tutorialRadio.addEventListener('change', (e) => {
             if ((e.target as HTMLInputElement).checked) {
                 this.format = 'detailed-guide';
+            }
+        });
+
+        // Brief radio button
+        const briefContainer = radioContainer.createDiv();
+        briefContainer.style.display = 'flex';
+        briefContainer.style.alignItems = 'center';
+        briefContainer.style.gap = '8px';
+
+        const briefRadio = briefContainer.createEl('input');
+        briefRadio.type = 'radio';
+        briefRadio.name = 'outputFormat';
+        briefRadio.value = 'brief';
+        briefRadio.id = 'brief-radio';
+        briefRadio.checked = this.format === 'brief';
+
+        const briefLabel = briefContainer.createEl('label');
+        briefLabel.setAttribute('for', 'brief-radio');
+        briefLabel.textContent = 'Brief';
+        briefLabel.style.cursor = 'pointer';
+
+        briefRadio.addEventListener('change', (e) => {
+            if ((e.target as HTMLInputElement).checked) {
+                this.format = 'brief';
             }
         });
     }
@@ -417,8 +545,13 @@ export class YouTubeUrlModal extends BaseModal {
             
             this.updateProgress(60, 'Analyzing video content...');
             
-            // Call the actual processing function
-            const filePath = await this.options.onProcess(trimmedUrl, this.format);
+            // Call the actual processing function (pass provider/model selection)
+            const filePath = await this.options.onProcess(
+                trimmedUrl,
+                this.format,
+                this.selectedProvider,
+                this.selectedModel
+            );
             this.setStepState(2, 'complete');
             this.setStepState(3, 'active');
             

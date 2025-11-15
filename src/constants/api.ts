@@ -14,6 +14,18 @@ export const AI_MODELS = {
     GROQ: 'llama-3.3-70b-versatile'
 } as const;
 
+// Known model options per provider (used to populate model selector in UI)
+export const PROVIDER_MODEL_OPTIONS: Record<string, string[]> = {
+    'Google Gemini': [
+        'gemini-2.5-pro',
+        'gemini-2.1',
+        'gemini-1.0'
+    ],
+    'Groq': [
+        'llama-3.3-70b-versatile'
+    ]
+};
+
 export const API_LIMITS = {
     MAX_TOKENS: 2000,
     TEMPERATURE: 0.7,

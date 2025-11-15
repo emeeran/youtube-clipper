@@ -7,12 +7,21 @@ import { ErrorHandler } from '../../utils/error-handler';
 
 export abstract class BaseAIProvider implements AIProvider {
     abstract readonly name: string;
-    abstract readonly model: string;
-    
-    protected constructor(protected apiKey: string) {
+    protected _model: string;
+
+    get model(): string {
+        return this._model;
+    }
+
+    setModel(model: string): void {
+        this._model = model;
+    }
+
+    protected constructor(protected apiKey: string, initialModel?: string) {
         if (!apiKey) {
             throw new Error('API key is required for AI provider');
         }
+        this._model = initialModel || '';
     }
 
     /**
