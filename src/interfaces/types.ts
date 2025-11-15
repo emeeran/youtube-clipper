@@ -1,0 +1,106 @@
+/**
+ * Core interfaces and types for the YouTube Processor plugin
+ */
+
+import { App, TFile } from 'obsidian';
+
+export interface YouTubePluginSettings {
+    geminiApiKey: string;
+    groqApiKey: string;
+    outputPath: string;
+    useEnvironmentVariables: boolean;
+    environmentPrefix: string;
+}
+
+export type OutputFormat = 'executive-summary' | 'detailed-guide';
+
+export interface ProcessingOptions {
+    format: OutputFormat;
+    useMultimodal: boolean;
+}
+
+export interface VideoData {
+    title: string;
+    description: string;
+}
+
+export interface AIResponse {
+    content: string;
+    provider: string;
+    model: string;
+}
+
+export interface ProcessingResult {
+    success: boolean;
+    filePath?: string;
+    error?: string;
+}
+
+// Service interfaces
+export interface AIProvider {
+    readonly name: string;
+    readonly model: string;
+    process(prompt: string): Promise<string>;
+}
+
+export interface VideoDataService {
+    extractVideoId(url: string): string | null;
+    getVideoData(videoId: string): Promise<VideoData>;
+}
+
+export interface FileService {
+    saveToFile(title: string, content: string, outputPath: string): Promise<string>;
+    openFileWithConfirmation(file: TFile): Promise<void>;
+}
+
+export interface CacheService {
+    get<T>(key: string): T | null;
+    set<T>(key: string, value: T, ttl?: number): void;
+    clear(): void;
+}
+
+export interface PromptService {
+    createAnalysisPrompt(videoData: VideoData, videoUrl: string, format?: OutputFormat): string;
+    processAIResponse(content: string, provider: string, model: string, format?: OutputFormat, videoData?: VideoData, videoUrl?: string): string;
+}
+
+// Utility types
+export type StyleObject = Record<string, string | number>;
+
+export interface DOMUtilsInterface {
+    applyStyles(element: HTMLElement, styles: StyleObject): void;
+    createButtonContainer(parent: HTMLElement): HTMLDivElement;
+    createStyledButton(
+        container: HTMLElement, 
+        text: string, 
+        isPrimary?: boolean, 
+        onClick?: () => void
+    ): HTMLButtonElement;
+}
+
+export interface ErrorHandlerInterface {
+    handle(error: Error, context: string, showNotice?: boolean): void;
+    withErrorHandling<T>(
+        operation: () => Promise<T>,
+        context: string
+    ): Promise<T | null>;
+}
+
+// Configuration types
+export interface ServiceContainer {
+    aiService: AIService;
+    videoService: VideoDataService;
+    fileService: FileService;
+    cacheService: CacheService;
+    promptService: PromptService;
+}
+
+export interface AIService {
+    process(prompt: string): Promise<AIResponse>;
+}
+
+// Event types
+export interface ModalEvents {
+    onConfirm: () => void | Promise<void>;
+    onCancel: () => void;
+}

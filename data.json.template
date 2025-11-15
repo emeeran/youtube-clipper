@@ -1,0 +1,7 @@
+{
+  "geminiApiKey": "",
+  "groqApiKey": "",
+  "outputPath": "📋 YouTube/Clipped Videos",
+  "useEnvironmentVariables": false,
+  "environmentPrefix": "YTC"
+}
