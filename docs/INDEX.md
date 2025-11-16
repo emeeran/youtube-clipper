@@ -11,6 +11,11 @@ Welcome to the YouTubeClipper documentation! This is your central hub for all in
   - API key errors
   - Processing failures
   - FAQ section
+- **[SECURITY.md](SECURITY.md)** - Security best practices and API key protection
+  - Storing API keys safely
+  - Using environment variables
+  - Protecting your credentials
+  - What to do if compromised
 
 ### For Developers
 - **[DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md)** - How to develop and contribute
@@ -50,7 +55,8 @@ Welcome to the YouTubeClipper documentation! This is your central hub for all in
 #### Use the Plugin
 1. Start with [README.md](../README.md) - User guide section
 2. Check [TROUBLESHOOTING.md](TROUBLESHOOTING.md) if something doesn't work
-3. Open GitHub Discussions for questions
+3. Review [SECURITY.md](SECURITY.md) for protecting your API keys
+4. Open GitHub Discussions for questions
 
 #### Develop Features
 1. Read [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) - Getting started
@@ -116,6 +122,23 @@ Welcome to the YouTubeClipper documentation! This is your central hub for all in
 - Performance optimization
 
 **Read when**: Something isn't working or you have questions
+
+---
+
+### SECURITY.md
+**Audience**: All users and developers  
+**Purpose**: Security best practices and API key protection  
+**Contains**:
+- API key security guidelines
+- Environment variable setup
+- Safely storing credentials
+- Data protection practices
+- What to do if compromised
+- Development security checklist
+- Third-party service security
+- Incident response procedures
+
+**Read when**: Setting up API keys, wanting to protect your credentials, or reporting security concerns
 
 ---
 
@@ -209,6 +232,11 @@ Welcome to the YouTubeClipper documentation! This is your central hub for all in
 - [README.md](../README.md) → Usage Guide
 - [TROUBLESHOOTING.md](TROUBLESHOOTING.md) → FAQ
 
+**Security & API Keys**
+- [SECURITY.md](SECURITY.md) → API Key Security
+- [SECURITY.md](SECURITY.md) → Using Environment Variables
+- [SECURITY.md](SECURITY.md) → Data Protection
+
 **Development Setup**
 - [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) → Getting Started with Development
 - [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) → Project Structure
@@ -296,6 +324,7 @@ If still stuck:
 |----------|-----------------|
 | How do I install? | [README.md](../README.md) → Quick Start |
 | How do I use it? | [README.md](../README.md) → Usage |
+| How do I secure my API keys? | [SECURITY.md](SECURITY.md) → API Key Security |
 | Something's broken | [TROUBLESHOOTING.md](TROUBLESHOOTING.md) |
 | How do I set up dev? | [DEVELOPER_GUIDE.md](DEVELOPER_GUIDE.md) |
 | What's the architecture? | [ARCHITECTURE.md](ARCHITECTURE.md) |
