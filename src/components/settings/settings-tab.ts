@@ -111,27 +111,153 @@ export class YouTubeSettingsTab extends PluginSettingTab {
         // API Keys section
         containerEl.createEl('h3', { text: 'API Configuration' });
 
-        // Gemini API Key
-        new Setting(containerEl)
-            .setName('Gemini API Key')
-            .setDesc('Your Google Gemini API key for content processing (recommended)')
-            .addText(text => text
-                .setPlaceholder(MESSAGES.PLACEHOLDERS.GEMINI_KEY)
-                .setValue(this.settings.geminiApiKey)
-                .onChange(async (value) => {
-                    await this.updateSetting('geminiApiKey', value);
-                }));
+        // Security Notice
+        const securityNotice = containerEl.createDiv('ytc-security-notice');
+        securityNotice.style.padding = '12px';
+        securityNotice.style.marginBottom = '16px';
+        securityNotice.style.backgroundColor = 'var(--background-modifier-hover)';
+        securityNotice.style.borderLeft = '4px solid var(--text-accent)';
+        securityNotice.style.borderRadius = '4px';
+        
+        const noticeTitle = securityNotice.createEl('strong');
+        noticeTitle.textContent = '🔒 Security Notice: ';
+        
+        const noticeText = securityNotice.createEl('span');
+        noticeText.textContent = 'API keys are encrypted and stored securely by Obsidian. Never share your keys or commit them to version control.';
+        noticeText.style.display = 'block';
+        noticeText.style.marginTop = '4px';
+        noticeText.style.fontSize = '0.9em';
+        noticeText.style.color = 'var(--text-muted)';
 
-        // Groq API Key
-        new Setting(containerEl)
+        // Gemini API Key (password field)
+        const geminiSetting = new Setting(containerEl)
+            .setName('Gemini API Key')
+            .setDesc('Your Google Gemini API key for content processing (password field - secured)')
+            .addText(text => {
+                // Use password-like input
+                const inputEl = text
+                    .setPlaceholder('sk-... (your key is encrypted)')
+                    .onChange(async (value) => {
+                        await this.updateSetting('geminiApiKey', value);
+                    })
+                    .inputEl;
+                
+                // Make it password field
+                inputEl.type = 'password';
+                
+                // Add toggle to show/hide
+                inputEl.style.fontFamily = 'monospace';
+                inputEl.style.letterSpacing = '0.1em';
+                
+                return text;
+            });
+        
+        // Add show/hide toggle for Gemini key
+        this.addKeyToggle(geminiSetting, this.settings.geminiApiKey);
+
+        // Groq API Key (password field)
+        const groqSetting = new Setting(containerEl)
             .setName('Groq API Key')
-            .setDesc('Your Groq API key for fallback processing')
-            .addText(text => text
-                .setPlaceholder(MESSAGES.PLACEHOLDERS.GROQ_KEY)
-                .setValue(this.settings.groqApiKey)
-                .onChange(async (value) => {
-                    await this.updateSetting('groqApiKey', value);
+            .setDesc('Your Groq API key for fallback processing (password field - secured)')
+            .addText(text => {
+                // Use password-like input
+                const inputEl = text
+                    .setPlaceholder('gsk_... (your key is encrypted)')
+                    .onChange(async (value) => {
+                        await this.updateSetting('groqApiKey', value);
+                    })
+                    .inputEl;
+                
+                // Make it password field
+                inputEl.type = 'password';
+                
+                // Add visual feedback
+                inputEl.style.fontFamily = 'monospace';
+                inputEl.style.letterSpacing = '0.1em';
+                
+                return text;
+            });
+        
+        // Add show/hide toggle for Groq key
+        this.addKeyToggle(groqSetting, this.settings.groqApiKey);
+
+        // Test Connectivity
+        const testSection = containerEl.createDiv('ytc-test-connection');
+        testSection.style.marginTop = '16px';
+        testSection.style.paddingTop = '12px';
+        testSection.style.borderTop = '1px solid var(--background-modifier-border)';
+        
+        new Setting(testSection)
+            .setName('Test API Connection')
+            .setDesc('Verify your API keys are valid')
+            .addButton(btn => btn
+                .setButtonText('Test Keys')
+                .onClick(async () => {
+                    btn.setDisabled(true);
+                    btn.setButtonText('Testing...');
+                    try {
+                        await this.testAPIKeys();
+                        btn.setButtonText('✓ Success!');
+                        setTimeout(() => {
+                            btn.setButtonText('Test Keys');
+                            btn.setDisabled(false);
+                        }, 2000);
+                    } catch (error) {
+                        btn.setButtonText('✗ Failed');
+                        ErrorHandler.handle(error as Error, 'API key test failed', true);
+                        setTimeout(() => {
+                            btn.setButtonText('Test Keys');
+                            btn.setDisabled(false);
+                        }, 2000);
+                    }
                 }));
+    }
+
+    /**
+     * Add show/hide toggle for sensitive API keys
+     */
+    private addKeyToggle(setting: Setting, keyValue: string): void {
+        if (!keyValue) return;
+
+        const toggleBtn = setting.addButton(btn => btn
+            .setButtonText('👁️ Show')
+            .setTooltip('Toggle key visibility')
+            .onClick((e) => {
+                const inputs = setting.settingEl.querySelectorAll('input[type="password"], input[type="text"]');
+                if (inputs.length === 0) return;
+
+                const input = inputs[0] as HTMLInputElement;
+                const isPassword = input.type === 'password';
+
+                input.type = isPassword ? 'text' : 'password';
+                btn.setButtonText(isPassword ? '👁️‍🗨️ Hide' : '👁️ Show');
+            }));
+    }
+
+    /**
+     * Test API keys for validity
+     */
+    private async testAPIKeys(): Promise<void> {
+        const errors: string[] = [];
+
+        if (this.settings.geminiApiKey) {
+            try {
+                const response = await fetch(
+                    'https://generativelanguage.googleapis.com/v1beta/models?key=' + this.settings.geminiApiKey
+                );
+                if (!response.ok) {
+                    errors.push(`Gemini API key invalid (${response.status})`);
+                }
+            } catch (error) {
+                errors.push('Gemini API key test failed (network error)');
+            }
+        } else {
+            errors.push('Gemini API key not configured');
+        }
+
+        if (errors.length > 0) {
+            throw new Error(errors.join('\n'));
+        }
     }
 
     /**
