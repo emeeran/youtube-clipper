@@ -1344,6 +1344,7 @@ var YouTubeUrlModal = class extends BaseModal {
     radioContainer.style.marginTop = "8px";
     radioContainer.style.display = "flex";
     radioContainer.style.gap = "20px";
+    radioContainer.style.flexWrap = "wrap";
     const executiveContainer = radioContainer.createDiv();
     executiveContainer.style.display = "flex";
     executiveContainer.style.alignItems = "center";
@@ -1377,11 +1378,17 @@ var YouTubeUrlModal = class extends BaseModal {
     executiveRadio.addEventListener("change", (e) => {
       if (e.target.checked) {
         this.format = "executive-summary";
+        if (this.customPromptContainer) {
+          this.customPromptContainer.style.display = "none";
+        }
       }
     });
     tutorialRadio.addEventListener("change", (e) => {
       if (e.target.checked) {
         this.format = "detailed-guide";
+        if (this.customPromptContainer) {
+          this.customPromptContainer.style.display = "none";
+        }
       }
     });
     const briefContainer = radioContainer.createDiv();
@@ -1402,8 +1409,69 @@ var YouTubeUrlModal = class extends BaseModal {
     briefRadio.addEventListener("change", (e) => {
       if (e.target.checked) {
         this.format = "brief";
+        if (this.customPromptContainer) {
+          this.customPromptContainer.style.display = "none";
+        }
       }
     });
+    const customContainer = radioContainer.createDiv();
+    customContainer.style.display = "flex";
+    customContainer.style.alignItems = "center";
+    customContainer.style.gap = "8px";
+    const customRadio = customContainer.createEl("input");
+    customRadio.type = "radio";
+    customRadio.name = "outputFormat";
+    customRadio.value = "custom";
+    customRadio.id = "custom-radio";
+    customRadio.checked = this.format === "custom";
+    customRadio.setAttribute("aria-label", "Custom prompt format");
+    const customLabel = customContainer.createEl("label");
+    customLabel.setAttribute("for", "custom-radio");
+    customLabel.textContent = "Custom";
+    customLabel.style.cursor = "pointer";
+    customRadio.addEventListener("change", (e) => {
+      var _a;
+      if (e.target.checked) {
+        this.format = "custom";
+        if (this.customPromptContainer) {
+          this.customPromptContainer.style.display = "block";
+          (_a = this.customPromptInput) == null ? void 0 : _a.focus();
+        }
+      }
+    });
+    this.customPromptContainer = container.createDiv();
+    this.customPromptContainer.style.marginTop = "12px";
+    this.customPromptContainer.style.padding = "12px";
+    this.customPromptContainer.style.backgroundColor = "var(--background-modifier-hover)";
+    this.customPromptContainer.style.borderRadius = "4px";
+    this.customPromptContainer.style.display = "none";
+    const customPromptLabel = this.customPromptContainer.createEl("label", {
+      text: "Custom Prompt (this session only):"
+    });
+    customPromptLabel.setAttribute("for", "custom-prompt-input");
+    customPromptLabel.style.display = "block";
+    customPromptLabel.style.marginBottom = "6px";
+    customPromptLabel.style.fontWeight = "600";
+    customPromptLabel.style.fontSize = "0.95rem";
+    this.customPromptInput = this.customPromptContainer.createEl("textarea");
+    this.customPromptInput.id = "custom-prompt-input";
+    this.customPromptInput.setAttribute("aria-label", "Custom AI prompt");
+    this.customPromptInput.setAttribute("placeholder", "Enter your custom prompt here. Available placeholders: __VIDEO_TITLE__, __VIDEO_DESCRIPTION__, __VIDEO_URL__");
+    this.customPromptInput.style.width = "100%";
+    this.customPromptInput.style.height = "100px";
+    this.customPromptInput.style.padding = "8px";
+    this.customPromptInput.style.fontFamily = "monospace";
+    this.customPromptInput.style.fontSize = "12px";
+    this.customPromptInput.style.border = "1px solid var(--background-modifier-border)";
+    this.customPromptInput.style.borderRadius = "4px";
+    this.customPromptInput.style.resize = "vertical";
+    this.customPromptInput.style.marginBottom = "6px";
+    const helpText = this.customPromptContainer.createEl("small");
+    helpText.textContent = "Placeholders: __VIDEO_TITLE__, __VIDEO_DESCRIPTION__, __VIDEO_URL__, __VIDEO_ID__, __EMBED_URL__, __DATE__, __TIMESTAMP__";
+    helpText.style.display = "block";
+    helpText.style.marginTop = "4px";
+    helpText.style.color = "var(--text-muted)";
+    helpText.style.fontSize = "11px";
   }
   /**
    * Create progress section
@@ -1571,6 +1639,7 @@ var YouTubeUrlModal = class extends BaseModal {
    * Handle process button click
    */
   async handleProcess() {
+    var _a;
     const trimmedUrl = this.url.trim();
     if (!trimmedUrl) {
       new import_obsidian4.Notice(MESSAGES.ERRORS.ENTER_URL);
@@ -1633,11 +1702,13 @@ Would you like to switch to a multimodal-capable model (${recommended}) for bett
       this.setStepState(1, "complete");
       this.setStepState(2, "active");
       this.updateProgress(60, "Analyzing video content...");
+      const customPrompt = this.format === "custom" ? (_a = this.customPromptInput) == null ? void 0 : _a.value : void 0;
       const filePath = await this.options.onProcess(
         trimmedUrl,
         this.format,
         this.selectedProvider,
-        this.selectedModel
+        this.selectedModel,
+        customPrompt
       );
       this.setStepState(2, "complete");
       this.setStepState(3, "active");
@@ -2264,7 +2335,8 @@ var YouTubeSettingsTab = class extends import_obsidian5.PluginSettingTab {
     const formats = [
       "executive-summary",
       "detailed-guide",
-      "brief"
+      "brief",
+      "custom"
     ];
     formats.forEach((format) => {
       var _a;
@@ -2331,6 +2403,8 @@ var YouTubeSettingsTab = class extends import_obsidian5.PluginSettingTab {
         return "\u{1F4DA} Comprehensive Tutorial";
       case "brief":
         return "\u26A1 Brief Format";
+      case "custom":
+        return "\u2728 Custom Prompt (Session Only)";
       default:
         return format;
     }
@@ -3702,7 +3776,7 @@ var YouTubeProcessorPlugin = class extends import_obsidian7.Plugin {
       ErrorHandler.handle(error, "Opening YouTube URL modal");
     });
   }
-  async processYouTubeVideo(url, format = "detailed-guide", providerName, model) {
+  async processYouTubeVideo(url, format = "detailed-guide", providerName, model, customPrompt) {
     if (this.isUnloading) {
       ConflictPrevention.log("Plugin is unloading, cancelling video processing");
       throw new Error("Plugin is shutting down");
@@ -3723,8 +3797,13 @@ var YouTubeProcessorPlugin = class extends import_obsidian7.Plugin {
         throw new Error(MESSAGES.ERRORS.VIDEO_ID_EXTRACTION);
       }
       const videoData = await youtubeService.getVideoData(videoId);
-      const customPrompt = (_a = this.settings.customPrompts) == null ? void 0 : _a[format];
-      const prompt = promptService.createAnalysisPrompt(videoData, url, format, customPrompt);
+      let promptToUse;
+      if (format === "custom") {
+        promptToUse = customPrompt;
+      } else {
+        promptToUse = (_a = this.settings.customPrompts) == null ? void 0 : _a[format];
+      }
+      const prompt = promptService.createAnalysisPrompt(videoData, url, format, promptToUse);
       let aiResponse;
       if (providerName) {
         aiResponse = await aiService.processWith(providerName, prompt, model);

@@ -355,6 +355,7 @@ export class YouTubeUrlModal extends BaseModal {
         radioContainer.style.marginTop = '8px';
         radioContainer.style.display = 'flex';
         radioContainer.style.gap = '20px';
+        radioContainer.style.flexWrap = 'wrap';
         
         // Executive radio button
         const executiveContainer = radioContainer.createDiv();
@@ -398,12 +399,18 @@ export class YouTubeUrlModal extends BaseModal {
         executiveRadio.addEventListener('change', (e) => {
             if ((e.target as HTMLInputElement).checked) {
                 this.format = 'executive-summary';
+                if (this.customPromptContainer) {
+                    this.customPromptContainer.style.display = 'none';
+                }
             }
         });
         
         tutorialRadio.addEventListener('change', (e) => {
             if ((e.target as HTMLInputElement).checked) {
                 this.format = 'detailed-guide';
+                if (this.customPromptContainer) {
+                    this.customPromptContainer.style.display = 'none';
+                }
             }
         });
 
@@ -429,7 +436,9 @@ export class YouTubeUrlModal extends BaseModal {
         briefRadio.addEventListener('change', (e) => {
             if ((e.target as HTMLInputElement).checked) {
                 this.format = 'brief';
-                this.customPromptContainer!.style.display = 'none';
+                if (this.customPromptContainer) {
+                    this.customPromptContainer.style.display = 'none';
+                }
             }
         });
 
@@ -455,14 +464,19 @@ export class YouTubeUrlModal extends BaseModal {
         customRadio.addEventListener('change', (e) => {
             if ((e.target as HTMLInputElement).checked) {
                 this.format = 'custom';
-                this.customPromptContainer!.style.display = 'block';
-                this.customPromptInput!.focus();
+                if (this.customPromptContainer) {
+                    this.customPromptContainer.style.display = 'block';
+                    this.customPromptInput?.focus();
+                }
             }
         });
 
-        // Create custom prompt textarea (initially hidden)
+        // Create custom prompt textarea container (initially hidden)
         this.customPromptContainer = container.createDiv();
         this.customPromptContainer.style.marginTop = '12px';
+        this.customPromptContainer.style.padding = '12px';
+        this.customPromptContainer.style.backgroundColor = 'var(--background-modifier-hover)';
+        this.customPromptContainer.style.borderRadius = '4px';
         this.customPromptContainer.style.display = 'none';
         
         const customPromptLabel = this.customPromptContainer.createEl('label', {
@@ -471,7 +485,8 @@ export class YouTubeUrlModal extends BaseModal {
         customPromptLabel.setAttribute('for', 'custom-prompt-input');
         customPromptLabel.style.display = 'block';
         customPromptLabel.style.marginBottom = '6px';
-        customPromptLabel.style.fontWeight = '500';
+        customPromptLabel.style.fontWeight = '600';
+        customPromptLabel.style.fontSize = '0.95rem';
 
         this.customPromptInput = this.customPromptContainer.createEl('textarea');
         this.customPromptInput.id = 'custom-prompt-input';
@@ -485,6 +500,7 @@ export class YouTubeUrlModal extends BaseModal {
         this.customPromptInput.style.border = '1px solid var(--background-modifier-border)';
         this.customPromptInput.style.borderRadius = '4px';
         this.customPromptInput.style.resize = 'vertical';
+        this.customPromptInput.style.marginBottom = '6px';
 
         const helpText = this.customPromptContainer.createEl('small');
         helpText.textContent = 'Placeholders: __VIDEO_TITLE__, __VIDEO_DESCRIPTION__, __VIDEO_URL__, __VIDEO_ID__, __EMBED_URL__, __DATE__, __TIMESTAMP__';

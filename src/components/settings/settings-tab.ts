@@ -300,7 +300,7 @@ export class YouTubeSettingsTab extends PluginSettingTab {
     /**
      * Convert format key to display name
      */
-    private formatDisplayName(format: 'executive-summary' | 'detailed-guide' | 'brief'): string {
+    private formatDisplayName(format: OutputFormat): string {
         switch (format) {
             case 'executive-summary':
                 return '📋 Executive Summary';
@@ -308,6 +308,8 @@ export class YouTubeSettingsTab extends PluginSettingTab {
                 return '📚 Comprehensive Tutorial';
             case 'brief':
                 return '⚡ Brief Format';
+            case 'custom':
+                return '✨ Custom Prompt (Session Only)';
             default:
                 return format;
         }
