@@ -154,6 +154,9 @@ export class YouTubeSettingsTab extends PluginSettingTab {
         
         // Add show/hide toggle for Gemini key
         this.addKeyToggle(geminiSetting, this.settings.geminiApiKey);
+        
+        // Add clear button for Gemini key
+        this.addKeyClearButton(geminiSetting, 'geminiApiKey');
 
         // Groq API Key (password field)
         const groqSetting = new Setting(containerEl)
@@ -181,6 +184,9 @@ export class YouTubeSettingsTab extends PluginSettingTab {
         
         // Add show/hide toggle for Groq key
         this.addKeyToggle(groqSetting, this.settings.groqApiKey);
+        
+        // Add clear button for Groq key
+        this.addKeyClearButton(groqSetting, 'groqApiKey');
 
         // Test Connectivity
         const testSection = containerEl.createDiv('ytc-test-connection');
@@ -231,6 +237,24 @@ export class YouTubeSettingsTab extends PluginSettingTab {
 
                 input.type = isPassword ? 'text' : 'password';
                 btn.setButtonText(isPassword ? '👁️‍🗨️ Hide' : '👁️ Show');
+            }));
+    }
+
+    /**
+     * Add clear button to remove API key
+     */
+    private addKeyClearButton(setting: Setting, settingKey: 'geminiApiKey' | 'groqApiKey'): void {
+        const clearBtn = setting.addButton(btn => btn
+            .setButtonText('🗑️ Clear')
+            .setTooltip('Remove this API key')
+            .onClick(async () => {
+                // Confirm before clearing
+                const keyName = settingKey === 'geminiApiKey' ? 'Gemini' : 'Groq';
+                if (confirm(`Are you sure you want to clear the ${keyName} API key?`)) {
+                    await this.updateSetting(settingKey, '');
+                    // Refresh the display to show empty field
+                    this.display();
+                }
             }));
     }
 
