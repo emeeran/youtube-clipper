@@ -15,15 +15,45 @@ export const AI_MODELS = {
 } as const;
 
 // Known model options per provider (used to populate model selector in UI)
-export const PROVIDER_MODEL_OPTIONS: Record<string, string[]> = {
+// Each entry is now an object with `name` and optional metadata like `supportsAudioVideo`.
+// Models are updated to reflect the latest available versions (Nov 2024 - Nov 2025).
+export type ProviderModelEntry = { name: string; supportsAudioVideo?: boolean };
+export const PROVIDER_MODEL_OPTIONS: Record<string, ProviderModelEntry[]> = {
     'Google Gemini': [
-        'gemini-2.5-pro',
-        'gemini-2.1',
-        'gemini-1.0'
+        // Gemini 2.5 series (latest, all support multimodal video analysis)
+        { name: 'gemini-2.5-pro', supportsAudioVideo: true },
+        { name: 'gemini-2.5-pro-tts', supportsAudioVideo: true },
+        { name: 'gemini-2.5-flash', supportsAudioVideo: true },
+        { name: 'gemini-2.5-flash-lite', supportsAudioVideo: true },
+        // Gemini 2.0 series (video support via native API, but no explicit multimodal flag)
+        { name: 'gemini-2.0-pro', supportsAudioVideo: true },
+        { name: 'gemini-2.0-flash' },
+        { name: 'gemini-2.0-flash-lite' },
+        // Gemini 1.5 series (available, supports video via File API)
+        { name: 'gemini-1.5-pro' },
+        { name: 'gemini-1.5-flash' }
     ],
     'Groq': [
-        'llama-3.3-70b-versatile'
+        // Latest models (Nov 2024 - Nov 2025)
+        // Note: Groq models prioritize speed/text; for multimodal video, Gemini is recommended
+        { name: 'llama-4-maverick-17b-128e-instruct' },
+        { name: 'llama-4-scout-17b-16e-instruct' },
+        // Llama 3.x series
+        { name: 'llama-3.3-70b-versatile' },
+        { name: 'llama-3.1-8b-instant' }
     ]
+};
+
+// Optional: provider pages to attempt to scrape for latest model names (best-effort)
+export const PROVIDER_MODEL_LIST_URLS: Record<string, string> = {
+    'Google Gemini': 'https://developers.generativeai.google/models',
+    'Groq': 'https://groq.com'
+};
+
+// Simple regex patterns to try to extract model-like tokens from provider pages
+export const PROVIDER_MODEL_REGEX: Record<string, RegExp> = {
+    'Google Gemini': /gemini[-_\.]?\d+(?:\.\d+)?(?:-[a-z0-9\-]+)?/gi,
+    'Groq': /llama[-_\.]?\d+(?:\.\d+)?(?:-[a-z0-9\-]+)?/gi
 };
 
 export const API_LIMITS = {

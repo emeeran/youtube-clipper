@@ -725,13 +725,36 @@ var AI_MODELS = {
 };
 var PROVIDER_MODEL_OPTIONS = {
   "Google Gemini": [
-    "gemini-2.5-pro",
-    "gemini-2.1",
-    "gemini-1.0"
+    // Gemini 2.5 series (latest, all support multimodal video analysis)
+    { name: "gemini-2.5-pro", supportsAudioVideo: true },
+    { name: "gemini-2.5-pro-tts", supportsAudioVideo: true },
+    { name: "gemini-2.5-flash", supportsAudioVideo: true },
+    { name: "gemini-2.5-flash-lite", supportsAudioVideo: true },
+    // Gemini 2.0 series (video support via native API, but no explicit multimodal flag)
+    { name: "gemini-2.0-pro", supportsAudioVideo: true },
+    { name: "gemini-2.0-flash" },
+    { name: "gemini-2.0-flash-lite" },
+    // Gemini 1.5 series (available, supports video via File API)
+    { name: "gemini-1.5-pro" },
+    { name: "gemini-1.5-flash" }
   ],
   "Groq": [
-    "llama-3.3-70b-versatile"
+    // Latest models (Nov 2024 - Nov 2025)
+    // Note: Groq models prioritize speed/text; for multimodal video, Gemini is recommended
+    { name: "llama-4-maverick-17b-128e-instruct" },
+    { name: "llama-4-scout-17b-16e-instruct" },
+    // Llama 3.x series
+    { name: "llama-3.3-70b-versatile" },
+    { name: "llama-3.1-8b-instant" }
   ]
+};
+var PROVIDER_MODEL_LIST_URLS = {
+  "Google Gemini": "https://developers.generativeai.google/models",
+  "Groq": "https://groq.com"
+};
+var PROVIDER_MODEL_REGEX = {
+  "Google Gemini": /gemini[-_\.]?\d+(?:\.\d+)?(?:-[a-z0-9\-]+)?/gi,
+  "Groq": /llama[-_\.]?\d+(?:\.\d+)?(?:-[a-z0-9\-]+)?/gi
 };
 var API_LIMITS = {
   MAX_TOKENS: 2e3,
@@ -946,6 +969,19 @@ var YouTubeUrlModal = class extends BaseModal {
       opt.text = p;
       this.providerSelect.appendChild(opt);
     });
+    const refreshBtn = this.createInlineButton(row, "Refresh models", () => {
+      void this.handleRefreshModels();
+    });
+    this.refreshSpinner = document.createElement("span");
+    this.refreshSpinner.style.display = "none";
+    this.refreshSpinner.style.marginLeft = "8px";
+    this.refreshSpinner.style.width = "16px";
+    this.refreshSpinner.style.height = "16px";
+    this.refreshSpinner.style.border = "2px solid var(--background-modifier-border)";
+    this.refreshSpinner.style.borderTop = "2px solid var(--interactive-accent)";
+    this.refreshSpinner.style.borderRadius = "50%";
+    this.refreshSpinner.style.animation = "ytp-spin 1s linear infinite";
+    row.appendChild(this.refreshSpinner);
     this.providerSelect.addEventListener("change", () => {
       this.selectedProvider = this.providerSelect.value || void 0;
       this.populateModelsForProvider(this.selectedProvider || "", modelOptions, this.options.defaultModel);
@@ -955,6 +991,45 @@ var YouTubeUrlModal = class extends BaseModal {
       this.selectedProvider = this.options.defaultProvider;
     }
     this.populateModelsForProvider(this.selectedProvider || "", modelOptions, this.options.defaultModel);
+  }
+  async handleRefreshModels() {
+    if (!this.options.fetchModels) {
+      this.setValidationMessage("Model refresh not available.", "error");
+      return;
+    }
+    this.setValidationMessage("Refreshing model lists\u2026", "info");
+    if (this.refreshSpinner)
+      this.refreshSpinner.style.display = "inline-block";
+    try {
+      const map = await this.options.fetchModels();
+      const providers = Object.keys(map);
+      if (this.providerSelect) {
+        const current = this.providerSelect.value;
+        this.providerSelect.innerHTML = "";
+        const autoOpt = document.createElement("option");
+        autoOpt.value = "";
+        autoOpt.text = "Auto (fallback)";
+        this.providerSelect.appendChild(autoOpt);
+        providers.forEach((p) => {
+          const opt = document.createElement("option");
+          opt.value = p;
+          opt.text = p;
+          this.providerSelect.appendChild(opt);
+        });
+        if (current && Array.from(this.providerSelect.options).some((o) => o.value === current)) {
+          this.providerSelect.value = current;
+          this.selectedProvider = current;
+        }
+      }
+      const modelOptions = map;
+      this.populateModelsForProvider(this.selectedProvider || "", modelOptions, this.options.defaultModel);
+      this.setValidationMessage("Model lists refreshed.", "success");
+    } catch (error) {
+      this.setValidationMessage("Failed to refresh models. Using cached options.", "error");
+    } finally {
+      if (this.refreshSpinner)
+        this.refreshSpinner.style.display = "none";
+    }
   }
   populateModelsForProvider(providerName, modelOptions, defaultModel) {
     if (!this.modelSelect)
@@ -972,7 +1047,20 @@ var YouTubeUrlModal = class extends BaseModal {
     models.forEach((m) => {
       const opt = document.createElement("option");
       opt.value = m;
-      opt.text = m;
+      let label = m;
+      try {
+        const providerModels = PROVIDER_MODEL_OPTIONS[providerName] || [];
+        const match = providerModels.find((pm) => {
+          const name = typeof pm === "string" ? pm : pm && pm.name ? pm.name : "";
+          return String(name).toLowerCase() === String(m).toLowerCase();
+        });
+        if (match && match.supportsAudioVideo) {
+          label = `${m}  \u{1F3A5}`;
+          opt.title = "Supports multimodal audio/video tokens";
+        }
+      } catch (err) {
+      }
+      opt.text = label;
       this.modelSelect.appendChild(opt);
     });
     if (defaultModel && models.includes(defaultModel)) {
@@ -1275,6 +1363,40 @@ var YouTubeUrlModal = class extends BaseModal {
       return;
     }
     try {
+      if (this.selectedProvider === "Google Gemini" && this.selectedModel && this.isUrlValid()) {
+        try {
+          const models = PROVIDER_MODEL_OPTIONS["Google Gemini"] || [];
+          const match = models.find((m) => {
+            const name = typeof m === "string" ? m : m && m.name ? m.name : "";
+            return String(name).toLowerCase() === String(this.selectedModel || "").toLowerCase();
+          });
+          const supportsAudioVideo = !!(match && match.supportsAudioVideo);
+          if (!supportsAudioVideo) {
+            const recommended = (models.find((m) => m && m.supportsAudioVideo) || { name: AI_MODELS.GEMINI }).name;
+            const confirmMsg = `The selected model (${this.selectedModel}) may not support multimodal analysis.
+
+Would you like to switch to a multimodal-capable model (${recommended}) for better video analysis?`;
+            const shouldSwitch = this.confirmClose(confirmMsg);
+            if (shouldSwitch) {
+              if (this.modelSelect) {
+                const exists = Array.from(this.modelSelect.options).some((o) => o.value === recommended);
+                if (!exists) {
+                  const opt = document.createElement("option");
+                  opt.value = recommended;
+                  opt.text = recommended;
+                  this.modelSelect.appendChild(opt);
+                }
+                this.modelSelect.value = recommended;
+                this.selectedModel = recommended;
+              } else {
+                this.selectedModel = recommended;
+              }
+            }
+          }
+        } catch (err) {
+          console.warn("[YouTubeUrlModal] model recommendation failed", err);
+        }
+      }
       this.showProcessingState();
       this.setStepState(0, "active");
       this.updateProgress(20, "Validating YouTube URL...");
@@ -2018,7 +2140,47 @@ var AIService = class {
    * Return available model options for a provider name (from constants mapping)
    */
   getProviderModels(providerName) {
-    return PROVIDER_MODEL_OPTIONS[providerName] || [];
+    const raw = PROVIDER_MODEL_OPTIONS[providerName] || [];
+    return raw.map((r) => typeof r === "string" ? r : r && r.name ? r.name : String(r));
+  }
+  /**
+   * Best-effort fetch of latest models for all providers by scraping known provider pages.
+   * Returns a mapping providerName -> list of discovered models. Falls back to static mapping.
+   */
+  async fetchLatestModels() {
+    const result = {};
+    const providers = this.getProviderNames();
+    for (const p of providers) {
+      try {
+        const models = await this.fetchLatestModelsForProvider(p);
+        result[p] = models.length > 0 ? models : PROVIDER_MODEL_OPTIONS[p] ? PROVIDER_MODEL_OPTIONS[p].map((m) => typeof m === "string" ? m : m.name) : [];
+      } catch (error) {
+        result[p] = PROVIDER_MODEL_OPTIONS[p] ? PROVIDER_MODEL_OPTIONS[p].map((m) => typeof m === "string" ? m : m.name) : [];
+      }
+    }
+    return result;
+  }
+  /**
+   * Fetch latest models for a single provider (best-effort scraping).
+   */
+  async fetchLatestModelsForProvider(providerName) {
+    const url = PROVIDER_MODEL_LIST_URLS[providerName];
+    const regex = PROVIDER_MODEL_REGEX[providerName];
+    if (!url || !regex) {
+      return PROVIDER_MODEL_OPTIONS[providerName] ? PROVIDER_MODEL_OPTIONS[providerName].map((m) => typeof m === "string" ? m : m.name) : [];
+    }
+    try {
+      const resp = await fetch(url, { method: "GET" });
+      if (!resp.ok) {
+        return PROVIDER_MODEL_OPTIONS[providerName] ? PROVIDER_MODEL_OPTIONS[providerName].map((m) => typeof m === "string" ? m : m.name) : [];
+      }
+      const text = await resp.text();
+      const matches = text.match(regex) || [];
+      const normalized = Array.from(new Set(matches.map((m) => m.toLowerCase())));
+      return normalized;
+    } catch (error) {
+      return PROVIDER_MODEL_OPTIONS[providerName] ? PROVIDER_MODEL_OPTIONS[providerName].map((m) => typeof m === "string" ? m : m.name) : [];
+    }
   }
   /**
    * Process prompt with fallback support
@@ -2194,16 +2356,39 @@ var GeminiProvider = class extends BaseAIProvider {
       // ]
     };
     if (isVideoAnalysis) {
-      return {
+      const providerModels = PROVIDER_MODEL_OPTIONS["Google Gemini"] || [];
+      const currentModelName = String(this.model || "").toLowerCase();
+      const matched = providerModels.find((m) => {
+        const name = typeof m === "string" ? m : m && m.name ? m.name : "";
+        return String(name).toLowerCase() === currentModelName;
+      });
+      const supportsAudioVideo = matched && matched.supportsAudioVideo === true;
+      const videoConfig = {
         ...baseConfig,
-        // Enable audio and video token processing for comprehensive analysis
-        useAudioVideoTokens: true,
         systemInstruction: {
           parts: [{
-            text: "You are an expert video content analyzer. Use both audio and visual information from videos to provide comprehensive analysis. Pay attention to slides, diagrams, text overlays, speaker gestures, and visual demonstrations in addition to spoken content."
+            text: `You are an expert video content analyzer. Provide comprehensive, multimodal analysis using:
+\u2022 AUDIO STREAM: Transcribe all spoken content, identify speakers, capture tone/emphasis/emotion
+\u2022 VIDEO STREAM: Analyze visual elements, text overlays, diagrams, slides, gestures, scene changes, and visual demonstrations
+\u2022 INTEGRATED INSIGHTS: Synthesize audio and visual data to provide complete understanding
+
+For best results:
+- Prioritize accuracy in transcription and speaker identification
+- Extract and explain key concepts shown visually
+- Note timing relationships between audio and visual elements
+- Identify visual cues that reinforce or clarify spoken content`
           }]
         }
       };
+      const gcsMatch = prompt.match(/(gs:\/\/[\w\-\.\/]+\.(?:mp4|mov|mkv|webm))/i);
+      if (gcsMatch && gcsMatch[1]) {
+        const gcsUri = gcsMatch[1];
+        videoConfig.contents = videoConfig.contents || [];
+        videoConfig.contents.push({
+          parts: [{ fileData: { fileUri: gcsUri, mimeType: "video/mp4" } }]
+        });
+      }
+      return videoConfig;
     }
     return baseConfig;
   }
@@ -3158,8 +3343,8 @@ var YouTubeProcessorPlugin = class extends import_obsidian7.Plugin {
       var _a;
       const aiService = (_a = this.serviceContainer) == null ? void 0 : _a.aiService;
       const providers = aiService ? aiService.getProviderNames() : [];
-      const modelOptionsMap = {};
-      if (aiService) {
+      const modelOptionsMap = this.settings.modelOptionsCache || {};
+      if (aiService && (!this.settings.modelOptionsCache || Object.keys(this.settings.modelOptionsCache).length === 0)) {
         for (const p of providers) {
           modelOptionsMap[p] = aiService.getProviderModels(p) || [];
         }
@@ -3168,7 +3353,17 @@ var YouTubeProcessorPlugin = class extends import_obsidian7.Plugin {
         onProcess: this.processYouTubeVideo.bind(this),
         onOpenFile: this.openFileByPath.bind(this),
         providers,
-        modelOptions: modelOptionsMap
+        modelOptions: modelOptionsMap,
+        fetchModels: async () => {
+          try {
+            const map = await this.serviceContainer.aiService.fetchLatestModels();
+            this.settings.modelOptionsCache = map;
+            await this.saveSettings();
+            return map;
+          } catch (error) {
+            return modelOptionsMap;
+          }
+        }
       }).open();
     }, "YouTube URL Modal").catch((error) => {
       ErrorHandler.handle(error, "Opening YouTube URL modal");
