@@ -14,7 +14,7 @@ export interface YouTubePluginSettings {
     customPrompts?: Record<OutputFormat, string>;
 }
 
-export type OutputFormat = 'executive-summary' | 'detailed-guide' | 'brief';
+export type OutputFormat = 'executive-summary' | 'detailed-guide' | 'brief' | 'custom';
 
 export interface ProcessingOptions {
     format: OutputFormat;

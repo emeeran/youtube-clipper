@@ -11,7 +11,7 @@ import { ErrorHandler } from '../../utils/error-handler';
 import { OutputFormat } from '../../interfaces/types';
 
 export interface YouTubeUrlModalOptions {
-    onProcess: (url: string, format: OutputFormat, provider?: string, model?: string) => Promise<string>; // Return file path
+    onProcess: (url: string, format: OutputFormat, provider?: string, model?: string, customPrompt?: string) => Promise<string>; // Return file path
     onOpenFile?: (filePath: string) => Promise<void>;
     initialUrl?: string;
     providers?: string[]; // available provider names
@@ -48,6 +48,8 @@ export class YouTubeUrlModal extends BaseModal {
     private currentStepIndex = 0;
     private isProcessing = false;
     private processedFilePath?: string;
+    private customPromptInput?: HTMLTextAreaElement;
+    private customPromptContainer?: HTMLDivElement;
     
     // Performance optimization: debounced validation
     private validationTimer?: number;
@@ -427,8 +429,69 @@ export class YouTubeUrlModal extends BaseModal {
         briefRadio.addEventListener('change', (e) => {
             if ((e.target as HTMLInputElement).checked) {
                 this.format = 'brief';
+                this.customPromptContainer!.style.display = 'none';
             }
         });
+
+        // Custom radio button
+        const customContainer = radioContainer.createDiv();
+        customContainer.style.display = 'flex';
+        customContainer.style.alignItems = 'center';
+        customContainer.style.gap = '8px';
+
+        const customRadio = customContainer.createEl('input');
+        customRadio.type = 'radio';
+        customRadio.name = 'outputFormat';
+        customRadio.value = 'custom';
+        customRadio.id = 'custom-radio';
+        customRadio.checked = this.format === 'custom';
+        customRadio.setAttribute('aria-label', 'Custom prompt format');
+
+        const customLabel = customContainer.createEl('label');
+        customLabel.setAttribute('for', 'custom-radio');
+        customLabel.textContent = 'Custom';
+        customLabel.style.cursor = 'pointer';
+
+        customRadio.addEventListener('change', (e) => {
+            if ((e.target as HTMLInputElement).checked) {
+                this.format = 'custom';
+                this.customPromptContainer!.style.display = 'block';
+                this.customPromptInput!.focus();
+            }
+        });
+
+        // Create custom prompt textarea (initially hidden)
+        this.customPromptContainer = container.createDiv();
+        this.customPromptContainer.style.marginTop = '12px';
+        this.customPromptContainer.style.display = 'none';
+        
+        const customPromptLabel = this.customPromptContainer.createEl('label', {
+            text: 'Custom Prompt (this session only):'
+        });
+        customPromptLabel.setAttribute('for', 'custom-prompt-input');
+        customPromptLabel.style.display = 'block';
+        customPromptLabel.style.marginBottom = '6px';
+        customPromptLabel.style.fontWeight = '500';
+
+        this.customPromptInput = this.customPromptContainer.createEl('textarea');
+        this.customPromptInput.id = 'custom-prompt-input';
+        this.customPromptInput.setAttribute('aria-label', 'Custom AI prompt');
+        this.customPromptInput.setAttribute('placeholder', 'Enter your custom prompt here. Available placeholders: __VIDEO_TITLE__, __VIDEO_DESCRIPTION__, __VIDEO_URL__');
+        this.customPromptInput.style.width = '100%';
+        this.customPromptInput.style.height = '100px';
+        this.customPromptInput.style.padding = '8px';
+        this.customPromptInput.style.fontFamily = 'monospace';
+        this.customPromptInput.style.fontSize = '12px';
+        this.customPromptInput.style.border = '1px solid var(--background-modifier-border)';
+        this.customPromptInput.style.borderRadius = '4px';
+        this.customPromptInput.style.resize = 'vertical';
+
+        const helpText = this.customPromptContainer.createEl('small');
+        helpText.textContent = 'Placeholders: __VIDEO_TITLE__, __VIDEO_DESCRIPTION__, __VIDEO_URL__, __VIDEO_ID__, __EMBED_URL__, __DATE__, __TIMESTAMP__';
+        helpText.style.display = 'block';
+        helpText.style.marginTop = '4px';
+        helpText.style.color = 'var(--text-muted)';
+        helpText.style.fontSize = '11px';
     }
 
     /**
@@ -706,11 +769,13 @@ export class YouTubeUrlModal extends BaseModal {
             this.updateProgress(60, 'Analyzing video content...');
             
             // Call the actual processing function (pass provider/model selection)
+            const customPrompt = this.format === 'custom' ? this.customPromptInput?.value : undefined;
             const filePath = await this.options.onProcess(
                 trimmedUrl,
                 this.format,
                 this.selectedProvider,
-                this.selectedModel
+                this.selectedModel,
+                customPrompt
             );
             this.setStepState(2, 'complete');
             this.setStepState(3, 'active');

@@ -4,7 +4,7 @@
  */
 
 import { App, PluginSettingTab, Setting } from 'obsidian';
-import { YouTubePluginSettings } from '../../interfaces/types';
+import { YouTubePluginSettings, OutputFormat } from '../../interfaces/types';
 import { MESSAGES } from '../../constants/messages';
 import { ValidationUtils } from '../../utils/validation';
 import { ErrorHandler } from '../../utils/error-handler';
@@ -219,14 +219,15 @@ export class YouTubeSettingsTab extends PluginSettingTab {
         
         // Initialize custom prompts if not present
         if (!this.settings.customPrompts) {
-            this.settings.customPrompts = {} as Record<'executive-summary' | 'detailed-guide' | 'brief', string>;
+            this.settings.customPrompts = {} as Record<OutputFormat, string>;
         }
         
         // For each output format
-        const formats: Array<'executive-summary' | 'detailed-guide' | 'brief'> = [
+        const formats: Array<OutputFormat> = [
             'executive-summary',
             'detailed-guide',
-            'brief'
+            'brief',
+            'custom'
         ];
         
         formats.forEach(format => {
@@ -277,7 +278,7 @@ export class YouTubeSettingsTab extends PluginSettingTab {
             textarea.addEventListener('change', async () => {
                 if (textarea.value.trim()) {
                     if (!this.settings.customPrompts) {
-                        this.settings.customPrompts = {} as Record<'executive-summary' | 'detailed-guide' | 'brief', string>;
+                        this.settings.customPrompts = {} as Record<OutputFormat, string>;
                     }
                     this.settings.customPrompts[format] = textarea.value;
                 } else if (this.settings.customPrompts) {

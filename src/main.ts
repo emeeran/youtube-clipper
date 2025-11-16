@@ -156,7 +156,7 @@ export default class YouTubeProcessorPlugin extends Plugin {
         });
     }
 
-    private async processYouTubeVideo(url: string, format: OutputFormat = 'detailed-guide', providerName?: string, model?: string): Promise<string> {
+    private async processYouTubeVideo(url: string, format: OutputFormat = 'detailed-guide', providerName?: string, model?: string, customPrompt?: string): Promise<string> {
         if (this.isUnloading) {
             ConflictPrevention.log('Plugin is unloading, cancelling video processing');
             throw new Error('Plugin is shutting down');
@@ -181,8 +181,14 @@ export default class YouTubeProcessorPlugin extends Plugin {
             }
 
             const videoData = await youtubeService.getVideoData(videoId);
-            const customPrompt = this.settings.customPrompts?.[format];
-            const prompt = promptService.createAnalysisPrompt(videoData, url, format, customPrompt);
+            // For 'custom' format, use the provided custom prompt; otherwise check settings
+            let promptToUse: string | undefined;
+            if (format === 'custom') {
+                promptToUse = customPrompt;
+            } else {
+                promptToUse = this.settings.customPrompts?.[format];
+            }
+            const prompt = promptService.createAnalysisPrompt(videoData, url, format, promptToUse);
             let aiResponse;
             if (providerName) {
                 // Use selected provider and optional model override
