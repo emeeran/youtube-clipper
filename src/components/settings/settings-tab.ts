@@ -137,6 +137,7 @@ export class YouTubeSettingsTab extends PluginSettingTab {
                 // Use password-like input
                 const inputEl = text
                     .setPlaceholder('sk-... (your key is encrypted)')
+                    .setValue(this.settings.geminiApiKey || '')
                     .onChange(async (value) => {
                         await this.updateSetting('geminiApiKey', value);
                     })
@@ -163,6 +164,7 @@ export class YouTubeSettingsTab extends PluginSettingTab {
                 // Use password-like input
                 const inputEl = text
                     .setPlaceholder('gsk_... (your key is encrypted)')
+                    .setValue(this.settings.groqApiKey || '')
                     .onChange(async (value) => {
                         await this.updateSetting('groqApiKey', value);
                     })
