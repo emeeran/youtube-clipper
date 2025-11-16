@@ -17,7 +17,7 @@
         "transcript",
         "ai"
     ],
-    "author": "Your Name",
+    "author": "YouTubeClipper Team",
     "license": "MIT",
     "devDependencies": {
         "@types/node": "^16.11.6",
