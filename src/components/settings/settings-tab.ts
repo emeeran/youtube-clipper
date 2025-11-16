@@ -217,8 +217,7 @@ export class YouTubeSettingsTab extends PluginSettingTab {
      * Add show/hide toggle for sensitive API keys
      */
     private addKeyToggle(setting: Setting, keyValue: string): void {
-        if (!keyValue) return;
-
+        // Always add toggle button, even if key is empty (user might be entering it now)
         const toggleBtn = setting.addButton(btn => btn
             .setButtonText('👁️ Show')
             .setTooltip('Toggle key visibility')
