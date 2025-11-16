@@ -125,8 +125,9 @@ export default class YouTubeProcessorPlugin extends Plugin {
             // Provide available AI providers and model options to the modal for selection
             const aiService = this.serviceContainer?.aiService;
             const providers = aiService ? aiService.getProviderNames() : [];
-            const modelOptionsMap: Record<string, string[]> = {};
-            if (aiService) {
+            // Prefer cached model options from settings if available
+            const modelOptionsMap: Record<string, string[]> = this.settings.modelOptionsCache || {};
+            if (aiService && (!this.settings.modelOptionsCache || Object.keys(this.settings.modelOptionsCache).length === 0)) {
                 for (const p of providers) {
                     modelOptionsMap[p] = aiService.getProviderModels(p) || [];
                 }
@@ -136,7 +137,19 @@ export default class YouTubeProcessorPlugin extends Plugin {
                 onProcess: this.processYouTubeVideo.bind(this),
                 onOpenFile: this.openFileByPath.bind(this),
                 providers,
-                modelOptions: modelOptionsMap
+                modelOptions: modelOptionsMap,
+                fetchModels: async () => {
+                    // Ask the aiService to try to fetch latest models for all providers
+                    try {
+                        const map = await (this.serviceContainer!.aiService as any).fetchLatestModels();
+                        // Persist to settings so future modal opens use cached lists
+                        this.settings.modelOptionsCache = map;
+                        await this.saveSettings();
+                        return map;
+                    } catch (error) {
+                        return modelOptionsMap;
+                    }
+                }
             }).open();
         }, 'YouTube URL Modal').catch((error) => {
             ErrorHandler.handle(error as Error, 'Opening YouTube URL modal');

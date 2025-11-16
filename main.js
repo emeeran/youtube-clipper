@@ -7,6 +7,9 @@ var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __esm = (fn, res) => function __init() {
+  return fn && (res = (0, fn[__getOwnPropNames(fn)[0]])(fn = 0)), res;
+};
 var __export = (target, all) => {
   for (var name in all)
     __defProp(target, name, { get: all[name], enumerable: true });
@@ -20,6 +23,516 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+// src/constants/styles.ts
+var MODAL_STYLES, INPUT_STYLES;
+var init_styles = __esm({
+  "src/constants/styles.ts"() {
+    MODAL_STYLES = {
+      zIndex: "10000",
+      display: "flex",
+      header: {
+        marginBottom: "15px",
+        color: "var(--text-accent)"
+      },
+      message: {
+        marginBottom: "20px",
+        lineHeight: "1.5"
+      },
+      buttonContainer: {
+        marginTop: "20px",
+        display: "flex",
+        gap: "10px",
+        justifyContent: "flex-end"
+      },
+      button: {
+        padding: "8px 16px",
+        minWidth: "100px"
+      }
+    };
+    INPUT_STYLES = {
+      width: "100%",
+      marginTop: "8px",
+      padding: "8px",
+      border: "1px solid var(--background-modifier-border)",
+      borderRadius: "4px"
+    };
+  }
+});
+
+// src/utils/dom.ts
+var DOMUtils;
+var init_dom = __esm({
+  "src/utils/dom.ts"() {
+    init_styles();
+    DOMUtils = class {
+      /**
+       * Apply styles to an HTML element
+       */
+      static applyStyles(element, styles) {
+        Object.assign(element.style, styles);
+      }
+      /**
+       * Create a standardized button container
+       */
+      static createButtonContainer(parent) {
+        const container = parent.createDiv();
+        this.applyStyles(container, MODAL_STYLES.buttonContainer);
+        return container;
+      }
+      /**
+       * Create a styled button with consistent appearance
+       */
+      static createStyledButton(container, text, isPrimary = false, onClick) {
+        const button = container.createEl("button", { text });
+        if (isPrimary) {
+          button.classList.add("mod-cta");
+        }
+        this.applyStyles(button, MODAL_STYLES.button);
+        if (onClick) {
+          button.addEventListener("click", onClick);
+        }
+        return button;
+      }
+      /**
+       * Create a styled input field
+       */
+      static createStyledInput(container, type, placeholder, value = "") {
+        const input = container.createEl("input", {
+          type,
+          placeholder,
+          value
+        });
+        this.applyStyles(input, INPUT_STYLES);
+        return input;
+      }
+      /**
+       * Set up modal base styling for consistency
+       */
+      static setupModalStyling(modalEl) {
+        this.applyStyles(modalEl, {
+          zIndex: MODAL_STYLES.zIndex,
+          display: MODAL_STYLES.display
+        });
+      }
+      /**
+       * Create a header element with consistent styling
+       */
+      static createModalHeader(parent, text) {
+        const header = parent.createEl("h2", { text });
+        this.applyStyles(header, MODAL_STYLES.header);
+        return header;
+      }
+      /**
+       * Create a message paragraph with consistent styling
+       */
+      static createModalMessage(parent, text) {
+        const message = parent.createEl("p");
+        message.setText(text);
+        this.applyStyles(message, MODAL_STYLES.message);
+        return message;
+      }
+      /**
+       * Set up keyboard event handlers for modals
+       */
+      static setupModalKeyHandlers(element, onEnter, onEscape) {
+        element.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            e.stopPropagation();
+            onEnter();
+          }
+          if (e.key === "Escape" && onEscape) {
+            e.preventDefault();
+            e.stopPropagation();
+            onEscape();
+          }
+        });
+      }
+      // Instance methods implementing interface
+      applyStyles(element, styles) {
+        DOMUtils.applyStyles(element, styles);
+      }
+      createButtonContainer(parent) {
+        return DOMUtils.createButtonContainer(parent);
+      }
+      createStyledButton(container, text, isPrimary = false, onClick) {
+        return DOMUtils.createStyledButton(container, text, isPrimary, onClick);
+      }
+    };
+  }
+});
+
+// src/constants/api.ts
+var API_ENDPOINTS, AI_MODELS, PROVIDER_MODEL_OPTIONS, PROVIDER_MODEL_LIST_URLS, PROVIDER_MODEL_REGEX, API_LIMITS, TIMEOUTS;
+var init_api = __esm({
+  "src/constants/api.ts"() {
+    API_ENDPOINTS = {
+      GEMINI: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent",
+      GROQ: "https://api.groq.com/openai/v1/chat/completions",
+      YOUTUBE_OEMBED: "https://www.youtube.com/oembed",
+      CORS_PROXY: "https://api.allorigins.win/raw"
+    };
+    AI_MODELS = {
+      GEMINI: "gemini-2.5-pro",
+      // Set Gemini model to gemini-2.5-pro
+      GROQ: "llama-3.3-70b-versatile"
+    };
+    PROVIDER_MODEL_OPTIONS = {
+      "Google Gemini": [
+        // Gemini 2.5 series (latest, all support multimodal video analysis)
+        { name: "gemini-2.5-pro", supportsAudioVideo: true },
+        { name: "gemini-2.5-pro-tts", supportsAudioVideo: true },
+        { name: "gemini-2.5-flash", supportsAudioVideo: true },
+        { name: "gemini-2.5-flash-lite", supportsAudioVideo: true },
+        // Gemini 2.0 series (video support via native API, but no explicit multimodal flag)
+        { name: "gemini-2.0-pro", supportsAudioVideo: true },
+        { name: "gemini-2.0-flash" },
+        { name: "gemini-2.0-flash-lite" },
+        // Gemini 1.5 series (available, supports video via File API)
+        { name: "gemini-1.5-pro" },
+        { name: "gemini-1.5-flash" }
+      ],
+      "Groq": [
+        // Latest models (Nov 2024 - Nov 2025)
+        // Note: Groq models prioritize speed/text; for multimodal video, Gemini is recommended
+        { name: "llama-4-maverick-17b-128e-instruct" },
+        { name: "llama-4-scout-17b-16e-instruct" },
+        // Llama 3.x series
+        { name: "llama-3.3-70b-versatile" },
+        { name: "llama-3.1-8b-instant" }
+      ]
+    };
+    PROVIDER_MODEL_LIST_URLS = {
+      "Google Gemini": "https://developers.generativeai.google/models",
+      "Groq": "https://groq.com"
+    };
+    PROVIDER_MODEL_REGEX = {
+      "Google Gemini": /gemini[-_\.]?\d+(?:\.\d+)?(?:-[a-z0-9\-]+)?/gi,
+      "Groq": /llama[-_\.]?\d+(?:\.\d+)?(?:-[a-z0-9\-]+)?/gi
+    };
+    API_LIMITS = {
+      MAX_TOKENS: 2e3,
+      TEMPERATURE: 0.7,
+      DESCRIPTION_MAX_LENGTH: 1e3,
+      TITLE_MAX_LENGTH: 100
+    };
+    TIMEOUTS = {
+      FILE_CREATION_WAIT: 300,
+      MODAL_DELAY: 100,
+      FALLBACK_MODAL_CHECK: 500,
+      FOCUS_DELAY: 150,
+      REPAINT_DELAY: 50
+    };
+  }
+});
+
+// src/components/modals/confirmation-modal.ts
+var confirmation_modal_exports = {};
+__export(confirmation_modal_exports, {
+  ConfirmationModal: () => ConfirmationModal
+});
+var ConfirmationModal;
+var init_confirmation_modal = __esm({
+  "src/components/modals/confirmation-modal.ts"() {
+    init_base_modal();
+    ConfirmationModal = class extends BaseModal {
+      constructor(app, options) {
+        super(app);
+        this.options = options;
+        this.result = false;
+      }
+      onOpen() {
+        this.createModalContent();
+        this.setupEventHandlers();
+        this.focusConfirmButton();
+      }
+      /**
+       * Create modal content with accessible structure
+       */
+      createModalContent() {
+        const header = this.createHeader(this.options.title);
+        header.setAttribute("id", "confirmation-modal-title");
+        const messageContainer = this.contentEl.createDiv("confirmation-message");
+        messageContainer.setAttribute("id", "confirmation-modal-description");
+        messageContainer.textContent = this.options.message;
+        const buttonContainer = this.createButtonContainer();
+        buttonContainer.style.marginTop = "20px";
+        const confirmText = this.options.confirmText || "Confirm";
+        const cancelText = this.options.cancelText || "Cancel";
+        const isDangerous = this.options.isDangerous || false;
+        if (isDangerous) {
+          this.cancelButton = this.createButton(
+            buttonContainer,
+            cancelText,
+            false,
+            () => this.handleCancel()
+          );
+          this.cancelButton.setAttribute("aria-label", `Cancel: ${cancelText}`);
+          this.confirmButton = this.createButton(
+            buttonContainer,
+            confirmText,
+            true,
+            () => this.handleConfirm()
+          );
+          this.confirmButton.setAttribute("aria-label", `Confirm: ${confirmText}`);
+        } else {
+          this.confirmButton = this.createButton(
+            buttonContainer,
+            confirmText,
+            true,
+            () => this.handleConfirm()
+          );
+          this.confirmButton.setAttribute("aria-label", `Confirm: ${confirmText}`);
+          this.cancelButton = this.createButton(
+            buttonContainer,
+            cancelText,
+            false,
+            () => this.handleCancel()
+          );
+          this.cancelButton.setAttribute("aria-label", `Cancel: ${cancelText}`);
+        }
+        this.contentEl.setAttribute("aria-labelledby", "confirmation-modal-title");
+        this.contentEl.setAttribute("aria-describedby", "confirmation-modal-description");
+        this.contentEl.setAttribute("role", "alertdialog");
+      }
+      /**
+       * Set up keyboard event handlers (Enter to confirm, Escape to cancel)
+       */
+      setupEventHandlers() {
+        this.scope.register([], "Enter", () => {
+          this.handleConfirm();
+          return false;
+        });
+        this.scope.register([], "Escape", () => {
+          this.handleCancel();
+          return false;
+        });
+      }
+      /**
+       * Focus the confirm button by default
+       */
+      focusConfirmButton() {
+        if (this.confirmButton) {
+          setTimeout(() => {
+            this.confirmButton.focus();
+          }, 50);
+        }
+      }
+      /**
+       * Handle confirmation (Confirm button or Enter key)
+       */
+      handleConfirm() {
+        this.result = true;
+        if (this.resolver) {
+          this.resolver(true);
+        }
+        this.close();
+      }
+      /**
+       * Handle cancellation (Cancel button or Escape key)
+       */
+      handleCancel() {
+        this.result = false;
+        if (this.resolver) {
+          this.resolver(false);
+        }
+        this.close();
+      }
+      /**
+       * Open modal and wait for user response
+       * Returns promise that resolves to true if confirmed, false if cancelled
+       */
+      openAndWait() {
+        return new Promise((resolve) => {
+          this.resolver = resolve;
+          this.open();
+        });
+      }
+      /**
+       * Get the result (synchronous if already closed)
+       */
+      getResult() {
+        return this.result;
+      }
+    };
+  }
+});
+
+// src/components/modals/base-modal.ts
+var import_obsidian3, MODAL_CSS_CLASSES, BaseModal;
+var init_base_modal = __esm({
+  "src/components/modals/base-modal.ts"() {
+    import_obsidian3 = require("obsidian");
+    init_dom();
+    init_styles();
+    init_api();
+    MODAL_CSS_CLASSES = {
+      modal: "ytc-modal",
+      header: "ytc-modal-header",
+      content: "ytc-modal-content",
+      button: "ytc-modal-button",
+      input: "ytc-modal-input"
+    };
+    BaseModal = class extends import_obsidian3.Modal {
+      constructor(app) {
+        super(app);
+        this.events = {};
+        this.isDisposed = false;
+        this.setupModalStyling();
+        this.setupConflictPrevention();
+      }
+      /**
+       * Set up base modal styling for consistency
+       */
+      setupModalStyling() {
+        DOMUtils.setupModalStyling(this.modalEl);
+        this.modalEl.addClass(MODAL_CSS_CLASSES.modal);
+        this.contentEl.addClass(MODAL_CSS_CLASSES.content);
+      }
+      /**
+       * Set up conflict prevention measures
+       */
+      setupConflictPrevention() {
+        this.modalEl.setAttribute("data-plugin", "youtube-clipper");
+        this.modalEl.style.zIndex = "9999";
+      }
+      /**
+       * Create standardized modal header with conflict prevention
+       */
+      createHeader(text) {
+        const header = DOMUtils.createModalHeader(this.contentEl, text);
+        header.addClass(MODAL_CSS_CLASSES.header);
+        return header;
+      }
+      /**
+       * Create standardized modal message
+       */
+      createMessage(text) {
+        return DOMUtils.createModalMessage(this.contentEl, text);
+      }
+      /**
+       * Create standardized button container
+       */
+      createButtonContainer() {
+        return DOMUtils.createButtonContainer(this.contentEl);
+      }
+      /**
+      * Create standardized button with conflict prevention and accessibility
+      */
+      createButton(container, text, isPrimary = false, onClick) {
+        const button = DOMUtils.createStyledButton(container, text, isPrimary, onClick);
+        button.addClass(MODAL_CSS_CLASSES.button);
+        button.setAttribute("data-plugin", "youtube-clipper");
+        button.setAttribute("role", "button");
+        if (!button.getAttribute("aria-label")) {
+          button.setAttribute("aria-label", text);
+        }
+        return button;
+      }
+      /**
+       * Create standardized input with conflict prevention and accessibility
+       */
+      createInput(container, type, placeholder) {
+        const input = container.createEl("input", {
+          type,
+          placeholder
+        });
+        DOMUtils.applyStyles(input, INPUT_STYLES);
+        input.addClass(MODAL_CSS_CLASSES.input);
+        input.setAttribute("data-plugin", "youtube-clipper");
+        if (placeholder) {
+          input.setAttribute("aria-label", placeholder);
+        }
+        return input;
+      }
+      /**
+       * Set up keyboard event handlers
+       */
+      setupKeyHandlers(onEnter, onEscape) {
+        const wrappedOnEnter = async () => {
+          try {
+            await onEnter();
+          } catch (error) {
+            console.error("Enter key handler error:", error);
+          }
+        };
+        const wrappedOnEscape = onEscape ? async () => {
+          try {
+            await onEscape();
+          } catch (error) {
+            console.error("Escape key handler error:", error);
+          }
+        } : void 0;
+        DOMUtils.setupModalKeyHandlers(this.contentEl, wrappedOnEnter, wrappedOnEscape);
+      }
+      /**
+       * Focus element with delay for better UX
+       */
+      focusElement(element, delay = TIMEOUTS.FOCUS_DELAY) {
+        setTimeout(() => {
+          element.focus();
+        }, delay);
+      }
+      /**
+       * Set up event handlers
+       */
+      setEvents(events) {
+        this.events = events;
+      }
+      /**
+       * Show custom styled confirmation dialog before closing
+       * This uses our custom ConfirmationModal instead of the native browser confirm()
+       * for better accessibility and UX.
+       * 
+       * Note: This is now synchronous for backwards compatibility with existing callers,
+       * but returns a boolean immediately. For async confirmation with proper modal,
+       * use showConfirmationModal() instead.
+       */
+      confirmClose(message) {
+        return confirm(message);
+      }
+      /**
+       * Show a custom accessible confirmation modal and wait for user response.
+       * Preferred method for confirmation dialogs (async, fully accessible).
+       */
+      async showConfirmationModal(title, message, confirmText = "Confirm", cancelText = "Cancel", isDangerous = false) {
+        const { ConfirmationModal: ConfirmationModal2 } = await Promise.resolve().then(() => (init_confirmation_modal(), confirmation_modal_exports));
+        const modal = new ConfirmationModal2(this.app, {
+          title,
+          message,
+          confirmText,
+          cancelText,
+          isDangerous
+        });
+        return modal.openAndWait();
+      }
+      /**
+       * Force modal visibility (for stubborn modals)
+       */
+      forceVisible() {
+        setTimeout(() => {
+          DOMUtils.setupModalStyling(this.modalEl);
+        }, TIMEOUTS.REPAINT_DELAY);
+      }
+      /**
+       * Clean up on close with proper disposal
+       */
+      onClose() {
+        if (this.isDisposed) {
+          return;
+        }
+        console.log("[youtube-clipper] Cleaning up modal");
+        this.isDisposed = true;
+        const { contentEl } = this;
+        contentEl.empty();
+        this.modalEl.removeClass(MODAL_CSS_CLASSES.modal);
+        this.modalEl.removeAttribute("data-plugin");
+        console.log("[youtube-clipper] Modal cleanup complete");
+      }
+    };
+  }
+});
 
 // main.ts
 var main_exports = {};
@@ -579,336 +1092,8 @@ var SaveConfirmationModal = class extends import_obsidian2.Modal {
 
 // src/components/modals/youtube-url-modal.ts
 var import_obsidian4 = require("obsidian");
-
-// src/components/modals/base-modal.ts
-var import_obsidian3 = require("obsidian");
-
-// src/constants/styles.ts
-var MODAL_STYLES = {
-  zIndex: "10000",
-  display: "flex",
-  header: {
-    marginBottom: "15px",
-    color: "var(--text-accent)"
-  },
-  message: {
-    marginBottom: "20px",
-    lineHeight: "1.5"
-  },
-  buttonContainer: {
-    marginTop: "20px",
-    display: "flex",
-    gap: "10px",
-    justifyContent: "flex-end"
-  },
-  button: {
-    padding: "8px 16px",
-    minWidth: "100px"
-  }
-};
-var INPUT_STYLES = {
-  width: "100%",
-  marginTop: "8px",
-  padding: "8px",
-  border: "1px solid var(--background-modifier-border)",
-  borderRadius: "4px"
-};
-
-// src/utils/dom.ts
-var DOMUtils = class {
-  /**
-   * Apply styles to an HTML element
-   */
-  static applyStyles(element, styles) {
-    Object.assign(element.style, styles);
-  }
-  /**
-   * Create a standardized button container
-   */
-  static createButtonContainer(parent) {
-    const container = parent.createDiv();
-    this.applyStyles(container, MODAL_STYLES.buttonContainer);
-    return container;
-  }
-  /**
-   * Create a styled button with consistent appearance
-   */
-  static createStyledButton(container, text, isPrimary = false, onClick) {
-    const button = container.createEl("button", { text });
-    if (isPrimary) {
-      button.classList.add("mod-cta");
-    }
-    this.applyStyles(button, MODAL_STYLES.button);
-    if (onClick) {
-      button.addEventListener("click", onClick);
-    }
-    return button;
-  }
-  /**
-   * Create a styled input field
-   */
-  static createStyledInput(container, type, placeholder, value = "") {
-    const input = container.createEl("input", {
-      type,
-      placeholder,
-      value
-    });
-    this.applyStyles(input, INPUT_STYLES);
-    return input;
-  }
-  /**
-   * Set up modal base styling for consistency
-   */
-  static setupModalStyling(modalEl) {
-    this.applyStyles(modalEl, {
-      zIndex: MODAL_STYLES.zIndex,
-      display: MODAL_STYLES.display
-    });
-  }
-  /**
-   * Create a header element with consistent styling
-   */
-  static createModalHeader(parent, text) {
-    const header = parent.createEl("h2", { text });
-    this.applyStyles(header, MODAL_STYLES.header);
-    return header;
-  }
-  /**
-   * Create a message paragraph with consistent styling
-   */
-  static createModalMessage(parent, text) {
-    const message = parent.createEl("p");
-    message.setText(text);
-    this.applyStyles(message, MODAL_STYLES.message);
-    return message;
-  }
-  /**
-   * Set up keyboard event handlers for modals
-   */
-  static setupModalKeyHandlers(element, onEnter, onEscape) {
-    element.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        e.stopPropagation();
-        onEnter();
-      }
-      if (e.key === "Escape" && onEscape) {
-        e.preventDefault();
-        e.stopPropagation();
-        onEscape();
-      }
-    });
-  }
-  // Instance methods implementing interface
-  applyStyles(element, styles) {
-    DOMUtils.applyStyles(element, styles);
-  }
-  createButtonContainer(parent) {
-    return DOMUtils.createButtonContainer(parent);
-  }
-  createStyledButton(container, text, isPrimary = false, onClick) {
-    return DOMUtils.createStyledButton(container, text, isPrimary, onClick);
-  }
-};
-
-// src/constants/api.ts
-var API_ENDPOINTS = {
-  GEMINI: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent",
-  GROQ: "https://api.groq.com/openai/v1/chat/completions",
-  YOUTUBE_OEMBED: "https://www.youtube.com/oembed",
-  CORS_PROXY: "https://api.allorigins.win/raw"
-};
-var AI_MODELS = {
-  GEMINI: "gemini-2.5-pro",
-  // Set Gemini model to gemini-2.5-pro
-  GROQ: "llama-3.3-70b-versatile"
-};
-var PROVIDER_MODEL_OPTIONS = {
-  "Google Gemini": [
-    // Gemini 2.5 series (latest, all support multimodal video analysis)
-    { name: "gemini-2.5-pro", supportsAudioVideo: true },
-    { name: "gemini-2.5-pro-tts", supportsAudioVideo: true },
-    { name: "gemini-2.5-flash", supportsAudioVideo: true },
-    { name: "gemini-2.5-flash-lite", supportsAudioVideo: true },
-    // Gemini 2.0 series (video support via native API, but no explicit multimodal flag)
-    { name: "gemini-2.0-pro", supportsAudioVideo: true },
-    { name: "gemini-2.0-flash" },
-    { name: "gemini-2.0-flash-lite" },
-    // Gemini 1.5 series (available, supports video via File API)
-    { name: "gemini-1.5-pro" },
-    { name: "gemini-1.5-flash" }
-  ],
-  "Groq": [
-    // Latest models (Nov 2024 - Nov 2025)
-    // Note: Groq models prioritize speed/text; for multimodal video, Gemini is recommended
-    { name: "llama-4-maverick-17b-128e-instruct" },
-    { name: "llama-4-scout-17b-16e-instruct" },
-    // Llama 3.x series
-    { name: "llama-3.3-70b-versatile" },
-    { name: "llama-3.1-8b-instant" }
-  ]
-};
-var PROVIDER_MODEL_LIST_URLS = {
-  "Google Gemini": "https://developers.generativeai.google/models",
-  "Groq": "https://groq.com"
-};
-var PROVIDER_MODEL_REGEX = {
-  "Google Gemini": /gemini[-_\.]?\d+(?:\.\d+)?(?:-[a-z0-9\-]+)?/gi,
-  "Groq": /llama[-_\.]?\d+(?:\.\d+)?(?:-[a-z0-9\-]+)?/gi
-};
-var API_LIMITS = {
-  MAX_TOKENS: 2e3,
-  TEMPERATURE: 0.7,
-  DESCRIPTION_MAX_LENGTH: 1e3,
-  TITLE_MAX_LENGTH: 100
-};
-var TIMEOUTS = {
-  FILE_CREATION_WAIT: 300,
-  MODAL_DELAY: 100,
-  FALLBACK_MODAL_CHECK: 500,
-  FOCUS_DELAY: 150,
-  REPAINT_DELAY: 50
-};
-
-// src/components/modals/base-modal.ts
-var MODAL_CSS_CLASSES = {
-  modal: "ytc-modal",
-  header: "ytc-modal-header",
-  content: "ytc-modal-content",
-  button: "ytc-modal-button",
-  input: "ytc-modal-input"
-};
-var BaseModal = class extends import_obsidian3.Modal {
-  constructor(app) {
-    super(app);
-    this.events = {};
-    this.isDisposed = false;
-    this.setupModalStyling();
-    this.setupConflictPrevention();
-  }
-  /**
-   * Set up base modal styling for consistency
-   */
-  setupModalStyling() {
-    DOMUtils.setupModalStyling(this.modalEl);
-    this.modalEl.addClass(MODAL_CSS_CLASSES.modal);
-    this.contentEl.addClass(MODAL_CSS_CLASSES.content);
-  }
-  /**
-   * Set up conflict prevention measures
-   */
-  setupConflictPrevention() {
-    this.modalEl.setAttribute("data-plugin", "youtube-clipper");
-    this.modalEl.style.zIndex = "9999";
-  }
-  /**
-   * Create standardized modal header with conflict prevention
-   */
-  createHeader(text) {
-    const header = DOMUtils.createModalHeader(this.contentEl, text);
-    header.addClass(MODAL_CSS_CLASSES.header);
-    return header;
-  }
-  /**
-   * Create standardized modal message
-   */
-  createMessage(text) {
-    return DOMUtils.createModalMessage(this.contentEl, text);
-  }
-  /**
-   * Create standardized button container
-   */
-  createButtonContainer() {
-    return DOMUtils.createButtonContainer(this.contentEl);
-  }
-  /**
-  * Create standardized button with conflict prevention
-  */
-  createButton(container, text, isPrimary = false, onClick) {
-    const button = DOMUtils.createStyledButton(container, text, isPrimary, onClick);
-    button.addClass(MODAL_CSS_CLASSES.button);
-    button.setAttribute("data-plugin", "youtube-clipper");
-    return button;
-  }
-  /**
-   * Create standardized input with conflict prevention
-   */
-  createInput(container, type, placeholder) {
-    const input = container.createEl("input", {
-      type,
-      placeholder
-    });
-    DOMUtils.applyStyles(input, INPUT_STYLES);
-    input.addClass(MODAL_CSS_CLASSES.input);
-    input.setAttribute("data-plugin", "youtube-clipper");
-    return input;
-  }
-  /**
-   * Set up keyboard event handlers
-   */
-  setupKeyHandlers(onEnter, onEscape) {
-    const wrappedOnEnter = async () => {
-      try {
-        await onEnter();
-      } catch (error) {
-        console.error("Enter key handler error:", error);
-      }
-    };
-    const wrappedOnEscape = onEscape ? async () => {
-      try {
-        await onEscape();
-      } catch (error) {
-        console.error("Escape key handler error:", error);
-      }
-    } : void 0;
-    DOMUtils.setupModalKeyHandlers(this.contentEl, wrappedOnEnter, wrappedOnEscape);
-  }
-  /**
-   * Focus element with delay for better UX
-   */
-  focusElement(element, delay = TIMEOUTS.FOCUS_DELAY) {
-    setTimeout(() => {
-      element.focus();
-    }, delay);
-  }
-  /**
-   * Set up event handlers
-   */
-  setEvents(events) {
-    this.events = events;
-  }
-  /**
-   * Show confirmation dialog before closing
-   */
-  confirmClose(message) {
-    return confirm(message);
-  }
-  /**
-   * Force modal visibility (for stubborn modals)
-   */
-  forceVisible() {
-    setTimeout(() => {
-      DOMUtils.setupModalStyling(this.modalEl);
-    }, TIMEOUTS.REPAINT_DELAY);
-  }
-  /**
-   * Clean up on close with proper disposal
-   */
-  onClose() {
-    if (this.isDisposed) {
-      return;
-    }
-    console.log("[youtube-clipper] Cleaning up modal");
-    this.isDisposed = true;
-    const { contentEl } = this;
-    contentEl.empty();
-    this.modalEl.removeClass(MODAL_CSS_CLASSES.modal);
-    this.modalEl.removeAttribute("data-plugin");
-    console.log("[youtube-clipper] Modal cleanup complete");
-  }
-};
-
-// src/components/modals/youtube-url-modal.ts
+init_base_modal();
+init_api();
 var YouTubeUrlModal = class extends BaseModal {
   constructor(app, options) {
     super(app);
@@ -940,18 +1125,23 @@ var YouTubeUrlModal = class extends BaseModal {
   createProviderSelectionSection() {
     const container = this.contentEl.createDiv();
     container.style.marginTop = "10px";
-    container.createEl("label", { text: "AI Provider & Model:" });
+    const label = container.createEl("label", { text: "AI Provider & Model:" });
+    label.setAttribute("for", "ytc-provider-select");
     const row = container.createDiv();
     row.style.display = "flex";
     row.style.gap = "8px";
     row.style.alignItems = "center";
     this.providerSelect = document.createElement("select");
+    this.providerSelect.id = "ytc-provider-select";
+    this.providerSelect.setAttribute("aria-label", "AI Provider");
     this.providerSelect.style.flex = "1";
     this.providerSelect.style.padding = "6px";
     this.providerSelect.style.borderRadius = "6px";
     this.providerSelect.style.border = "1px solid var(--background-modifier-border)";
     row.appendChild(this.providerSelect);
     this.modelSelect = document.createElement("select");
+    this.modelSelect.id = "ytc-model-select";
+    this.modelSelect.setAttribute("aria-label", "AI Model");
     this.modelSelect.style.width = "220px";
     this.modelSelect.style.padding = "6px";
     this.modelSelect.style.borderRadius = "6px";
@@ -1079,7 +1269,8 @@ var YouTubeUrlModal = class extends BaseModal {
    */
   createUrlInputSection() {
     const container = this.contentEl.createDiv();
-    container.createEl("label", { text: "YouTube URL:" });
+    const label = container.createEl("label", { text: "YouTube URL:" });
+    label.setAttribute("for", "ytc-url-input");
     const inputRow = container.createDiv();
     inputRow.style.display = "flex";
     inputRow.style.gap = "8px";
@@ -1089,14 +1280,19 @@ var YouTubeUrlModal = class extends BaseModal {
       "url",
       MESSAGES.PLACEHOLDERS.YOUTUBE_URL + " (Press Enter to process)"
     );
+    this.urlInput.id = "ytc-url-input";
+    this.urlInput.setAttribute("aria-label", "YouTube URL");
+    this.urlInput.setAttribute("aria-describedby", "ytc-url-hint");
     this.urlInput.style.flex = "1";
     this.urlInput.style.transition = "border-color 0.2s ease, box-shadow 0.2s ease";
     this.pasteButton = this.createInlineButton(inputRow, "Paste", () => {
       void this.handlePasteFromClipboard();
     });
+    this.pasteButton.setAttribute("aria-label", "Paste YouTube URL from clipboard");
     this.clearButton = this.createInlineButton(inputRow, "Clear", () => {
       this.handleClearUrl();
     });
+    this.clearButton.setAttribute("aria-label", "Clear YouTube URL input");
     if (this.options.initialUrl) {
       this.urlInput.value = this.options.initialUrl;
       this.url = this.options.initialUrl;
@@ -1107,9 +1303,11 @@ var YouTubeUrlModal = class extends BaseModal {
       this.updateQuickActionsState();
     });
     this.validationMessage = container.createDiv();
+    this.validationMessage.id = "ytc-url-hint";
     this.validationMessage.style.marginTop = "6px";
     this.validationMessage.style.fontSize = "0.85rem";
     this.validationMessage.style.color = "var(--text-muted)";
+    this.validationMessage.setAttribute("role", "status");
     this.setValidationMessage("Paste a YouTube link to begin processing.", "info");
     const preview = container.createDiv();
     preview.style.display = "flex";
@@ -1117,12 +1315,14 @@ var YouTubeUrlModal = class extends BaseModal {
     preview.style.alignItems = "center";
     preview.style.marginTop = "8px";
     this.thumbnailEl = preview.createEl("img");
+    this.thumbnailEl.setAttribute("aria-label", "Video thumbnail");
     this.thumbnailEl.style.width = "120px";
     this.thumbnailEl.style.height = "68px";
     this.thumbnailEl.style.objectFit = "cover";
     this.thumbnailEl.style.borderRadius = "4px";
     this.thumbnailEl.style.display = "none";
     this.metadataContainer = preview.createDiv();
+    this.metadataContainer.setAttribute("aria-label", "Video metadata");
     this.metadataContainer.style.display = "none";
     this.metadataContainer.style.fontSize = "0.9rem";
     this.metadataContainer.style.color = "var(--text-normal)";
@@ -1136,8 +1336,11 @@ var YouTubeUrlModal = class extends BaseModal {
    */
   createFormatSelectionSection() {
     const container = this.contentEl.createDiv();
-    container.createEl("label", { text: "Output Format:" });
+    const label = container.createEl("label", { text: "Output Format:" });
+    label.id = "format-group-label";
     const radioContainer = container.createDiv();
+    radioContainer.setAttribute("role", "group");
+    radioContainer.setAttribute("aria-labelledby", "format-group-label");
     radioContainer.style.marginTop = "8px";
     radioContainer.style.display = "flex";
     radioContainer.style.gap = "20px";
@@ -1151,6 +1354,7 @@ var YouTubeUrlModal = class extends BaseModal {
     executiveRadio.value = "executive-summary";
     executiveRadio.id = "executive-radio";
     executiveRadio.checked = this.format === "executive-summary";
+    executiveRadio.setAttribute("aria-label", "Executive Summary format");
     const executiveLabel = executiveContainer.createEl("label");
     executiveLabel.setAttribute("for", "executive-radio");
     executiveLabel.textContent = "Executive";
@@ -1165,6 +1369,7 @@ var YouTubeUrlModal = class extends BaseModal {
     tutorialRadio.value = "detailed-guide";
     tutorialRadio.id = "tutorial-radio";
     tutorialRadio.checked = this.format === "detailed-guide";
+    tutorialRadio.setAttribute("aria-label", "Detailed Guide format");
     const tutorialLabel = tutorialContainer.createEl("label");
     tutorialLabel.setAttribute("for", "tutorial-radio");
     tutorialLabel.textContent = "Tutorial";
@@ -1189,6 +1394,7 @@ var YouTubeUrlModal = class extends BaseModal {
     briefRadio.value = "brief";
     briefRadio.id = "brief-radio";
     briefRadio.checked = this.format === "brief";
+    briefRadio.setAttribute("aria-label", "Brief format");
     const briefLabel = briefContainer.createEl("label");
     briefLabel.setAttribute("for", "brief-radio");
     briefLabel.textContent = "Brief";
@@ -1204,14 +1410,23 @@ var YouTubeUrlModal = class extends BaseModal {
    */
   createProgressSection() {
     this.progressContainer = this.contentEl.createDiv();
+    this.progressContainer.setAttribute("role", "region");
+    this.progressContainer.setAttribute("aria-label", "Processing progress");
+    this.progressContainer.setAttribute("aria-live", "polite");
     this.progressContainer.style.marginTop = "16px";
     this.progressContainer.style.display = "none";
     this.progressText = this.progressContainer.createDiv();
+    this.progressText.id = "progress-text";
     this.progressText.style.marginBottom = "8px";
     this.progressText.style.fontWeight = "500";
     this.progressText.style.color = "var(--text-accent)";
     this.progressText.textContent = "Processing video...";
     const progressBarContainer = this.progressContainer.createDiv();
+    progressBarContainer.setAttribute("role", "progressbar");
+    progressBarContainer.setAttribute("aria-valuenow", "0");
+    progressBarContainer.setAttribute("aria-valuemin", "0");
+    progressBarContainer.setAttribute("aria-valuemax", "100");
+    progressBarContainer.setAttribute("aria-labelledby", "progress-text");
     progressBarContainer.style.width = "100%";
     progressBarContainer.style.height = "6px";
     progressBarContainer.style.backgroundColor = "var(--background-modifier-border)";
@@ -1224,6 +1439,7 @@ var YouTubeUrlModal = class extends BaseModal {
     this.progressBar.style.width = "0%";
     this.progressBar.style.transition = "width 0.3s ease";
     const stepList = this.progressContainer.createEl("ol");
+    stepList.setAttribute("aria-label", "Processing steps");
     stepList.style.marginTop = "12px";
     stepList.style.paddingLeft = "20px";
     stepList.style.fontSize = "0.9rem";
@@ -1236,34 +1452,38 @@ var YouTubeUrlModal = class extends BaseModal {
     ];
     this.progressSteps = labels.map((label) => {
       const item = stepList.createEl("li");
+      item.setAttribute("role", "status");
       item.style.marginBottom = "4px";
       item.textContent = `\u25CB ${label}`;
       return { label, element: item };
     });
   }
   /**
-   * Create action buttons
+   * Create action buttons with accessibility
    */
   createActionButtons() {
     const container = this.createButtonContainer();
-    this.createButton(
+    const cancelBtn = this.createButton(
       container,
       MESSAGES.MODALS.CANCEL,
       false,
       () => this.close()
     );
+    cancelBtn.setAttribute("aria-label", "Cancel video processing");
     this.processButton = this.createButton(
       container,
       MESSAGES.MODALS.PROCESS,
       true,
       () => this.handleProcess()
     );
+    this.processButton.setAttribute("aria-label", "Process YouTube video");
     this.openButton = this.createButton(
       container,
       "Open Note",
       true,
       () => this.handleOpenFile()
     );
+    this.openButton.setAttribute("aria-label", "Open the processed note");
     this.openButton.style.display = "none";
     this.updateProcessButtonState();
   }
@@ -1373,10 +1593,15 @@ var YouTubeUrlModal = class extends BaseModal {
           const supportsAudioVideo = !!(match && match.supportsAudioVideo);
           if (!supportsAudioVideo) {
             const recommended = (models.find((m) => m && m.supportsAudioVideo) || { name: AI_MODELS.GEMINI }).name;
-            const confirmMsg = `The selected model (${this.selectedModel}) may not support multimodal analysis.
+            const shouldSwitch = await this.showConfirmationModal(
+              "Multimodal Model Recommended",
+              `The selected model (${this.selectedModel}) may not support multimodal analysis.
 
-Would you like to switch to a multimodal-capable model (${recommended}) for better video analysis?`;
-            const shouldSwitch = this.confirmClose(confirmMsg);
+Would you like to switch to a multimodal-capable model (${recommended}) for better video analysis?`,
+              "Switch to Multimodal",
+              "Keep Current Model",
+              false
+            );
             if (shouldSwitch) {
               if (this.modelSelect) {
                 const exists = Array.from(this.modelSelect.options).some((o) => o.value === recommended);
@@ -2128,6 +2353,7 @@ var YouTubeSettingsTab = class extends import_obsidian5.PluginSettingTab {
 };
 
 // src/services/ai/ai-service.ts
+init_api();
 var AIService = class {
   constructor(providers) {
     this.providers = [];
@@ -2266,6 +2492,9 @@ var AIService = class {
   }
 };
 
+// src/services/ai/gemini.ts
+init_api();
+
 // src/services/ai/base.ts
 var BaseAIProvider = class {
   constructor(apiKey, initialModel) {
@@ -2399,6 +2628,7 @@ For best results:
 };
 
 // src/services/ai/groq.ts
+init_api();
 var GroqProvider = class extends BaseAIProvider {
   constructor(apiKey, model) {
     super(apiKey, model || AI_MODELS.GROQ);
@@ -2452,6 +2682,7 @@ var GroqProvider = class extends BaseAIProvider {
 };
 
 // src/services/youtube/video-data.ts
+init_api();
 var YouTubeVideoService = class {
   // 30 minutes
   constructor(cache) {
@@ -2619,8 +2850,10 @@ var YouTubeVideoService = class {
 
 // src/services/file/obsidian-file.ts
 var import_obsidian6 = require("obsidian");
+init_api();
 
 // src/components/modals/file-conflict-modal.ts
+init_base_modal();
 var COPY_WARNING = "A note with this title already exists. Choose how to proceed.";
 var FileConflictModal = class extends BaseModal {
   constructor(app, file) {

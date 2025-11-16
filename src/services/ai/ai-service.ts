@@ -3,7 +3,7 @@
  */
 
 import { AIService as IAIService, AIProvider, AIResponse } from '../../interfaces/types';
-import { PROVIDER_MODEL_OPTIONS } from '../../constants/api';
+import { PROVIDER_MODEL_OPTIONS, PROVIDER_MODEL_LIST_URLS, PROVIDER_MODEL_REGEX } from '../../constants/api';
 import { ErrorHandler } from '../../utils/error-handler';
 import { MESSAGES } from '../../constants/messages';
 
@@ -21,7 +21,53 @@ export class AIService implements IAIService {
      * Return available model options for a provider name (from constants mapping)
      */
     getProviderModels(providerName: string): string[] {
-        return PROVIDER_MODEL_OPTIONS[providerName] || [];
+        const raw = PROVIDER_MODEL_OPTIONS[providerName] || [] as any[];
+        // Support both legacy string arrays and the new object shape (ProviderModelEntry)
+        return raw.map(r => typeof r === 'string' ? r : (r && r.name ? r.name : String(r)));
+    }
+
+    /**
+     * Best-effort fetch of latest models for all providers by scraping known provider pages.
+     * Returns a mapping providerName -> list of discovered models. Falls back to static mapping.
+     */
+    async fetchLatestModels(): Promise<Record<string, string[]>> {
+        const result: Record<string, string[]> = {};
+        const providers = this.getProviderNames();
+        for (const p of providers) {
+            try {
+                const models = await this.fetchLatestModelsForProvider(p);
+                result[p] = models.length > 0 ? models : (PROVIDER_MODEL_OPTIONS[p] ? (PROVIDER_MODEL_OPTIONS[p] as any[]).map(m => typeof m === 'string' ? m : m.name) : []);
+            } catch (error) {
+                result[p] = PROVIDER_MODEL_OPTIONS[p] ? (PROVIDER_MODEL_OPTIONS[p] as any[]).map(m => typeof m === 'string' ? m : m.name) : [];
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Fetch latest models for a single provider (best-effort scraping).
+     */
+    async fetchLatestModelsForProvider(providerName: string): Promise<string[]> {
+        const url = PROVIDER_MODEL_LIST_URLS[providerName];
+        const regex = PROVIDER_MODEL_REGEX[providerName];
+        if (!url || !regex) {
+            return PROVIDER_MODEL_OPTIONS[providerName] ? (PROVIDER_MODEL_OPTIONS[providerName] as any[]).map(m => typeof m === 'string' ? m : m.name) : [];
+        }
+
+        try {
+            const resp = await fetch(url, { method: 'GET' });
+            if (!resp.ok) {
+                return PROVIDER_MODEL_OPTIONS[providerName] ? (PROVIDER_MODEL_OPTIONS[providerName] as any[]).map(m => typeof m === 'string' ? m : m.name) : [];
+            }
+            const text = await resp.text();
+            const matches = text.match(regex) || [];
+            // Normalize and dedupe
+            const normalized = Array.from(new Set(matches.map(m => m.toLowerCase())));
+            return normalized;
+        } catch (error) {
+            // On any error, return static fallback
+            return PROVIDER_MODEL_OPTIONS[providerName] ? (PROVIDER_MODEL_OPTIONS[providerName] as any[]).map(m => typeof m === 'string' ? m : m.name) : [];
+        }
     }
 
     /**

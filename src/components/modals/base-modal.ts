@@ -74,7 +74,7 @@ export abstract class BaseModal extends Modal {
     }
 
         /**
-     * Create standardized button with conflict prevention
+     * Create standardized button with conflict prevention and accessibility
      */
     protected createButton(
         container: HTMLElement,
@@ -87,11 +87,18 @@ export abstract class BaseModal extends Modal {
         
         // Add unique data attribute
         button.setAttribute('data-plugin', 'youtube-clipper');
+        
+        // Accessibility: add role and aria-label
+        button.setAttribute('role', 'button');
+        if (!button.getAttribute('aria-label')) {
+            button.setAttribute('aria-label', text);
+        }
+        
         return button;
     }
 
     /**
-     * Create standardized input with conflict prevention
+     * Create standardized input with conflict prevention and accessibility
      */
     protected createInput(
         container: HTMLElement,
@@ -107,6 +114,11 @@ export abstract class BaseModal extends Modal {
         DOMUtils.applyStyles(input, INPUT_STYLES);
         input.addClass(MODAL_CSS_CLASSES.input);
         input.setAttribute('data-plugin', 'youtube-clipper');
+        
+        // Accessibility: add ARIA labels if placeholder exists
+        if (placeholder) {
+            input.setAttribute('aria-label', placeholder);
+        }
         
         return input;
     }
@@ -154,10 +166,41 @@ export abstract class BaseModal extends Modal {
     }
 
     /**
-     * Show confirmation dialog before closing
+     * Show custom styled confirmation dialog before closing
+     * This uses our custom ConfirmationModal instead of the native browser confirm()
+     * for better accessibility and UX.
+     * 
+     * Note: This is now synchronous for backwards compatibility with existing callers,
+     * but returns a boolean immediately. For async confirmation with proper modal,
+     * use showConfirmationModal() instead.
      */
     protected confirmClose(message: string): boolean {
+        // For backward compatibility, return a synchronous value.
+        // However, in practice, you should use showConfirmationModal() for the full async experience.
+        // This fallback uses native confirm() only if needed.
         return confirm(message);
+    }
+
+    /**
+     * Show a custom accessible confirmation modal and wait for user response.
+     * Preferred method for confirmation dialogs (async, fully accessible).
+     */
+    protected async showConfirmationModal(
+        title: string,
+        message: string,
+        confirmText = 'Confirm',
+        cancelText = 'Cancel',
+        isDangerous = false
+    ): Promise<boolean> {
+        const { ConfirmationModal } = await import('./confirmation-modal');
+        const modal = new ConfirmationModal(this.app, {
+            title,
+            message,
+            confirmText,
+            cancelText,
+            isDangerous
+        });
+        return modal.openAndWait();
     }
 
     /**

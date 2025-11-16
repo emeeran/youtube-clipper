@@ -2,7 +2,7 @@
  * Google Gemini AI provider implementation
  */
 
-import { API_ENDPOINTS, AI_MODELS } from '../../constants/api';
+import { API_ENDPOINTS, AI_MODELS, PROVIDER_MODEL_OPTIONS } from '../../constants/api';
 import { MESSAGES } from '../../constants/messages';
 import { BaseAIProvider } from './base';
 
@@ -73,18 +73,65 @@ export class GeminiProvider extends BaseAIProvider {
             // ]
         };
 
-        // Enable multimodal analysis for YouTube videos
+        // Enable multimodal analysis for YouTube videos only when the chosen Gemini model
+        // is known to support audio/video tokens. Sending the `useAudioVideoTokens` flag
+        // to models that don't support it causes a 400 from the Gemini API (unknown field).
+        // Conservative check: only enable for newer 2.5-series models.
         if (isVideoAnalysis) {
-            return {
+            // Lookup the model entry in PROVIDER_MODEL_OPTIONS to see if it explicitly
+            // supports audio/video tokens. This is more reliable than a name heuristic.
+            const providerModels = PROVIDER_MODEL_OPTIONS['Google Gemini'] || [] as any[];
+            const currentModelName = String(this.model || '').toLowerCase();
+            const matched = providerModels.find(m => {
+                const name = (typeof m === 'string') ? m : (m && m.name ? m.name : '');
+                return String(name).toLowerCase() === currentModelName;
+            }) as any | undefined;
+
+            const supportsAudioVideo = matched && matched.supportsAudioVideo === true;
+
+            // Gemini automatically processes YouTube URLs and extracts both audio
+            // and video streams. Per Google's official docs, there is no special
+            // `useAudioVideoTokens` or similar parameter needed. The multimodal
+            // analysis is built-in behavior. We rely on a strong system instruction
+            // to guide comprehensive analysis of both visual and audio content.
+            const videoConfig: any = {
                 ...baseConfig,
-                // Enable audio and video token processing for comprehensive analysis
-                useAudioVideoTokens: true,
                 systemInstruction: {
                     parts: [{
-                        text: "You are an expert video content analyzer. Use both audio and visual information from videos to provide comprehensive analysis. Pay attention to slides, diagrams, text overlays, speaker gestures, and visual demonstrations in addition to spoken content."
+                        text: `You are an expert video content analyzer. Provide comprehensive, multimodal analysis using:
+• AUDIO STREAM: Transcribe all spoken content, identify speakers, capture tone/emphasis/emotion
+• VIDEO STREAM: Analyze visual elements, text overlays, diagrams, slides, gestures, scene changes, and visual demonstrations
+• INTEGRATED INSIGHTS: Synthesize audio and visual data to provide complete understanding
+
+For best results:
+- Prioritize accuracy in transcription and speaker identification
+- Extract and explain key concepts shown visually
+- Note timing relationships between audio and visual elements
+- Identify visual cues that reinforce or clarify spoken content`
                     }]
                 }
             };
+
+            // If the prompt contains a Google Cloud Storage URI (gs://...), attach it
+            // as a FileData part for additional video analysis capability.
+            const gcsMatch = prompt.match(/(gs:\/\/[\w\-\.\/]+\.(?:mp4|mov|mkv|webm))/i);
+            if (gcsMatch && gcsMatch[1]) {
+                const gcsUri = gcsMatch[1];
+                // Append a FileData part to contents so Gemini can process the video file
+                videoConfig.contents = videoConfig.contents || [];
+                videoConfig.contents.push({
+                    parts: [{ fileData: { fileUri: gcsUri, mimeType: 'video/mp4' } }]
+                });
+            }
+
+            // Historically we attempted to send `useAudioVideoTokens` for
+            // multimodal-capable models. That flag has caused 400 errors
+            // for some accounts / model deployments. To be safe and avoid
+            // breaking requests, we no longer send that flag. The
+            // `systemInstruction` above still guides the model to consider
+            // video/audio context when available.
+
+            return videoConfig;
         }
 
         return baseConfig;

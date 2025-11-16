@@ -5,6 +5,7 @@
 import { App, Notice } from 'obsidian';
 import { BaseModal } from './base-modal';
 import { MESSAGES } from '../../constants/messages';
+import { PROVIDER_MODEL_OPTIONS, AI_MODELS } from '../../constants/api';
 import { ValidationUtils } from '../../utils/validation';
 import { ErrorHandler } from '../../utils/error-handler';
 import { OutputFormat } from '../../interfaces/types';
@@ -17,6 +18,7 @@ export interface YouTubeUrlModalOptions {
     modelOptions?: Record<string, string[]>; // mapping providerName -> models
     defaultProvider?: string;
     defaultModel?: string;
+    fetchModels?: () => Promise<Record<string, string[]>>;
 }
 
 type StepState = 'pending' | 'active' | 'complete' | 'error';
@@ -35,6 +37,7 @@ export class YouTubeUrlModal extends BaseModal {
     private fetchInProgress = false;
     private providerSelect?: HTMLSelectElement;
     private modelSelect?: HTMLSelectElement;
+    private refreshSpinner?: HTMLSpanElement;
     private selectedProvider?: string;
     private selectedModel?: string;
     private progressContainer?: HTMLDivElement;
@@ -80,23 +83,28 @@ export class YouTubeUrlModal extends BaseModal {
     private createProviderSelectionSection(): void {
         const container = this.contentEl.createDiv();
         container.style.marginTop = '10px';
-        container.createEl('label', { text: 'AI Provider & Model:' });
+        const label = container.createEl('label', { text: 'AI Provider & Model:' });
+        label.setAttribute('for', 'ytc-provider-select');
 
         const row = container.createDiv();
         row.style.display = 'flex';
         row.style.gap = '8px';
         row.style.alignItems = 'center';
 
-        // Provider select
+        // Provider select with accessibility
         this.providerSelect = document.createElement('select');
+        this.providerSelect.id = 'ytc-provider-select';
+        this.providerSelect.setAttribute('aria-label', 'AI Provider');
         this.providerSelect.style.flex = '1';
         this.providerSelect.style.padding = '6px';
         this.providerSelect.style.borderRadius = '6px';
         this.providerSelect.style.border = '1px solid var(--background-modifier-border)';
         row.appendChild(this.providerSelect);
 
-        // Model select
+        // Model select with accessibility
         this.modelSelect = document.createElement('select');
+        this.modelSelect.id = 'ytc-model-select';
+        this.modelSelect.setAttribute('aria-label', 'AI Model');
         this.modelSelect.style.width = '220px';
         this.modelSelect.style.padding = '6px';
         this.modelSelect.style.borderRadius = '6px';
@@ -120,6 +128,23 @@ export class YouTubeUrlModal extends BaseModal {
             this.providerSelect!.appendChild(opt);
         });
 
+        // Refresh models button
+        const refreshBtn = this.createInlineButton(row, 'Refresh models', () => {
+            void this.handleRefreshModels();
+        });
+
+        // Inline spinner next to refresh button
+        this.refreshSpinner = document.createElement('span');
+        this.refreshSpinner.style.display = 'none';
+        this.refreshSpinner.style.marginLeft = '8px';
+        this.refreshSpinner.style.width = '16px';
+        this.refreshSpinner.style.height = '16px';
+        this.refreshSpinner.style.border = '2px solid var(--background-modifier-border)';
+        this.refreshSpinner.style.borderTop = '2px solid var(--interactive-accent)';
+        this.refreshSpinner.style.borderRadius = '50%';
+        this.refreshSpinner.style.animation = 'ytp-spin 1s linear infinite';
+        row.appendChild(this.refreshSpinner);
+
         // Wire change handler
         this.providerSelect.addEventListener('change', () => {
             this.selectedProvider = this.providerSelect!.value || undefined;
@@ -134,6 +159,51 @@ export class YouTubeUrlModal extends BaseModal {
 
         // Populate models for initial provider selection (or empty)
         this.populateModelsForProvider(this.selectedProvider || '', modelOptions, this.options.defaultModel);
+    }
+
+    private async handleRefreshModels(): Promise<void> {
+        if (!this.options.fetchModels) {
+            this.setValidationMessage('Model refresh not available.', 'error');
+            return;
+        }
+
+        this.setValidationMessage('Refreshing model lists…', 'info');
+        // show spinner
+        if (this.refreshSpinner) this.refreshSpinner.style.display = 'inline-block';
+        // disable refresh to avoid double clicks
+        try {
+            const map = await this.options.fetchModels();
+            // update provider list if changed
+            const providers = Object.keys(map);
+            if (this.providerSelect) {
+                // preserve current selection
+                const current = this.providerSelect.value;
+                this.providerSelect.innerHTML = '';
+                const autoOpt = document.createElement('option');
+                autoOpt.value = '';
+                autoOpt.text = 'Auto (fallback)';
+                this.providerSelect.appendChild(autoOpt);
+                providers.forEach(p => {
+                    const opt = document.createElement('option');
+                    opt.value = p;
+                    opt.text = p;
+                    this.providerSelect!.appendChild(opt);
+                });
+                if (current && Array.from(this.providerSelect.options).some(o => o.value === current)) {
+                    this.providerSelect.value = current;
+                    this.selectedProvider = current;
+                }
+            }
+
+            // update modelOptions and repopulate for selected provider
+            const modelOptions = map;
+            this.populateModelsForProvider(this.selectedProvider || '', modelOptions, this.options.defaultModel);
+            this.setValidationMessage('Model lists refreshed.', 'success');
+        } catch (error) {
+            this.setValidationMessage('Failed to refresh models. Using cached options.', 'error');
+        } finally {
+            if (this.refreshSpinner) this.refreshSpinner.style.display = 'none';
+        }
     }
 
     private populateModelsForProvider(providerName: string, modelOptions: Record<string, string[]>, defaultModel?: string): void {
@@ -155,7 +225,22 @@ export class YouTubeUrlModal extends BaseModal {
         models.forEach((m) => {
             const opt = document.createElement('option');
             opt.value = m;
-            opt.text = m;
+            // If we have metadata in PROVIDER_MODEL_OPTIONS, show a small badge
+            let label = m;
+            try {
+                const providerModels = PROVIDER_MODEL_OPTIONS[providerName] || [] as any[];
+                const match = providerModels.find(pm => {
+                    const name = typeof pm === 'string' ? pm : (pm && pm.name ? pm.name : '');
+                    return String(name).toLowerCase() === String(m).toLowerCase();
+                }) as any | undefined;
+                if (match && match.supportsAudioVideo) {
+                    label = `${m}  🎥`; // small camera emoji indicates multimodal-capable
+                    opt.title = 'Supports multimodal audio/video tokens';
+                }
+            } catch (err) {
+                // ignore and fall back to plain label
+            }
+            opt.text = label;
             this.modelSelect!.appendChild(opt);
         });
 
@@ -177,7 +262,8 @@ export class YouTubeUrlModal extends BaseModal {
      */
     private createUrlInputSection(): void {
         const container = this.contentEl.createDiv();
-        container.createEl('label', { text: 'YouTube URL:' });
+        const label = container.createEl('label', { text: 'YouTube URL:' });
+        label.setAttribute('for', 'ytc-url-input');
         
         const inputRow = container.createDiv();
         inputRow.style.display = 'flex';
@@ -189,16 +275,21 @@ export class YouTubeUrlModal extends BaseModal {
             'url',
             MESSAGES.PLACEHOLDERS.YOUTUBE_URL + ' (Press Enter to process)'
         );
+        this.urlInput.id = 'ytc-url-input';
+        this.urlInput.setAttribute('aria-label', 'YouTube URL');
+        this.urlInput.setAttribute('aria-describedby', 'ytc-url-hint');
         this.urlInput.style.flex = '1';
         this.urlInput.style.transition = 'border-color 0.2s ease, box-shadow 0.2s ease';
         
         this.pasteButton = this.createInlineButton(inputRow, 'Paste', () => {
             void this.handlePasteFromClipboard();
         });
+        this.pasteButton.setAttribute('aria-label', 'Paste YouTube URL from clipboard');
         
         this.clearButton = this.createInlineButton(inputRow, 'Clear', () => {
             this.handleClearUrl();
         });
+        this.clearButton.setAttribute('aria-label', 'Clear YouTube URL input');
         
         // Set initial value if provided
         if (this.options.initialUrl) {
@@ -214,9 +305,11 @@ export class YouTubeUrlModal extends BaseModal {
         });
 
         this.validationMessage = container.createDiv();
+        this.validationMessage.id = 'ytc-url-hint';
         this.validationMessage.style.marginTop = '6px';
         this.validationMessage.style.fontSize = '0.85rem';
         this.validationMessage.style.color = 'var(--text-muted)';
+        this.validationMessage.setAttribute('role', 'status');
         this.setValidationMessage('Paste a YouTube link to begin processing.', 'info');
 
     // Preview container (thumbnail + metadata)
@@ -227,6 +320,7 @@ export class YouTubeUrlModal extends BaseModal {
     preview.style.marginTop = '8px';
 
     this.thumbnailEl = preview.createEl('img');
+    this.thumbnailEl.setAttribute('aria-label', 'Video thumbnail');
     this.thumbnailEl.style.width = '120px';
     this.thumbnailEl.style.height = '68px';
     this.thumbnailEl.style.objectFit = 'cover';
@@ -234,6 +328,7 @@ export class YouTubeUrlModal extends BaseModal {
     this.thumbnailEl.style.display = 'none';
 
     this.metadataContainer = preview.createDiv();
+    this.metadataContainer.setAttribute('aria-label', 'Video metadata');
     this.metadataContainer.style.display = 'none';
     this.metadataContainer.style.fontSize = '0.9rem';
     this.metadataContainer.style.color = 'var(--text-normal)';
@@ -249,9 +344,12 @@ export class YouTubeUrlModal extends BaseModal {
      */
     private createFormatSelectionSection(): void {
         const container = this.contentEl.createDiv();
-        container.createEl('label', { text: 'Output Format:' });
+        const label = container.createEl('label', { text: 'Output Format:' });
+        label.id = 'format-group-label';
         
         const radioContainer = container.createDiv();
+        radioContainer.setAttribute('role', 'group');
+        radioContainer.setAttribute('aria-labelledby', 'format-group-label');
         radioContainer.style.marginTop = '8px';
         radioContainer.style.display = 'flex';
         radioContainer.style.gap = '20px';
@@ -268,6 +366,7 @@ export class YouTubeUrlModal extends BaseModal {
         executiveRadio.value = 'executive-summary';
         executiveRadio.id = 'executive-radio';
         executiveRadio.checked = this.format === 'executive-summary';
+        executiveRadio.setAttribute('aria-label', 'Executive Summary format');
         
         const executiveLabel = executiveContainer.createEl('label');
         executiveLabel.setAttribute('for', 'executive-radio');
@@ -286,6 +385,7 @@ export class YouTubeUrlModal extends BaseModal {
         tutorialRadio.value = 'detailed-guide';
         tutorialRadio.id = 'tutorial-radio';
         tutorialRadio.checked = this.format === 'detailed-guide';
+        tutorialRadio.setAttribute('aria-label', 'Detailed Guide format');
         
         const tutorialLabel = tutorialContainer.createEl('label');
         tutorialLabel.setAttribute('for', 'tutorial-radio');
@@ -317,6 +417,7 @@ export class YouTubeUrlModal extends BaseModal {
         briefRadio.value = 'brief';
         briefRadio.id = 'brief-radio';
         briefRadio.checked = this.format === 'brief';
+        briefRadio.setAttribute('aria-label', 'Brief format');
 
         const briefLabel = briefContainer.createEl('label');
         briefLabel.setAttribute('for', 'brief-radio');
@@ -335,11 +436,15 @@ export class YouTubeUrlModal extends BaseModal {
      */
     private createProgressSection(): void {
         this.progressContainer = this.contentEl.createDiv();
+        this.progressContainer.setAttribute('role', 'region');
+        this.progressContainer.setAttribute('aria-label', 'Processing progress');
+        this.progressContainer.setAttribute('aria-live', 'polite');
         this.progressContainer.style.marginTop = '16px';
         this.progressContainer.style.display = 'none';
         
         // Progress text
         this.progressText = this.progressContainer.createDiv();
+        this.progressText.id = 'progress-text';
         this.progressText.style.marginBottom = '8px';
         this.progressText.style.fontWeight = '500';
         this.progressText.style.color = 'var(--text-accent)';
@@ -347,6 +452,11 @@ export class YouTubeUrlModal extends BaseModal {
         
         // Progress bar container
         const progressBarContainer = this.progressContainer.createDiv();
+        progressBarContainer.setAttribute('role', 'progressbar');
+        progressBarContainer.setAttribute('aria-valuenow', '0');
+        progressBarContainer.setAttribute('aria-valuemin', '0');
+        progressBarContainer.setAttribute('aria-valuemax', '100');
+        progressBarContainer.setAttribute('aria-labelledby', 'progress-text');
         progressBarContainer.style.width = '100%';
         progressBarContainer.style.height = '6px';
         progressBarContainer.style.backgroundColor = 'var(--background-modifier-border)';
@@ -362,6 +472,7 @@ export class YouTubeUrlModal extends BaseModal {
         this.progressBar.style.transition = 'width 0.3s ease';
 
         const stepList = this.progressContainer.createEl('ol');
+        stepList.setAttribute('aria-label', 'Processing steps');
         stepList.style.marginTop = '12px';
         stepList.style.paddingLeft = '20px';
         stepList.style.fontSize = '0.9rem';
@@ -376,6 +487,7 @@ export class YouTubeUrlModal extends BaseModal {
 
         this.progressSteps = labels.map((label) => {
             const item = stepList.createEl('li');
+            item.setAttribute('role', 'status');
             item.style.marginBottom = '4px';
             item.textContent = `○ ${label}`;
             return { label, element: item };
@@ -383,18 +495,19 @@ export class YouTubeUrlModal extends BaseModal {
     }
 
     /**
-     * Create action buttons
+     * Create action buttons with accessibility
      */
     private createActionButtons(): void {
         const container = this.createButtonContainer();
 
         // Cancel button
-        this.createButton(
+        const cancelBtn = this.createButton(
             container,
             MESSAGES.MODALS.CANCEL,
             false,
             () => this.close()
         );
+        cancelBtn.setAttribute('aria-label', 'Cancel video processing');
 
         // Process button
         this.processButton = this.createButton(
@@ -403,6 +516,7 @@ export class YouTubeUrlModal extends BaseModal {
             true,
             () => this.handleProcess()
         );
+        this.processButton.setAttribute('aria-label', 'Process YouTube video');
 
         // Open button (hidden initially)
         this.openButton = this.createButton(
@@ -411,6 +525,7 @@ export class YouTubeUrlModal extends BaseModal {
             true,
             () => this.handleOpenFile()
         );
+        this.openButton.setAttribute('aria-label', 'Open the processed note');
         this.openButton.style.display = 'none';
 
         this.updateProcessButtonState();
@@ -529,6 +644,51 @@ export class YouTubeUrlModal extends BaseModal {
         }
 
         try {
+            // If user explicitly selected Google Gemini and chose a model that
+            // does not support multimodal audio/video tokens, but the URL is a
+            // YouTube video, suggest switching to a multimodal-capable model.
+            if (this.selectedProvider === 'Google Gemini' && this.selectedModel && this.isUrlValid()) {
+                try {
+                    const models = PROVIDER_MODEL_OPTIONS['Google Gemini'] || [] as any[];
+                    const match = models.find(m => {
+                        const name = typeof m === 'string' ? m : (m && m.name ? m.name : '');
+                        return String(name).toLowerCase() === String(this.selectedModel || '').toLowerCase();
+                    }) as any | undefined;
+
+                    const supportsAudioVideo = !!(match && match.supportsAudioVideo);
+                    if (!supportsAudioVideo) {
+                        // Recommend a multimodal-capable model (prefer configured default)
+                        const recommended = (models.find(m => (m && m.supportsAudioVideo)) || { name: AI_MODELS.GEMINI }).name;
+                        // Use custom styled confirmation modal instead of native confirm()
+                        const shouldSwitch = await this.showConfirmationModal(
+                            'Multimodal Model Recommended',
+                            `The selected model (${this.selectedModel}) may not support multimodal analysis.\n\nWould you like to switch to a multimodal-capable model (${recommended}) for better video analysis?`,
+                            'Switch to Multimodal',
+                            'Keep Current Model',
+                            false
+                        );
+                        if (shouldSwitch) {
+                            // Ensure the recommended model exists in the current modelSelect; if not, add it
+                            if (this.modelSelect) {
+                                const exists = Array.from(this.modelSelect.options).some(o => o.value === recommended);
+                                if (!exists) {
+                                    const opt = document.createElement('option');
+                                    opt.value = recommended;
+                                    opt.text = recommended;
+                                    this.modelSelect.appendChild(opt);
+                                }
+                                this.modelSelect.value = recommended;
+                                this.selectedModel = recommended;
+                            } else {
+                                this.selectedModel = recommended;
+                            }
+                        }
+                    }
+                } catch (err) {
+                    // Non-fatal: fall back to default behavior
+                    console.warn('[YouTubeUrlModal] model recommendation failed', err);
+                }
+            }
             this.showProcessingState();
             this.setStepState(0, 'active');
             

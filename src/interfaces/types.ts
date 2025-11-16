@@ -10,6 +10,7 @@ export interface YouTubePluginSettings {
     outputPath: string;
     useEnvironmentVariables: boolean;
     environmentPrefix: string;
+    modelOptionsCache?: Record<string, string[]>;
 }
 
 export type OutputFormat = 'executive-summary' | 'detailed-guide' | 'brief';
@@ -101,6 +102,8 @@ export interface AIService {
     processWith(providerName: string, prompt: string, overrideModel?: string): Promise<AIResponse>;
     getProviderNames(): string[];
     getProviderModels(providerName: string): string[];
+    fetchLatestModels(): Promise<Record<string, string[]>>;
+    fetchLatestModelsForProvider(providerName: string): Promise<string[]>;
 }
 
 // Event types
