@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-YouTubeClipper is an AI-powered Obsidian plugin that transforms YouTube videos into structured notes using multimodal analysis (audio + visual). It uses Google Gemini 2.0+ for video analysis and Groq as a fallback provider.
+YoutubeClipper is an AI-powered Obsidian plugin that transforms YouTube videos into structured notes using multimodal analysis (audio + visual). It uses Google Gemini 2.0+ for video analysis and Groq as a fallback provider.
 
 ## Development Commands
 
@@ -102,7 +102,7 @@ When adding new AI providers:
 
 To test changes:
 1. Run `npm run build` to generate `main.js`
-2. Copy `main.js` and `manifest.json` to your vault's `.obsidian/plugins/youtube-processor/`
+2. Copy `main.js` and `manifest.json` to your vault's `.obsidian/plugins/youtube-clipper/`
 3. Reload Obsidian or restart the app
 4. Enable plugin and test functionality
 

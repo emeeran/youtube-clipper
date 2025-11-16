@@ -2,58 +2,82 @@
  * Prompt generation service for AI processing
  */
 
-import { PromptService, VideoData, OutputFormat } from '../interfaces/types';
+import { PromptService, VideoData, OutputFormat, PerformanceMode } from '../interfaces/types';
 import { ValidationUtils } from '../utils/validation';
+import { PerformanceOptimizer } from '../constants/performance';
 
 export class AIPromptService implements PromptService {
-    // Pre-compiled template fragments for hot paths (performance optimization)
-    private static readonly BASE_TEMPLATE = `Analyze this YouTube video using comprehensive multimodal analysis with audio_video_tokens=True:
+    // Optimized prompt templates for different performance modes
+    private static readonly COMPACT_BASE_TEMPLATE = `Analyze this YouTube video:
+Title: {{TITLE}}
+URL: {{URL}}
+Description: {{DESCRIPTION}}
 
-        VIDEO INFORMATION:
-        Title: {{TITLE}}
-        URL: {{URL}}
-        Description/Context: {{DESCRIPTION}}
+Focus on extracting the key information and insights.`;
 
-        MULTIMODAL ANALYSIS INSTRUCTIONS:
-        1. Watch the complete video using both audio and visual analysis capabilities with audio_video_tokens=True
-        2. Extract insights from spoken content, music, sound effects, and ambient audio
-        3. Analyze visual elements including:
-           - Slides, presentations, and text overlays
-           - Diagrams, charts, and visual demonstrations
-           - Body language, gestures, and facial expressions
-           - Screen recordings, code examples, or software demos
-           - Any visual aids or props used
-        4. Before responding, perform a web search to find relevant insights or highlights about this topic
-        5. Use web search results only when they directly enhance the response by adding clarity, depth, or useful context
-        6. Focus on practical, action-oriented information that viewers can implement
-        7. Maintain accuracy and cite specific examples from the video when relevant
-        8. Identify the main value proposition and key learning objectives`;
+    private static readonly BALANCED_BASE_TEMPLATE = `Analyze this YouTube video with multimodal analysis:
+Title: {{TITLE}}
+URL: {{URL}}
+Description: {{DESCRIPTION}}
+
+Extract insights from both spoken content and visual elements, focusing on practical information.`;
+
+    private static readonly COMPREHENSIVE_BASE_TEMPLATE = `Analyze this YouTube video using comprehensive multimodal analysis:
+Title: {{TITLE}}
+URL: {{URL}}
+Description: {{DESCRIPTION}}
+
+MULTIMODAL ANALYSIS INSTRUCTIONS:
+1. Watch the complete video using both audio and visual analysis capabilities
+2. Extract insights from spoken content, music, sound effects, and ambient audio
+3. Analyze visual elements including slides, diagrams, charts, body language, and demonstrations
+4. Focus on practical, action-oriented information with specific examples
+5. Maintain accuracy and cite specific examples from the video when relevant`;
 
     /**
-     * Create analysis prompt for YouTube video content with format selection (optimized)
+     * Create analysis prompt for YouTube video content with performance optimization
      */
-    createAnalysisPrompt(videoData: VideoData, videoUrl: string, format: OutputFormat = 'detailed-guide', customPrompt?: string): string {
+    createAnalysisPrompt(
+        videoData: VideoData,
+        videoUrl: string,
+        format: OutputFormat = 'detailed-guide',
+        customPrompt?: string,
+        performanceMode: PerformanceMode = 'balanced'
+    ): string {
         // Use custom prompt if provided
         if (customPrompt && customPrompt.trim()) {
             return this.applyCustomPrompt(customPrompt, videoData, videoUrl);
         }
 
-        // Fast string replacement instead of template literals (reduced allocations)
-        const baseContent = AIPromptService.BASE_TEMPLATE
+        // Select base template based on performance mode
+        let baseTemplate: string;
+        switch (performanceMode) {
+            case 'fast':
+                baseTemplate = AIPromptService.COMPACT_BASE_TEMPLATE;
+                break;
+            case 'quality':
+                baseTemplate = AIPromptService.COMPREHENSIVE_BASE_TEMPLATE;
+                break;
+            default:
+                baseTemplate = AIPromptService.BALANCED_BASE_TEMPLATE;
+        }
+
+        // Fast string replacement
+        const baseContent = baseTemplate
             .replace('{{TITLE}}', videoData.title)
             .replace('{{URL}}', videoUrl)
             .replace('{{DESCRIPTION}}', videoData.description);
 
-        // Branchless optimization: ternary instead of if/else
-        if (format === 'executive-summary') {
-            return this.createExecutiveSummaryPrompt(baseContent, videoUrl);
+        // Create format-specific prompt
+        switch (format) {
+            case 'executive-summary':
+                return this.createExecutiveSummaryPrompt(baseContent, videoUrl, performanceMode);
+            case 'brief':
+                return this.createBriefPrompt(baseContent, videoUrl, performanceMode);
+            case 'detailed-guide':
+            default:
+                return this.createDetailedGuidePrompt(baseContent, videoUrl, performanceMode);
         }
-
-        if (format === 'brief') {
-            return this.createBriefPrompt(baseContent, videoUrl);
-        }
-
-        return this.createDetailedGuidePrompt(baseContent, videoUrl);
     }
 
     /**
@@ -76,7 +100,7 @@ export class AIPromptService implements PromptService {
     /**
      * Create a brief prompt: short description plus resources list
      */
-    private createBriefPrompt(baseContent: string, videoUrl: string): string {
+    private createBriefPrompt(baseContent: string, videoUrl: string, performanceMode: PerformanceMode = 'balanced'): string {
         const videoId = ValidationUtils.extractVideoId(videoUrl);
         const embedUrl = videoId ? `https://www.youtube-nocookie.com/embed/${videoId}` : videoUrl;
 
@@ -127,7 +151,7 @@ export class AIPromptService implements PromptService {
     /**
      * Create executive summary prompt (≤250 words)
      */
-    private createExecutiveSummaryPrompt(baseContent: string, videoUrl: string): string {
+    private createExecutiveSummaryPrompt(baseContent: string, videoUrl: string, performanceMode: PerformanceMode = 'balanced'): string {
         const videoId = ValidationUtils.extractVideoId(videoUrl);
         const embedUrl = videoId ? `https://www.youtube-nocookie.com/embed/${videoId}` : videoUrl;
         
@@ -186,7 +210,7 @@ export class AIPromptService implements PromptService {
     /**
      * Create detailed guide prompt
      */
-    private createDetailedGuidePrompt(baseContent: string, videoUrl: string): string {
+    private createDetailedGuidePrompt(baseContent: string, videoUrl: string, performanceMode: PerformanceMode = 'balanced'): string {
         const videoId = ValidationUtils.extractVideoId(videoUrl);
         const embedUrl = videoId ? `https://www.youtube-nocookie.com/embed/${videoId}` : videoUrl;
         

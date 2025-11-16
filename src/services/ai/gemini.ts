@@ -9,8 +9,8 @@ import { BaseAIProvider } from './base';
 export class GeminiProvider extends BaseAIProvider {
     readonly name = 'Google Gemini';
 
-    constructor(apiKey: string, model?: string) {
-        super(apiKey, model || AI_MODELS.GEMINI);
+    constructor(apiKey: string, model?: string, timeout?: number) {
+        super(apiKey, model || AI_MODELS.GEMINI, timeout);
     }
 
     async process(prompt: string): Promise<string> {

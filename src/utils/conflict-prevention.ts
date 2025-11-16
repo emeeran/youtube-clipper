@@ -1,5 +1,5 @@
 /**
- * Conflict prevention utilities for YouTube Processor Plugin
+ * Conflict prevention utilities for YoutubeClipper Plugin
  * Designed to prevent conflicts with other Obsidian plugins
  */
 

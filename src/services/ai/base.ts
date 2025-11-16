@@ -4,30 +4,60 @@
 
 import { AIProvider } from '../../interfaces/types';
 import { ErrorHandler } from '../../utils/error-handler';
+import { CustomTimeoutSettings } from '../../interfaces/types';
 
 export abstract class BaseAIProvider implements AIProvider {
     abstract readonly name: string;
     protected _model: string;
+    protected _timeout: number = 30000; // Default 30s timeout
 
     get model(): string {
         return this._model;
+    }
+
+    get timeout(): number {
+        return this._timeout;
     }
 
     setModel(model: string): void {
         this._model = model;
     }
 
-    protected constructor(protected apiKey: string, initialModel?: string) {
+    setTimeout(timeout: number): void {
+        this._timeout = timeout;
+    }
+
+    protected constructor(protected apiKey: string, initialModel?: string, timeout?: number) {
         if (!apiKey) {
             throw new Error('API key is required for AI provider');
         }
         this._model = initialModel || '';
+        if (timeout) {
+            this._timeout = timeout;
+        }
     }
 
     /**
      * Process a prompt and return the response
      */
     abstract process(prompt: string): Promise<string>;
+
+    /**
+     * Process with timeout support
+     */
+    async processWithTimeout(prompt: string, customTimeout?: number): Promise<string> {
+        const timeoutMs = customTimeout || this._timeout;
+
+        const timeoutPromise = new Promise<never>((_, reject) => {
+            setTimeout(() => {
+                reject(new Error(`${this.name} request timed out after ${timeoutMs}ms`));
+            }, timeoutMs);
+        });
+
+        const processPromise = this.process(prompt);
+
+        return Promise.race([processPromise, timeoutPromise]);
+    }
 
     /**
      * Validate API response structure

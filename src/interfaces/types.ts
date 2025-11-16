@@ -1,5 +1,5 @@
 /**
- * Core interfaces and types for the YouTube Processor plugin
+ * Core interfaces and types for the YoutubeClipper plugin
  */
 
 import { App, TFile } from 'obsidian';
@@ -12,6 +12,35 @@ export interface YouTubePluginSettings {
     environmentPrefix: string;
     modelOptionsCache?: Record<string, string[]>;
     customPrompts?: Record<OutputFormat, string>;
+    // Speed/Quality balance settings
+    performanceMode: PerformanceMode;
+    customTimeouts?: CustomTimeoutSettings;
+    enableParallelProcessing: boolean;
+    preferMultimodal: boolean;
+}
+
+export type PerformanceMode = 'fast' | 'balanced' | 'quality';
+
+export interface CustomTimeoutSettings {
+    geminiTimeout: number;
+    groqTimeout: number;
+    metadataTimeout: number;
+}
+
+export interface PerformancePreset {
+    name: string;
+    description: string;
+    timeouts: CustomTimeoutSettings;
+    enableParallel: boolean;
+    preferMultimodal: boolean;
+    modelStrategy: ModelStrategy;
+}
+
+export interface ModelStrategy {
+    briefFormat: string;
+    executiveSummary: string;
+    detailedGuide: string;
+    fallbackModel: string;
 }
 
 export type OutputFormat = 'executive-summary' | 'detailed-guide' | 'brief' | 'custom';

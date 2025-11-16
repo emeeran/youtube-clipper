@@ -2,7 +2,7 @@
 
 ## System Overview
 
-The YouTube Processor plugin follows a layered architecture pattern with clear separation of concerns:
+The YoutubeClipper plugin follows a layered architecture pattern with clear separation of concerns:
 
 ```
 ┌─────────────────────────────────────────────────────┐
@@ -327,7 +327,7 @@ onunload(): void {
 ### Settings Persistence
 
 Settings are stored in Obsidian's plugin data directory:
-- **Location**: `.obsidian/plugins/youtube-processor/data.json`
+- **Location**: `.obsidian/plugins/youtube-clipper/data.json`
 - **Format**: JSON with encrypted API keys (Obsidian handles encryption)
 - **Accessibility**: Via `SecureConfigService`
 

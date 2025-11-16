@@ -1,20 +1,48 @@
 /**
- * AI service that manages multiple providers with fallback support
+ * AI service that manages multiple providers with parallel processing support
  */
 
-import { AIService as IAIService, AIProvider, AIResponse } from '../../interfaces/types';
+import { AIService as IAIService, AIProvider, AIResponse, YouTubePluginSettings, PerformanceMode } from '../../interfaces/types';
 import { PROVIDER_MODEL_OPTIONS, PROVIDER_MODEL_LIST_URLS, PROVIDER_MODEL_REGEX } from '../../constants/api';
 import { ErrorHandler } from '../../utils/error-handler';
 import { MESSAGES } from '../../constants/messages';
+import { PERFORMANCE_PRESETS, PerformanceOptimizer } from '../../constants/performance';
 
 export class AIService implements IAIService {
     private providers: AIProvider[] = [];
+    private settings: YouTubePluginSettings;
 
-    constructor(providers: AIProvider[]) {
+    constructor(providers: AIProvider[], settings: YouTubePluginSettings) {
         if (!providers || providers.length === 0) {
             throw new Error(MESSAGES.ERRORS.MISSING_API_KEYS);
         }
         this.providers = providers;
+        this.settings = settings;
+        this.applyPerformanceSettings();
+    }
+
+    /**
+     * Apply performance settings to providers
+     */
+    private applyPerformanceSettings(): void {
+        const preset = PERFORMANCE_PRESETS[this.settings.performanceMode] || PERFORMANCE_PRESETS.balanced;
+        const timeouts = this.settings.customTimeouts || preset.timeouts;
+
+        this.providers.forEach(provider => {
+            if (provider.name === 'Google Gemini') {
+                provider.setTimeout(timeouts.geminiTimeout);
+            } else if (provider.name === 'Groq') {
+                provider.setTimeout(timeouts.groqTimeout);
+            }
+        });
+    }
+
+    /**
+     * Update settings and reapply performance configurations
+     */
+    updateSettings(newSettings: YouTubePluginSettings): void {
+        this.settings = newSettings;
+        this.applyPerformanceSettings();
     }
 
     /**
@@ -71,13 +99,25 @@ export class AIService implements IAIService {
     }
 
     /**
-     * Process prompt with fallback support
+     * Process prompt with fallback support (original sequential method)
      */
     async process(prompt: string): Promise<AIResponse> {
         if (!prompt || typeof prompt !== 'string') {
             throw new Error('Valid prompt is required');
         }
 
+        // Use parallel processing if enabled
+        if (this.settings.enableParallelProcessing) {
+            return this.processParallel(prompt);
+        }
+
+        return this.processSequential(prompt);
+    }
+
+    /**
+     * Process prompt with sequential fallback (original method)
+     */
+    private async processSequential(prompt: string): Promise<AIResponse> {
         let lastError: Error | null = null;
 
         // Try each provider in order
@@ -85,7 +125,7 @@ export class AIService implements IAIService {
             try {
                 console.log(`Attempting to process with ${provider.name}...`);
                 const content = await provider.process(prompt);
-                
+
                 if (content && content.trim().length > 0) {
                     return {
                         content,
@@ -98,7 +138,7 @@ export class AIService implements IAIService {
             } catch (error) {
                 lastError = error as Error;
                 console.warn(`${provider.name} failed:`, error);
-                
+
                 // Continue to next provider unless this is the last one
                 if (provider === this.providers[this.providers.length - 1]) {
                     break;
@@ -107,10 +147,70 @@ export class AIService implements IAIService {
         }
 
         // All providers failed
-        const errorMessage = lastError 
+        const errorMessage = lastError
             ? MESSAGES.ERRORS.AI_PROCESSING(lastError.message)
             : 'All AI providers failed to process the request';
-            
+
+        throw new Error(errorMessage);
+    }
+
+    /**
+     * Process prompt with parallel provider racing for maximum speed
+     */
+    private async processParallel(prompt: string): Promise<AIResponse> {
+        console.log('Starting parallel provider racing...');
+
+        const providerPromises = this.providers.map(async (provider) => {
+            try {
+                const content = await (provider as any).processWithTimeout(prompt);
+
+                if (content && content.trim().length > 0) {
+                    return {
+                        content,
+                        provider: provider.name,
+                        model: provider.model,
+                        success: true,
+                        responseTime: Date.now()
+                    };
+                } else {
+                    throw new Error('Empty response from AI provider');
+                }
+            } catch (error) {
+                console.warn(`${provider.name} failed in parallel race:`, error);
+                return {
+                    error: (error as Error).message,
+                    provider: provider.name,
+                    model: provider.model,
+                    success: false,
+                    responseTime: Date.now()
+                };
+            }
+        });
+
+        // Wait for first successful response or all to complete
+        const results = await Promise.allSettled(providerPromises);
+
+        // Find first successful response
+        for (const result of results) {
+            if (result.status === 'fulfilled' && result.value.success) {
+                console.log(`Parallel winner: ${result.value.provider} (${Date.now() - result.value.responseTime}ms)`);
+                return {
+                    content: result.value.content,
+                    provider: result.value.provider,
+                    model: result.value.model
+                };
+            }
+        }
+
+        // All providers failed - collect errors
+        const errors = results
+            .filter(r => r.status === 'fulfilled' && !r.value.success)
+            .map(r => (r as any).value.error);
+
+        const errorMessage = errors.length > 0
+            ? MESSAGES.ERRORS.AI_PROCESSING(errors.join('; '))
+            : 'All AI providers failed to process the request';
+
         throw new Error(errorMessage);
     }
 

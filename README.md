@@ -1,4 +1,4 @@
-# YouTubeClipper for Obsidian
+# YoutubeClipper for Obsidian
 
 [![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](https://github.com/youtube-clipper/obsidian-plugin)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)

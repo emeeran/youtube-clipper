@@ -7,12 +7,26 @@ import { API_ENDPOINTS, API_LIMITS } from '../../constants/api';
 import { MESSAGES } from '../../constants/messages';
 import { ValidationUtils } from '../../utils/validation';
 import { ErrorHandler } from '../../utils/error-handler';
+import { YouTubeTranscriptService } from './transcript-service';
+import { VideoOptimizationEngine, VideoAnalysisStrategy } from '../../constants/video-optimization';
+
+export interface EnhancedVideoData extends VideoData {
+    duration?: number;
+    hasTranscript?: boolean;
+    strategy?: VideoAnalysisStrategy;
+    estimatedProcessingTime?: number;
+    thumbnail?: string;
+    channelName?: string;
+}
 
 export class YouTubeVideoService implements VideoDataService {
     private readonly metadataTTL = 1000 * 60 * 30; // 30 minutes
     private readonly descriptionTTL = 1000 * 60 * 30; // 30 minutes
+    private transcriptService: YouTubeTranscriptService;
 
-    constructor(private cache?: CacheService) {}
+    constructor(private cache?: CacheService) {
+        this.transcriptService = new YouTubeTranscriptService(cache);
+    }
     /**
      * Extract video ID from YouTube URL
      */
@@ -35,16 +49,26 @@ export class YouTubeVideoService implements VideoDataService {
         }
 
         try {
-            // Get metadata and description in parallel
-            const [metadata, description] = await Promise.all([
-                this.getVideoMetadata(videoId),
-                this.getVideoDescription(videoId)
-            ]);
+            // Get basic metadata first
+            const metadata = await this.getVideoMetadata(videoId);
 
-            const result: VideoData = {
+            // Enhanced video data with optimization info
+            const result: EnhancedVideoData = {
                 title: metadata.title || 'Unknown Title',
-                description: description || 'No description available'
+                description: metadata.description || 'No description available',
+                duration: metadata.duration,
+                thumbnail: metadata.thumbnail,
+                channelName: metadata.channelName
             };
+
+            // Check for transcript availability in background
+            if (result.duration && result.duration < 1800) { // Only check for videos < 30 mins
+                this.checkTranscriptAvailability(videoId).then(hasTranscript => {
+                    result.hasTranscript = hasTranscript;
+                    // Cache the enhanced data
+                    this.cache?.set(cacheKey, result, this.metadataTTL);
+                });
+            }
 
             this.cache?.set(cacheKey, result, this.metadataTTL);
             return result;
@@ -59,7 +83,13 @@ export class YouTubeVideoService implements VideoDataService {
     /**
      * Get video metadata using YouTube oEmbed API
      */
-    private async getVideoMetadata(videoId: string): Promise<{ title: string }> {
+    private async getVideoMetadata(videoId: string): Promise<{
+        title: string;
+        description?: string;
+        duration?: number;
+        thumbnail?: string;
+        channelName?: string;
+    }> {
         const cacheKey = this.getCacheKey('metadata', videoId);
         const cached = this.cache?.get<{ title: string }>(cacheKey);
         if (cached) {
@@ -75,7 +105,7 @@ export class YouTubeVideoService implements VideoDataService {
             
             const response = await fetch(oembedUrl, {
                 headers: {
-                    'User-Agent': 'Obsidian YouTube Processor Plugin'
+                    'User-Agent': 'Obsidian YoutubeClipper Plugin'
                 },
                 signal: controller.signal
             });
@@ -95,9 +125,31 @@ export class YouTubeVideoService implements VideoDataService {
             }
 
             const data = await response.json();
-            const metadata = {
-                title: data.title || 'Unknown Title'
+
+            // Get additional metadata by scraping video page
+            let enhancedData: any = {
+                title: data.title || 'Unknown Title',
+                thumbnail: data.thumbnail_url,
+                author_name: data.author_name
             };
+
+            // Try to get duration and description from page scraping
+            try {
+                const pageData = await this.scrapeAdditionalMetadata(videoId);
+                enhancedData = { ...enhancedData, ...pageData };
+            } catch (error) {
+                // Ignore scraping errors, proceed with oEmbed data
+                console.debug('Could not scrape additional metadata:', error);
+            }
+
+            const metadata = {
+                title: enhancedData.title,
+                description: enhancedData.description,
+                duration: enhancedData.duration,
+                thumbnail: enhancedData.thumbnail,
+                channelName: enhancedData.author_name
+            };
+
             this.cache?.set(cacheKey, metadata, this.metadataTTL);
             return metadata;
         } catch (error) {
@@ -111,6 +163,43 @@ export class YouTubeVideoService implements VideoDataService {
                 throw new Error('Failed to parse YouTube response. The service may be temporarily unavailable.');
             }
             throw error; // Re-throw other errors
+        }
+    }
+
+    /**
+     * Scrape additional metadata from YouTube page
+     */
+    private async scrapeAdditionalMetadata(videoId: string): Promise<{
+        description?: string;
+        duration?: number;
+    }> {
+        try {
+            const html = await this.fetchVideoPageHTML(videoId);
+
+            // Extract duration
+            const durationMatch = html.match(/"lengthSeconds":"(\d+)"/);
+            const duration = durationMatch ? parseInt(durationMatch[1]) : undefined;
+
+            // Extract description
+            const descriptionMatch = html.match(/"shortDescription":"([^"]+)"/);
+            const description = descriptionMatch ?
+                descriptionMatch[1].replace(/\\u0026/g, '&').replace(/\\n/g, '\n') :
+                undefined;
+
+            return { description, duration };
+        } catch (error) {
+            return {};
+        }
+    }
+
+    /**
+     * Check if transcript is available for this video
+     */
+    private async checkTranscriptAvailability(videoId: string): Promise<boolean> {
+        try {
+            return await this.transcriptService.isTranscriptAvailable(videoId);
+        } catch (error) {
+            return false;
         }
     }
 

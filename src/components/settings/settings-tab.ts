@@ -4,11 +4,12 @@
  */
 
 import { App, PluginSettingTab, Setting } from 'obsidian';
-import { YouTubePluginSettings, OutputFormat } from '../../interfaces/types';
+import { YouTubePluginSettings, OutputFormat, PerformanceMode } from '../../interfaces/types';
 import { MESSAGES } from '../../constants/messages';
 import { ValidationUtils } from '../../utils/validation';
 import { ErrorHandler } from '../../utils/error-handler';
 import { SecureConfigService } from '../../services/secure-config';
+import { PERFORMANCE_PRESETS, PerformanceOptimizer } from '../../constants/performance';
 
 // Unique CSS classes to prevent conflicts
 const SETTINGS_CSS_CLASSES = {
@@ -47,6 +48,7 @@ export class YouTubeSettingsTab extends PluginSettingTab {
 
         this.createHeader();
         this.createAPISettings();
+        this.createPerformanceSettings();
         this.createSecuritySettings();
         this.createFileSettings();
         this.createValidationStatus();
@@ -282,6 +284,84 @@ export class YouTubeSettingsTab extends PluginSettingTab {
         if (errors.length > 0) {
             throw new Error(errors.join('\n'));
         }
+    }
+
+    /**
+     * Create performance and speed settings
+     */
+    private createPerformanceSettings(): void {
+        const { containerEl } = this;
+
+        containerEl.createEl('h3', { text: 'Performance & Speed' });
+
+        const currentMode = this.settings.performanceMode || 'balanced';
+        const preset = PERFORMANCE_PRESETS[currentMode];
+
+        // Performance Mode Selection
+        new Setting(containerEl)
+            .setName('Performance Mode')
+            .setDesc(`Current: ${preset.name} - ${preset.description}`)
+            .addDropdown(dropdown => dropdown
+                .addOption('fast', '⚡ Fast - Maximum speed')
+                .addOption('balanced', '⚖️ Balanced - Speed & Quality')
+                .addOption('quality', '🎯 Quality - Maximum analysis')
+                .setValue(currentMode)
+                .onChange(async (value: PerformanceMode) => {
+                    await this.updateSetting('performanceMode', value);
+                    this.display(); // Refresh to show updated description
+                }));
+
+        // Enable Parallel Processing
+        new Setting(containerEl)
+            .setName('Parallel Processing')
+            .setDesc('Race multiple AI providers simultaneously for faster responses')
+            .addToggle(toggle => toggle
+                .setValue(this.settings.enableParallelProcessing)
+                .onChange(async (value) => {
+                    await this.updateSetting('enableParallelProcessing', value);
+                }));
+
+        // Prefer Multimodal Analysis
+        new Setting(containerEl)
+            .setName('Multimodal Analysis')
+            .setDesc('Use video-aware models that can analyze both audio and visual content')
+            .addToggle(toggle => toggle
+                .setValue(this.settings.preferMultimodal)
+                .onChange(async (value) => {
+                    await this.updateSetting('preferMultimodal', value);
+                }));
+
+        // Current Performance Status
+        const statusEl = containerEl.createDiv();
+        statusEl.createEl('h4', { text: 'Current Configuration' });
+
+        const statusListEl = statusEl.createEl('ul');
+        const statusItems = [
+            `Mode: ${preset.name}`,
+            `Parallel Processing: ${this.settings.enableParallelProcessing ? 'Enabled' : 'Disabled'}`,
+            `Multimodal: ${this.settings.preferMultimodal ? 'Preferred' : 'Standard'}`,
+            `Gemini Timeout: ${this.settings.customTimeouts?.geminiTimeout || preset.timeouts.geminiTimeout}ms`,
+            `Groq Timeout: ${this.settings.customTimeouts?.groqTimeout || preset.timeouts.groqTimeout}ms`
+        ];
+
+        statusItems.forEach(item => {
+            const li = statusListEl.createEl('li');
+            li.textContent = item;
+        });
+
+        // Performance Recommendations
+        const recommendations = PerformanceOptimizer.getPerformanceRecommendations(
+            this.settings.performanceMode,
+            undefined, // video duration not available in settings
+            'detailed-guide' // default format
+        );
+
+        const recEl = containerEl.createDiv();
+        recEl.createEl('h4', { text: 'Recommendations' });
+        const recTextEl = recEl.createEl('p');
+        recTextEl.textContent = recommendations.reason;
+        recTextEl.style.fontStyle = 'italic';
+        recTextEl.style.color = 'var(--text-muted)';
     }
 
     /**

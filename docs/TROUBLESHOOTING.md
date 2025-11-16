@@ -10,7 +10,7 @@
 1. **Verify file location**:
    - Files must be at: `.obsidian/plugins/youtube-clipper/`
    - Required files: `main.js`, `manifest.json`
-   - Check that path is correct (not in `youtube-processor/`)
+   - Check that path is correct (not in `youtube-clipper/`)
 
 2. **Reload plugin**:
    - Settings → Community Plugins → Manage

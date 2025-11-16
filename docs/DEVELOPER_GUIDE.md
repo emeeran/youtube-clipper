@@ -31,7 +31,7 @@ npm run version
 ## Project Structure Explained
 
 ```
-youtube-processor/
+youtube-clipper/
 ├── src/                          # TypeScript source code
 │   ├── main.ts                  # Plugin entry point
 │   ├── components/

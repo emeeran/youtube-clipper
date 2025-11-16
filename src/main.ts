@@ -16,10 +16,14 @@ const DEFAULT_SETTINGS: YouTubePluginSettings = {
     groqApiKey: '',
     outputPath: 'YouTube/Processed Videos',
     useEnvironmentVariables: false,
-    environmentPrefix: 'YTC'
+    environmentPrefix: 'YTC',
+    // Performance settings with smart defaults
+    performanceMode: 'balanced',
+    enableParallelProcessing: true,
+    preferMultimodal: true
 };
 
-export default class YouTubeProcessorPlugin extends Plugin {
+export default class YoutubeClipperPlugin extends Plugin {
     private settings: YouTubePluginSettings = DEFAULT_SETTINGS;
     private serviceContainer?: ServiceContainer;
     private ribbonIcon?: HTMLElement;
@@ -27,7 +31,7 @@ export default class YouTubeProcessorPlugin extends Plugin {
     private operationCount = 0;
 
     async onload(): Promise<void> {
-        this.logInfo('Initializing YouTube Processor Plugin v1.2.0...');
+        this.logInfo('Initializing YoutubeClipper Plugin v1.2.0...');
         const conflicts = ConflictPrevention.checkForPotentialConflicts();
         if (conflicts.length > 0) {
             this.logWarning(`Potential conflicts detected but proceeding: ${conflicts.join(', ')}`);
@@ -37,23 +41,23 @@ export default class YouTubeProcessorPlugin extends Plugin {
             await this.loadSettings();
             await this.initializeServices();
             this.registerUIComponents();
-            this.logInfo('YouTube Processor Plugin loaded successfully');
+            this.logInfo('YoutubeClipper Plugin loaded successfully');
         } catch (error) {
             this.logError('Failed to load plugin', error as Error);
             ErrorHandler.handle(error as Error, 'Plugin initialization');
-            new Notice('Failed to load YouTube Processor Plugin. Check console for details.');
+            new Notice('Failed to load YoutubeClipper Plugin. Check console for details.');
         }
     }
 
     onunload(): void {
-        this.logInfo('Unloading YouTube Processor Plugin...');
+        this.logInfo('Unloading YoutubeClipper Plugin...');
         this.isUnloading = true;
 
         try {
             this.serviceContainer?.clearServices();
             this.cleanupUIElements();
             ConflictPrevention.cleanupAllElements();
-            this.logInfo('YouTube Processor Plugin unloaded successfully');
+            this.logInfo('YoutubeClipper Plugin unloaded successfully');
         } catch (error) {
             this.logError('Error during plugin unload', error as Error);
         }
