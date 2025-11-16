@@ -32,7 +32,12 @@ export class AIPromptService implements PromptService {
     /**
      * Create analysis prompt for YouTube video content with format selection (optimized)
      */
-    createAnalysisPrompt(videoData: VideoData, videoUrl: string, format: OutputFormat = 'detailed-guide'): string {
+    createAnalysisPrompt(videoData: VideoData, videoUrl: string, format: OutputFormat = 'detailed-guide', customPrompt?: string): string {
+        // Use custom prompt if provided
+        if (customPrompt && customPrompt.trim()) {
+            return this.applyCustomPrompt(customPrompt, videoData, videoUrl);
+        }
+
         // Fast string replacement instead of template literals (reduced allocations)
         const baseContent = AIPromptService.BASE_TEMPLATE
             .replace('{{TITLE}}', videoData.title)
@@ -49,6 +54,23 @@ export class AIPromptService implements PromptService {
         }
 
         return this.createDetailedGuidePrompt(baseContent, videoUrl);
+    }
+
+    /**
+     * Apply custom prompt template with placeholder substitution
+     */
+    private applyCustomPrompt(customPrompt: string, videoData: VideoData, videoUrl: string): string {
+        const videoId = ValidationUtils.extractVideoId(videoUrl);
+        const embedUrl = videoId ? `https://www.youtube-nocookie.com/embed/${videoId}` : videoUrl;
+        
+        return customPrompt
+            .replace(/__VIDEO_TITLE__/g, videoData.title)
+            .replace(/__VIDEO_DESCRIPTION__/g, videoData.description)
+            .replace(/__VIDEO_URL__/g, videoUrl)
+            .replace(/__VIDEO_ID__/g, videoId || 'unknown')
+            .replace(/__EMBED_URL__/g, embedUrl)
+            .replace(/__DATE__/g, new Date().toISOString().split('T')[0])
+            .replace(/__TIMESTAMP__/g, new Date().toISOString());
     }
 
     /**

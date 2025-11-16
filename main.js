@@ -2149,6 +2149,7 @@ var YouTubeSettingsTab = class extends import_obsidian5.PluginSettingTab {
     this.createHeader();
     this.createAPISettings();
     this.createSecuritySettings();
+    this.createCustomPromptsSettings();
     this.createFileSettings();
     this.createValidationStatus();
     this.createUsageInstructions();
@@ -2244,6 +2245,94 @@ var YouTubeSettingsTab = class extends import_obsidian5.PluginSettingTab {
       validation.warnings.forEach((warning) => {
         warningEl.createEl("p", { text: warning, cls: "ytc-warning-text" });
       });
+    }
+  }
+  /**
+   * Create custom prompts settings
+   */
+  createCustomPromptsSettings() {
+    const { containerEl } = this;
+    containerEl.createEl("h3", { text: "Custom Output Formats" });
+    const promptsDesc = containerEl.createDiv("ytc-prompts-description");
+    promptsDesc.createEl("p", {
+      text: "Customize AI prompts for each output format. Use placeholders: __VIDEO_TITLE__, __VIDEO_DESCRIPTION__, __VIDEO_URL__",
+      cls: "setting-item-description"
+    });
+    if (!this.settings.customPrompts) {
+      this.settings.customPrompts = {};
+    }
+    const formats = [
+      "executive-summary",
+      "detailed-guide",
+      "brief"
+    ];
+    formats.forEach((format) => {
+      var _a;
+      const currentPrompt = ((_a = this.settings.customPrompts) == null ? void 0 : _a[format]) || "";
+      const formatHeader = containerEl.createDiv("ytc-format-header");
+      formatHeader.style.display = "flex";
+      formatHeader.style.justifyContent = "space-between";
+      formatHeader.style.alignItems = "center";
+      formatHeader.style.marginTop = "15px";
+      formatHeader.style.marginBottom = "10px";
+      formatHeader.createEl("h4", {
+        text: this.formatDisplayName(format),
+        attr: { style: "margin: 0;" }
+      });
+      const resetBtn = formatHeader.createEl("button", {
+        text: "Reset to Default",
+        attr: {
+          style: "padding: 4px 12px; font-size: 12px; cursor: pointer;"
+        },
+        cls: "ytc-reset-prompt-btn"
+      });
+      resetBtn.addEventListener("click", () => {
+        if (this.settings.customPrompts) {
+          delete this.settings.customPrompts[format];
+          this.validateAndSaveSettings();
+        }
+      });
+      const textareaContainer = containerEl.createDiv("ytc-prompt-textarea-container");
+      textareaContainer.style.marginBottom = "10px";
+      const textarea = textareaContainer.createEl("textarea", {
+        attr: {
+          placeholder: `Enter custom prompt for ${this.formatDisplayName(format)}...`,
+          style: "width: 100%; height: 120px; padding: 8px; font-family: monospace; font-size: 12px; border: 1px solid var(--background-modifier-border); border-radius: 4px; resize: vertical;"
+        }
+      });
+      textarea.value = currentPrompt;
+      textarea.addEventListener("change", async () => {
+        if (textarea.value.trim()) {
+          if (!this.settings.customPrompts) {
+            this.settings.customPrompts = {};
+          }
+          this.settings.customPrompts[format] = textarea.value;
+        } else if (this.settings.customPrompts) {
+          delete this.settings.customPrompts[format];
+        }
+        await this.validateAndSaveSettings();
+      });
+      const helpText = textareaContainer.createEl("small", {
+        text: `Available placeholders: __VIDEO_TITLE__, __VIDEO_DESCRIPTION__, __VIDEO_URL__, __AI_PROVIDER__, __AI_MODEL__`,
+        attr: {
+          style: "display: block; margin-top: 6px; color: var(--text-muted); font-size: 11px;"
+        }
+      });
+    });
+  }
+  /**
+   * Convert format key to display name
+   */
+  formatDisplayName(format) {
+    switch (format) {
+      case "executive-summary":
+        return "\u{1F4CB} Executive Summary";
+      case "detailed-guide":
+        return "\u{1F4DA} Comprehensive Tutorial";
+      case "brief":
+        return "\u26A1 Brief Format";
+      default:
+        return format;
     }
   }
   /**
@@ -3055,7 +3144,10 @@ var _AIPromptService = class {
   /**
    * Create analysis prompt for YouTube video content with format selection (optimized)
    */
-  createAnalysisPrompt(videoData, videoUrl, format = "detailed-guide") {
+  createAnalysisPrompt(videoData, videoUrl, format = "detailed-guide", customPrompt) {
+    if (customPrompt && customPrompt.trim()) {
+      return this.applyCustomPrompt(customPrompt, videoData, videoUrl);
+    }
     const baseContent = _AIPromptService.BASE_TEMPLATE.replace("{{TITLE}}", videoData.title).replace("{{URL}}", videoUrl).replace("{{DESCRIPTION}}", videoData.description);
     if (format === "executive-summary") {
       return this.createExecutiveSummaryPrompt(baseContent, videoUrl);
@@ -3064,6 +3156,14 @@ var _AIPromptService = class {
       return this.createBriefPrompt(baseContent, videoUrl);
     }
     return this.createDetailedGuidePrompt(baseContent, videoUrl);
+  }
+  /**
+   * Apply custom prompt template with placeholder substitution
+   */
+  applyCustomPrompt(customPrompt, videoData, videoUrl) {
+    const videoId = ValidationUtils.extractVideoId(videoUrl);
+    const embedUrl = videoId ? `https://www.youtube-nocookie.com/embed/${videoId}` : videoUrl;
+    return customPrompt.replace(/__VIDEO_TITLE__/g, videoData.title).replace(/__VIDEO_DESCRIPTION__/g, videoData.description).replace(/__VIDEO_URL__/g, videoUrl).replace(/__VIDEO_ID__/g, videoId || "unknown").replace(/__EMBED_URL__/g, embedUrl).replace(/__DATE__/g, new Date().toISOString().split("T")[0]).replace(/__TIMESTAMP__/g, new Date().toISOString());
   }
   /**
    * Create a brief prompt: short description plus resources list
@@ -3608,6 +3708,7 @@ var YouTubeProcessorPlugin = class extends import_obsidian7.Plugin {
       throw new Error("Plugin is shutting down");
     }
     const result = await ConflictPrevention.safeOperation(async () => {
+      var _a;
       new import_obsidian7.Notice(MESSAGES.PROCESSING);
       const validation = ValidationUtils.validateSettings(this.settings);
       if (!validation.isValid) {
@@ -3622,7 +3723,8 @@ var YouTubeProcessorPlugin = class extends import_obsidian7.Plugin {
         throw new Error(MESSAGES.ERRORS.VIDEO_ID_EXTRACTION);
       }
       const videoData = await youtubeService.getVideoData(videoId);
-      const prompt = promptService.createAnalysisPrompt(videoData, url, format);
+      const customPrompt = (_a = this.settings.customPrompts) == null ? void 0 : _a[format];
+      const prompt = promptService.createAnalysisPrompt(videoData, url, format, customPrompt);
       let aiResponse;
       if (providerName) {
         aiResponse = await aiService.processWith(providerName, prompt, model);

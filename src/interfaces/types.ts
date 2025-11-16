@@ -11,6 +11,7 @@ export interface YouTubePluginSettings {
     useEnvironmentVariables: boolean;
     environmentPrefix: string;
     modelOptionsCache?: Record<string, string[]>;
+    customPrompts?: Record<OutputFormat, string>;
 }
 
 export type OutputFormat = 'executive-summary' | 'detailed-guide' | 'brief';
@@ -62,7 +63,7 @@ export interface CacheService {
 }
 
 export interface PromptService {
-    createAnalysisPrompt(videoData: VideoData, videoUrl: string, format?: OutputFormat): string;
+    createAnalysisPrompt(videoData: VideoData, videoUrl: string, format?: OutputFormat, customPrompt?: string): string;
     processAIResponse(content: string, provider: string, model: string, format?: OutputFormat, videoData?: VideoData, videoUrl?: string): string;
 }
 

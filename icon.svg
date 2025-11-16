@@ -1,0 +1,40 @@
+<svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF0000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#CC0000;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.95" />
+      <stop offset="100%" style="stop-color:#F0F0F0;stop-opacity:0.85" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Red background (YouTube-inspired) -->
+  <rect width="128" height="128" fill="url(#bgGradient)" rx="24"/>
+  
+  <!-- Play button (main icon) -->
+  <g transform="translate(64, 64)">
+    <!-- Play triangle -->
+    <polygon points="0,-28 -28,20 28,20" fill="white" opacity="0.95"/>
+    
+    <!-- Accent circle -->
+    <circle cx="0" cy="0" r="42" fill="none" stroke="white" stroke-width="2" opacity="0.6"/>
+  </g>
+  
+  <!-- Document/note indicator (left side, subtle) -->
+  <g transform="translate(24, 24)" opacity="0.75">
+    <rect width="20" height="28" fill="none" stroke="white" stroke-width="1.5" rx="2"/>
+    <line x1="4" y1="8" x2="16" y2="8" stroke="white" stroke-width="1"/>
+    <line x1="4" y1="14" x2="16" y2="14" stroke="white" stroke-width="1"/>
+    <line x1="4" y1="20" x2="12" y2="20" stroke="white" stroke-width="1"/>
+  </g>
+  
+  <!-- Plugin indicator (right side, subtle) -->
+  <g transform="translate(92, 24)" opacity="0.6">
+    <circle cx="0" cy="0" r="3" fill="white"/>
+    <circle cx="6" cy="0" r="3" fill="white"/>
+    <circle cx="12" cy="0" r="3" fill="white"/>
+  </g>
+</svg>

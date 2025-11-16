@@ -48,6 +48,7 @@ export class YouTubeSettingsTab extends PluginSettingTab {
         this.createHeader();
         this.createAPISettings();
         this.createSecuritySettings();
+        this.createCustomPromptsSettings();
         this.createFileSettings();
         this.createValidationStatus();
         this.createUsageInstructions();
@@ -198,6 +199,116 @@ export class YouTubeSettingsTab extends PluginSettingTab {
             validation.warnings.forEach(warning => {
                 warningEl.createEl('p', { text: warning, cls: 'ytc-warning-text' });
             });
+        }
+    }
+
+    /**
+     * Create custom prompts settings
+     */
+    private createCustomPromptsSettings(): void {
+        const { containerEl } = this;
+        
+        // Custom Prompts section
+        containerEl.createEl('h3', { text: 'Custom Output Formats' });
+        
+        const promptsDesc = containerEl.createDiv('ytc-prompts-description');
+        promptsDesc.createEl('p', {
+            text: 'Customize AI prompts for each output format. Use placeholders: __VIDEO_TITLE__, __VIDEO_DESCRIPTION__, __VIDEO_URL__',
+            cls: 'setting-item-description'
+        });
+        
+        // Initialize custom prompts if not present
+        if (!this.settings.customPrompts) {
+            this.settings.customPrompts = {} as Record<'executive-summary' | 'detailed-guide' | 'brief', string>;
+        }
+        
+        // For each output format
+        const formats: Array<'executive-summary' | 'detailed-guide' | 'brief'> = [
+            'executive-summary',
+            'detailed-guide',
+            'brief'
+        ];
+        
+        formats.forEach(format => {
+            const currentPrompt = this.settings.customPrompts?.[format] || '';
+            
+            // Format header with reset button
+            const formatHeader = containerEl.createDiv('ytc-format-header');
+            formatHeader.style.display = 'flex';
+            formatHeader.style.justifyContent = 'space-between';
+            formatHeader.style.alignItems = 'center';
+            formatHeader.style.marginTop = '15px';
+            formatHeader.style.marginBottom = '10px';
+            
+            formatHeader.createEl('h4', {
+                text: this.formatDisplayName(format),
+                attr: { style: 'margin: 0;' }
+            });
+            
+            // Reset button
+            const resetBtn = formatHeader.createEl('button', {
+                text: 'Reset to Default',
+                attr: {
+                    style: 'padding: 4px 12px; font-size: 12px; cursor: pointer;'
+                },
+                cls: 'ytc-reset-prompt-btn'
+            });
+            
+            resetBtn.addEventListener('click', () => {
+                if (this.settings.customPrompts) {
+                    delete this.settings.customPrompts[format];
+                    this.validateAndSaveSettings();
+                }
+            });
+            
+            // Textarea for custom prompt
+            const textareaContainer = containerEl.createDiv('ytc-prompt-textarea-container');
+            textareaContainer.style.marginBottom = '10px';
+            
+            const textarea = textareaContainer.createEl('textarea', {
+                attr: {
+                    placeholder: `Enter custom prompt for ${this.formatDisplayName(format)}...`,
+                    style: 'width: 100%; height: 120px; padding: 8px; font-family: monospace; font-size: 12px; border: 1px solid var(--background-modifier-border); border-radius: 4px; resize: vertical;'
+                }
+            }) as HTMLTextAreaElement;
+            
+            textarea.value = currentPrompt;
+            
+            textarea.addEventListener('change', async () => {
+                if (textarea.value.trim()) {
+                    if (!this.settings.customPrompts) {
+                        this.settings.customPrompts = {} as Record<'executive-summary' | 'detailed-guide' | 'brief', string>;
+                    }
+                    this.settings.customPrompts[format] = textarea.value;
+                } else if (this.settings.customPrompts) {
+                    delete this.settings.customPrompts[format];
+                }
+                await this.validateAndSaveSettings();
+            });
+            
+            // Help text with placeholders
+            const helpText = textareaContainer.createEl('small', {
+                text: `Available placeholders: __VIDEO_TITLE__, __VIDEO_DESCRIPTION__, __VIDEO_URL__, __AI_PROVIDER__, __AI_MODEL__`,
+                attr: {
+                    style: 'display: block; margin-top: 6px; color: var(--text-muted); font-size: 11px;'
+                }
+            });
+        });
+    }
+
+    /**
+     * Convert format key to display name
+     */
+    private formatDisplayName(format: 'executive-summary' | 'detailed-guide' | 'brief'): string {
+        switch (format) {
+            case 'executive-summary':
+                return '📋 Executive Summary';
+            case 'detailed-guide':
+                return '📚 Comprehensive Tutorial';
+            case 'brief':
+                return '⚡ Brief Format';
+            default:
+                return format;
         }
     }
 

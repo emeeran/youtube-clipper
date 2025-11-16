@@ -181,7 +181,8 @@ export default class YouTubeProcessorPlugin extends Plugin {
             }
 
             const videoData = await youtubeService.getVideoData(videoId);
-            const prompt = promptService.createAnalysisPrompt(videoData, url, format);
+            const customPrompt = this.settings.customPrompts?.[format];
+            const prompt = promptService.createAnalysisPrompt(videoData, url, format, customPrompt);
             let aiResponse;
             if (providerName) {
                 // Use selected provider and optional model override
