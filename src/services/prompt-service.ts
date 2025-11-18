@@ -205,11 +205,13 @@ ai_provider: "__AI_PROVIDER__"
 ai_model: "__AI_MODEL__"
 ---
 
+<div style="text-align: center; margin-bottom: 24px;">
 <iframe width="640" height="360" src="${embedUrl}" title="{{TITLE}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
 
 ---
 
-## Executive Summary
+# 📊 Executive Summary
 
 The video discusses [explain the main problem/opportunity and the central argument of the video].
 
@@ -217,39 +219,61 @@ Key concepts include [summarize the most important concepts, frameworks, or diff
 
 To implement these insights, [provide recommendations, risks, and priority actions based on the insights].
 
-Focus on strategic value, not narration or surface-level recap.
+> **💡 Focus:** Strategic value over narrative recap - prioritize actionable insights.
 
-------
+---
 
-## Key Insights
+## 🎯 Key Strategic Insights
 
-- **Technical Strategy:** [Critical insight with business impact and specific example from video]
-- **Design Thinking:** [Critical insight with business impact and specific example from video]
-- **Continuous Learning:** [Critical insight with business impact and specific example from video]
+### 🔧 Technical Strategy
+**[Critical insight with specific business impact and example from video]**
 
-(Optional: add 4–5 if they provide real value)
+### 💡 Design Thinking
+**[Critical insight with specific business impact and example from video]**
 
-------
+### 📚 Continuous Learning
+**[Critical insight with specific business impact and example from video]**
 
-## Action Items
+> *Optional: Add 4–5 additional insights if they provide significant value.*
 
-1. **Immediate (0-30 days):** [Specific, measurable action with clear success criteria]
-2. **Short-term (1-3 months):** [Specific, measurable action with clear success criteria]
-3. **Mid-term (3-6 months):** [Specific, measurable action with clear success criteria]
-4. **Long-term (6+ months):** [Specific, measurable action with clear success criteria]
-5. *(optional)*
+---
 
-Each item MUST include a clear success metric.
+## 🚀 Action Plan & Implementation
 
-------
+### ⚡ Immediate (0-30 days)
+- **Action:** [Specific, measurable action]
+- **Success Metric:** [Clear success criteria]
 
-## Resources
+### 📈 Short-term (1-3 months)
+- **Action:** [Specific, measurable action]
+- **Success Metric:** [Clear success criteria]
 
-- Original Video: [Watch on YouTube](${videoUrl})
-- Channel: [Creator's Channel](https://youtube.com/channel/[extract-channel-id])
-- Key Tools / Technologies Mentioned:
-- Official Docs:
-- Further Reading (1–2 high-quality links):
+### 🎯 Mid-term (3-6 months)
+- **Action:** [Specific, measurable action]
+- **Success Metric:** [Clear success criteria]
+
+### 🔮 Long-term (6+ months)
+- **Action:** [Specific, measurable action]
+- **Success Metric:** [Clear success criteria]
+
+> **✅ Requirement:** Each action item must include clear, measurable success criteria.
+
+---
+
+## 📚 Curated Resources & References
+
+### 🎥 Primary Sources
+- **Original Video:** [Watch on YouTube](${videoUrl})
+- **Channel:** [Creator's Channel](https://youtube.com/channel/[extract-channel-id])
+
+### 🛠️ Key Tools & Technologies
+- [List main tools, frameworks, or technologies mentioned]
+
+### 📖 Official Documentation
+- [Links to official documentation for mentioned technologies]
+
+### 🌟 Further Reading
+- [1-2 high-quality related articles or resources for deep dive]
 
 ---
 

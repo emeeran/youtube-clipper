@@ -4172,11 +4172,13 @@ ai_provider: "__AI_PROVIDER__"
 ai_model: "__AI_MODEL__"
 ---
 
+<div style="text-align: center; margin-bottom: 24px;">
 <iframe width="640" height="360" src="${embedUrl}" title="{{TITLE}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
 
 ---
 
-## Executive Summary
+# \u{1F4CA} Executive Summary
 
 The video discusses [explain the main problem/opportunity and the central argument of the video].
 
@@ -4184,39 +4186,61 @@ Key concepts include [summarize the most important concepts, frameworks, or diff
 
 To implement these insights, [provide recommendations, risks, and priority actions based on the insights].
 
-Focus on strategic value, not narration or surface-level recap.
+> **\u{1F4A1} Focus:** Strategic value over narrative recap - prioritize actionable insights.
 
-------
+---
 
-## Key Insights
+## \u{1F3AF} Key Strategic Insights
 
-- **Technical Strategy:** [Critical insight with business impact and specific example from video]
-- **Design Thinking:** [Critical insight with business impact and specific example from video]
-- **Continuous Learning:** [Critical insight with business impact and specific example from video]
+### \u{1F527} Technical Strategy
+**[Critical insight with specific business impact and example from video]**
 
-(Optional: add 4\u20135 if they provide real value)
+### \u{1F4A1} Design Thinking
+**[Critical insight with specific business impact and example from video]**
 
-------
+### \u{1F4DA} Continuous Learning
+**[Critical insight with specific business impact and example from video]**
 
-## Action Items
+> *Optional: Add 4\u20135 additional insights if they provide significant value.*
 
-1. **Immediate (0-30 days):** [Specific, measurable action with clear success criteria]
-2. **Short-term (1-3 months):** [Specific, measurable action with clear success criteria]
-3. **Mid-term (3-6 months):** [Specific, measurable action with clear success criteria]
-4. **Long-term (6+ months):** [Specific, measurable action with clear success criteria]
-5. *(optional)*
+---
 
-Each item MUST include a clear success metric.
+## \u{1F680} Action Plan & Implementation
 
-------
+### \u26A1 Immediate (0-30 days)
+- **Action:** [Specific, measurable action]
+- **Success Metric:** [Clear success criteria]
 
-## Resources
+### \u{1F4C8} Short-term (1-3 months)
+- **Action:** [Specific, measurable action]
+- **Success Metric:** [Clear success criteria]
 
-- Original Video: [Watch on YouTube](${videoUrl})
-- Channel: [Creator's Channel](https://youtube.com/channel/[extract-channel-id])
-- Key Tools / Technologies Mentioned:
-- Official Docs:
-- Further Reading (1\u20132 high-quality links):
+### \u{1F3AF} Mid-term (3-6 months)
+- **Action:** [Specific, measurable action]
+- **Success Metric:** [Clear success criteria]
+
+### \u{1F52E} Long-term (6+ months)
+- **Action:** [Specific, measurable action]
+- **Success Metric:** [Clear success criteria]
+
+> **\u2705 Requirement:** Each action item must include clear, measurable success criteria.
+
+---
+
+## \u{1F4DA} Curated Resources & References
+
+### \u{1F3A5} Primary Sources
+- **Original Video:** [Watch on YouTube](${videoUrl})
+- **Channel:** [Creator's Channel](https://youtube.com/channel/[extract-channel-id])
+
+### \u{1F6E0}\uFE0F Key Tools & Technologies
+- [List main tools, frameworks, or technologies mentioned]
+
+### \u{1F4D6} Official Documentation
+- [Links to official documentation for mentioned technologies]
+
+### \u{1F31F} Further Reading
+- [1-2 high-quality related articles or resources for deep dive]
 
 ---
 
