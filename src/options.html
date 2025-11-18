@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>YouTube Clipper Options</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 16px; }
+      label { display:block; margin-bottom:8px; font-weight:600 }
+      input[type=text] { width:100%; padding:8px; font-size:14px }
+      button { margin-top:10px; padding:8px 12px }
+      /* Simple tooltip for the options page */
+      .tooltip { display:inline-block; margin-left:8px; cursor:help; position:relative; color:#333; font-weight:700; border-radius:50%; width:18px; height:18px; line-height:18px; text-align:center; background:#eee; }
+      .tooltip .tooltip-text { visibility:hidden; width:300px; background:#222; color:#fff; text-align:left; padding:8px; border-radius:6px; position:absolute; z-index:10; bottom:125%; left:50%; transform:translateX(-50%); opacity:0; transition:opacity 0.18s ease-in-out; font-size:13px; }
+      .tooltip .tooltip-text code { background:rgba(255,255,255,0.05); padding:2px 4px; border-radius:3px; font-size:12px; }
+      .tooltip .tooltip-text::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border-width:6px; border-style:solid; border-color:#222 transparent transparent transparent; }
+      .tooltip:focus .tooltip-text,
+      .tooltip:hover .tooltip-text { visibility:visible; opacity:1; }
+    </style>
+  </head>
+  <body>
+    <h2>YouTube Clipper</h2>
+    <p>Set the endpoint the extension should POST to when you click "Clip". Example: <code>http://localhost:3000/clip</code> or an Obsidian deep link like <code>obsidian://open?vault=VAULT&file=YouTube%20Clips</code>.</p>
+    <p><strong>Advanced URI (recommended for a one-click flow):</strong> If you have the <em>Advanced URI</em> plugin installed in Obsidian you can use a command-based deep link so the extension opens the YouTube Clipper modal directly. Set the endpoint to an Obsidian Advanced URI such as <code>obsidian://advanced-uri?comm=ytp-open-url-from-clipboard</code>. The extension will copy the video URL to your clipboard before opening the link so the plugin command can read it. If Advanced URI is not installed, install it from Obsidian community plugins and enable it, then use the URI above.</p>
+    <label for="webhook">Endpoint URL
+      <span class="tooltip" tabindex="0" role="button" aria-label="Endpoint help">?
+        <span class="tooltip-text">Use an HTTP endpoint or an Obsidian URI. For a one-click flow with the Advanced URI plugin, install Advanced URI (Obsidian Community Plugins) and use this example: <code>obsidian://advanced-uri?comm=ytp-open-url-from-clipboard</code>. The extension will copy the video URL to your clipboard before opening the link so the plugin command can read it.</span>
+      </span>
+    </label>
+    <div style="margin-top:6px;">
+      <button id="install-advanced-uri" style="background:#0366d6;color:#fff;border:none;padding:6px 10px;border-radius:4px;cursor:pointer;font-size:13px">Install Advanced URI</button>
+      <span style="margin-left:10px;color:#666;font-size:13px">(opens Advanced URI plugin page)</span>
+    </div>
+    <input id="webhook" type="text" placeholder="https://..." />
+    <div>
+      <button id="save">Save</button>
+      <button id="test">Test send (no server logs required)</button>
+    </div>
+    <script src="options.js"></script>
+  </body>
+</html>

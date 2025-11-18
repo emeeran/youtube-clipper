@@ -1,0 +1,83 @@
+{
+  "geminiApiKey": "",
+  "groqApiKey": "",
+  "outputPath": "/📥 Inbox/Clippings/YouTube",
+  "useEnvironmentVariables": false,
+  "environmentPrefix": " ",
+  "openaiApiKey": "",
+  "processingHistory": [
+    {
+      "id": "mhogy45ejtcqbzr39r",
+      "title": "Leadership Excellence",
+      "url": "https://www.youtube.com/watch?v=sBwKEBVeH-w&pp=ugUHEgVlbi1HQg%3D%3D",
+      "filePath": "/📥 Inbox/Clippings/YouTube/2025-11-07 - Leadership Excellence - Executive Summary.md",
+      "format": "executive",
+      "provider": "mock",
+      "outputType": "markdown",
+      "processedAt": "2025-11-07T06:22:43.586Z",
+      "videoId": "sBwKEBVeH-w",
+      "thumbnail": "https://img.youtube.com/vi/sBwKEBVeH-w/maxresdefault.jpg",
+      "duration": "12:34"
+    },
+    {
+      "id": "mhogq7nhlteoqqwdom",
+      "title": "Digital Transformation",
+      "url": "https://www.youtube.com/watch?v=en3qUvJG42s&pp=ugUHEgVlbi1HQg%3D%3D",
+      "filePath": "/📥 Inbox/Clippings/YouTube/2025-11-07 - Digital Transformation - Executive Summary.md",
+      "format": "executive",
+      "provider": "mock",
+      "outputType": "markdown",
+      "processedAt": "2025-11-07T06:16:34.877Z",
+      "videoId": "en3qUvJG42s",
+      "thumbnail": "https://img.youtube.com/vi/en3qUvJG42s/maxresdefault.jpg",
+      "duration": "8:45"
+    },
+    {
+      "id": "mhogkgdgh37qsee7emj",
+      "title": "Innovation Strategies",
+      "url": "https://www.youtube.com/watch?v=EpsvZSbtk9o",
+      "filePath": "/📥 Inbox/Clippings/YouTube/2025-11-07 - Innovation Strategies - Executive Summary.md",
+      "format": "executive",
+      "provider": "mock",
+      "outputType": "markdown",
+      "processedAt": "2025-11-07T06:12:06.244Z",
+      "videoId": "EpsvZSbtk9o",
+      "thumbnail": "https://img.youtube.com/vi/EpsvZSbtk9o/maxresdefault.jpg",
+      "duration": "25:18"
+    }
+  ],
+  "modelOptionsCache": {
+    "Google Gemini": [
+      "gemini-2.5-pro",
+      "gemini-2.5-pro-tts",
+      "gemini-2.5-pro-preview-tts",
+      "gemini-2.5-flash",
+      "gemini-2.5-flash-preview",
+      "gemini-2.5-flash-preview-09-2025",
+      "gemini-2.5-flash-image",
+      "gemini-2.5-flash-image-preview",
+      "gemini-2.5-flash-live",
+      "gemini-2.5-flash-native-audio-preview-09-2025",
+      "gemini-2.5-flash-tts",
+      "gemini-2.5-flash-preview-tts",
+      "gemini-2.5-flash-lite",
+      "gemini-2.5-flash-lite-preview",
+      "gemini-2.5-flash-lite-preview-09-2025",
+      "gemini-2.0-flash",
+      "gemini-2.0-flash-001",
+      "gemini-2.0-flash-exp",
+      "gemini-2.0-flash-image",
+      "gemini-2.0-flash-preview-image-generation",
+      "gemini-2.0-flash-live",
+      "gemini-2.0-flash-live-001",
+      "gemini-2.0-flash-lite",
+      "gemini-2.0-flash-lite-001"
+    ],
+    "Groq": [
+      "llama-4-scout-17b-16e-instruct",
+      "llama-4-maverick-17b-128e-instruct",
+      "llama-3.3-70b-versatile",
+      "llama-3.1-8b-instant"
+    ]
+  }
+}

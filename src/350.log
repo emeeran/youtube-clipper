@@ -1,0 +1,91 @@
+VM209 transformers@3.5.1:1 Failed to create WebGPU Context Provider
+Iu @ VM209 transformers@3.5.1:1
+tc @ VM209 transformers@3.5.1:1
+init @ VM209 transformers@3.5.1:1
+await in init
+a @ VM209 transformers@3.5.1:1
+l @ VM209 transformers@3.5.1:1
+create @ VM209 transformers@3.5.1:1
+_ @ VM209 transformers@3.5.1:1
+(anonymous) @ VM209 transformers@3.5.1:1
+await in (anonymous)
+L @ VM209 transformers@3.5.1:1
+from_pretrained @ VM209 transformers@3.5.1:1
+await in from_pretrained
+from_pretrained @ VM209 transformers@3.5.1:1
+await in from_pretrained
+(anonymous) @ VM209 transformers@3.5.1:1
+q @ VM209 transformers@3.5.1:1
+load_transformers @ VM208 about:srcdoc:738
+await in load_transformers
+load @ VM208 about:srcdoc:700
+invoke_adapter_method @ VM208 about:srcdoc:260
+load_adapter @ VM208 about:srcdoc:199
+get adapter @ VM208 about:srcdoc:233
+load @ VM208 about:srcdoc:126
+process_message @ VM208 about:srcdoc:1002
+(anonymous) @ VM208 about:srcdoc:1028
+postMessage
+_post_message @ plugin:smart-connections:9833
+eval @ plugin:smart-connections:9702
+_send_message @ plugin:smart-connections:9699
+load @ plugin:smart-connections:9815
+await in load
+invoke_adapter_method @ plugin:smart-connections:8504
+load @ plugin:smart-connections:8371
+eval @ plugin:smart-connections:8378
+plugin:youtube-processor:106 Google Gemini failed: Error: Google Gemini API error: 400 . Invalid JSON payload received. Unknown name "useAudioVideoTokens" at 'generation_config': Cannot find field.
+    at _ErrorHandler.createAPIError (plugin:youtube-processor:212:12)
+    at _ErrorHandler.handleAPIError (plugin:youtube-processor:225:16)
+    at async GeminiProvider.process (plugin:youtube-processor:298:7)
+    at async AIService.process (plugin:youtube-processor:94:25)
+    at async eval (plugin:youtube-processor:2117:28)
+    at async ConflictPrevention.safeOperation (plugin:youtube-processor:1936:22)
+    at async YouTubeProcessorPlugin.processYouTubeVideo (plugin:youtube-processor:2100:20)
+    at async YouTubeUrlModal.handleProcess (plugin:youtube-processor:1638:7)
+process @ plugin:youtube-processor:106
+await in process
+eval @ plugin:youtube-processor:2117
+await in eval
+safeOperation @ plugin:youtube-processor:1936
+processYouTubeVideo @ plugin:youtube-processor:2100
+handleProcess @ plugin:youtube-processor:1638
+eval @ plugin:youtube-processor:1584
+transformers@3.5.1:1 Failed to create WebGPU Context Provider
+Iu @ transformers@3.5.1:1
+tc @ transformers@3.5.1:1
+init @ transformers@3.5.1:1
+await in init
+a @ transformers@3.5.1:1
+l @ transformers@3.5.1:1
+create @ transformers@3.5.1:1
+_ @ transformers@3.5.1:1
+(anonymous) @ transformers@3.5.1:1
+await in (anonymous)
+L @ transformers@3.5.1:1
+from_pretrained @ transformers@3.5.1:1
+await in from_pretrained
+from_pretrained @ transformers@3.5.1:1
+await in from_pretrained
+(anonymous) @ transformers@3.5.1:1
+q @ transformers@3.5.1:1
+load_transformers @ VM221 about:srcdoc:738
+await in load_transformers
+load @ VM221 about:srcdoc:700
+invoke_adapter_method @ VM221 about:srcdoc:260
+load @ VM221 about:srcdoc:127
+process_message @ VM221 about:srcdoc:1002
+(anonymous) @ VM221 about:srcdoc:1028
+postMessage
+_post_message @ plugin:smart-connections:9833
+eval @ plugin:smart-connections:9702
+_send_message @ plugin:smart-connections:9699
+load @ plugin:smart-connections:9815
+await in load
+invoke_adapter_method @ plugin:smart-connections:8504
+load @ plugin:smart-connections:8371
+eval @ plugin:smart-connections:8378
+setTimeout
+load @ plugin:smart-connections:8376
+await in load
+eval @ plugin:smart-connections:8378

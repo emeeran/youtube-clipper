@@ -34,7 +34,7 @@ Welcome to the complete documentation for the YouTubeClipper Obsidian plugin!
 
 - **2,963 lines** of comprehensive documentation
 - **644 lines** - API Reference
-- **574 lines** - Developer Guide  
+- **574 lines** - Developer Guide
 - **463 lines** - Architecture Guide
 - **451 lines** - Contributing Guide
 - **439 lines** - Troubleshooting & FAQ
@@ -137,6 +137,8 @@ docs/
 - ✅ Complete API reference
 - ✅ Contributing guidelines
 - ✅ Troubleshooting & FAQ
+- ✅ Performance optimization options
+- ✅ Chrome extension integration
 
 ### Well-Organized
 - ✅ Clear navigation paths

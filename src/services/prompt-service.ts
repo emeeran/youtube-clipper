@@ -2,9 +2,9 @@
  * Prompt generation service for AI processing
  */
 
-import { PromptService, VideoData, OutputFormat, PerformanceMode } from '../interfaces/types';
-import { ValidationUtils } from '../utils/validation';
-import { PerformanceOptimizer } from '../constants/performance';
+import { PromptService, VideoData, OutputFormat, PerformanceMode } from '../types/types';
+import { ValidationUtils } from '../validation';
+import { PerformanceOptimizer } from '../performance';
 
 export class AIPromptService implements PromptService {
     // Optimized prompt templates for different performance modes
@@ -137,6 +137,15 @@ MULTIMODAL ANALYSIS INSTRUCTIONS:
         ## Brief Description
         [Provide a concise 3-4 sentence description that captures the core message of the video]
 
+        ## Key Takeaways
+        - **[Takeaway 1]**: [Core insight or lesson from the video]
+        - **[Takeaway 2]**: [Core insight or lesson from the video]
+        - **[Takeaway 3]**: [Core insight or lesson from the video]
+
+        ## Quick Actions
+        1. **[Immediate Action]**: [Specific action you can take right away]
+        2. **[Next Step]**: [Follow-up action to apply what you learned]
+
         ## Resources
         - **Original Video:** [Watch on YouTube](${videoUrl})
         - **Channel:** [Creator's Channel](https://youtube.com/channel/[extract-channel-id])
@@ -145,7 +154,7 @@ MULTIMODAL ANALYSIS INSTRUCTIONS:
           - [Resource 2]
           - [Resource 3]
 
-        IMPORTANT: Keep the Brief Description short and focused. Provide 2-3 high-quality resource links that help the reader explore the topic further.`;
+        IMPORTANT: Keep the Brief Description short and focused. Provide 2-3 high-quality resource links that help the reader explore the topic further. Action items should be simple and immediately applicable.`;
     }
 
     /**
@@ -189,13 +198,26 @@ MULTIMODAL ANALYSIS INSTRUCTIONS:
 
         ---
 
-        ## Key Insights
-        - [Critical insight 1 with specific detail]
-        - [Critical insight 2 with specific detail]
-        - [Critical insight 3 with specific detail]
+        ## Executive Summary
+        [Provide a comprehensive executive summary in exactly 250 words or fewer. Focus on strategic insights, business implications, and high-level takeaways. Structure it as follows:
 
-        ## Concise Summary
-        [Provide a concise, cohesive summary in exactly two paragraphs, maximum 250 words total. Focus on the core value, main insights, and key actionable takeaways. Make every word count.]
+        **First Paragraph:** Core problem/opportunity and the video's main thesis
+        **Second Paragraph:** Key strategic insights and competitive advantages
+        **Third Paragraph:** Business implications and recommendation priority
+
+        Focus on strategic value, not tactical details. Make every word count.]
+
+        ## Key Insights
+        - **[Strategic Insight 1]:** [Critical insight with business impact and specific example from video]
+        - **[Strategic Insight 2]:** [Critical insight with business impact and specific example from video]
+        - **[Strategic Insight 3]:** [Critical insight with business impact and specific example from video]
+
+        ## Action Items (3-5 items)
+        1. **[Immediate Priority - 0-30 days]**: [Specific, measurable action with clear success criteria]
+        2. **[Short-term Priority - 1-3 months]**: [Specific, measurable action with clear success criteria]
+        3. **[Strategic Priority - 3-6 months]**: [Specific, measurable action with clear success criteria]
+        4. **[Long-term Priority - 6+ months]**: [Specific, measurable action with clear success criteria]
+        5. **[Optional Additional Priority]**: [Specific, measurable action with clear success criteria]
 
         ## Resources
         - **Original Video:** [Watch on YouTube](${videoUrl})
@@ -204,7 +226,11 @@ MULTIMODAL ANALYSIS INSTRUCTIONS:
         - **Official Documentation:** [Links to official docs for mentioned technologies]
         - **Further Reading:** [1-2 high-quality related articles or resources]
 
-        CRITICAL: Keep the Executive Summary section to exactly 250 words or fewer. Be concise but comprehensive.`;
+        CRITICAL:
+        - Keep the Executive Summary to exactly 250 words or fewer
+        - Provide 3-5 specific, actionable items with timeframes and success criteria
+        - Each action item should be measurable and directly tied to video content
+        - Focus on strategic business value, not just technical details`;
     }
 
     /**
@@ -270,6 +296,20 @@ MULTIMODAL ANALYSIS INSTRUCTIONS:
 
         [Continue with additional steps as needed - provide comprehensive coverage]
 
+        ## Action Items & Next Steps
+        ### Immediate Actions (0-1 week)
+        - **[Action 1]**: [Specific, measurable task with clear success criteria]
+        - **[Action 2]**: [Specific, measurable task with clear success criteria]
+        - **[Action 3]**: [Specific, measurable task with clear success criteria]
+
+        ### Short-term Goals (1-4 weeks)
+        - **[Goal 1]**: [Specific outcome or milestone to achieve]
+        - **[Goal 2]**: [Specific outcome or milestone to achieve]
+
+        ### Long-term Objectives (1-3 months)
+        - **[Objective 1]**: [Strategic objective with measurable results]
+        - **[Objective 2]**: [Strategic objective with measurable results]
+
         ## Resources
         - **Original Video:** [Watch on YouTube](${videoUrl})
         - **Channel:** [Creator's Channel](https://youtube.com/channel/[extract-channel-id])
@@ -278,7 +318,11 @@ MULTIMODAL ANALYSIS INSTRUCTIONS:
         - **Tools & Software:** [List any tools mentioned with download/setup links]
         - **Community:** [Relevant forums, Discord servers, or communities]
 
-        IMPORTANT: Provide detailed, actionable steps that someone could follow to implement the concepts from the video.`;
+        IMPORTANT:
+        - Provide detailed, actionable steps that someone could follow to implement the concepts from the video
+        - Include 3-5 immediate action items and 2-4 longer-term goals
+        - Each action item should be specific, measurable, and directly tied to video content
+        - Success criteria should be clear and achievable`;
     }
 
     /**

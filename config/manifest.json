@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Clipper",
+  "version": "0.1",
+  "description": "Send the current YouTube video URL to the YouTubeClipper plugin for processing.",
+  "permissions": ["storage", "activeTab", "scripting", "clipboardWrite"],
+  "host_permissions": ["*://*.youtube.com/*"],
+  "action": { "default_title": "YouTube Clipper" },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["content_script.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_page": "options.html",
+  "commands": {
+    "send-current-video": {
+      "suggested_key": { "default": "Ctrl+Shift+Y", "mac": "Command+Shift+Y" },
+      "description": "Send current YouTube video URL to the Clipper endpoint"
+    }
+  }
+}
