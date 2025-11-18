@@ -29,6 +29,8 @@ export default class YoutubeClipperPlugin extends Plugin {
     private ribbonIcon?: HTMLElement;
     private isUnloading = false;
     private operationCount = 0;
+    // Track temp notes we've already handled to avoid duplicate modal opens
+    private handledTempFiles: Set<string> = new Set();
 
     async onload(): Promise<void> {
         this.logInfo('Initializing YoutubeClipper Plugin v1.2.0...');
@@ -41,7 +43,134 @@ export default class YoutubeClipperPlugin extends Plugin {
             await this.loadSettings();
             await this.initializeServices();
             this.registerUIComponents();
+
+            // Listen for notes created via Obsidian URI. The extension appends a
+            // hidden marker to created notes so we can reliably detect them.
+            const NOTE_MARKER = '<!-- ytc-extension:youtube-clipper -->';
+            this.registerEvent(this.app.vault.on('create', async (file) => {
+                try {
+                    if (!(file instanceof TFile)) return;
+                    const content = await this.app.vault.read(file as TFile);
+
+                    // Heuristics to detect temporary notes created by the Chrome extension:
+                    // - Contains the hidden marker, OR
+                    // - File name starts with the known prefix, OR
+                    // - The entire file content is a single YouTube URL (common when Obsidian
+                    //   opens an existing file or strips comments).
+                    let url: string | null = null;
+
+                    if (content && content.includes(NOTE_MARKER)) {
+                        url = content.replace(NOTE_MARKER, '').trim();
+                    } else {
+                        // Try to find the first YouTube URL anywhere in the content
+                        const maybe = (content || '').trim();
+                        // Regex to capture common YouTube watch URLs and youtu.be links
+                        const ytRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=[A-Za-z0-9_-]{6,}|https?:\/\/(?:www\.)?youtu\.be\/[A-Za-z0-9_-]{6,})/i;
+                        const m = maybe.match(ytRegex);
+                        if (m && m[1]) {
+                            url = m[1].trim();
+                        } else if (file.name && file.name.startsWith('YouTube Clip -')) {
+                            // fallback: if filename matches and content is a single token possibly URL
+                            const single = maybe.split('\n').map(s => s.trim()).find(Boolean) || '';
+                            if (ValidationUtils.isValidYouTubeUrl(single)) url = single;
+                        }
+                    }
+
+                    if (!url) {
+                        console.debug('YouTubeClipper: create handler - no url extracted for', file.path);
+                        return;
+                    }
+
+                    console.debug('YouTubeClipper: detected temp note', { path: file.path, url });
+
+                    // Defer slightly so the UI settles, then open the modal with the URL
+                    setTimeout(() => {
+                        console.debug('YouTubeClipper: opening modal for', url);
+                        void this.safeShowUrlModal(url!);
+                        // Keep the temporary note for debugging. Do not delete it here.
+                    }, 300);
+                } catch (e) {
+                    // swallow; non-critical
+                }
+            }));
+
+            // Also listen for when a file becomes active (opened). Some Obsidian
+            // URL flows create the file and immediately open it; detecting the
+            // active leaf ensures we catch notes created without firing a create
+            // event in time for our handler.
+            this.registerEvent(this.app.workspace.on('active-leaf-change', async () => {
+                try {
+                    const file = this.app.workspace.getActiveFile();
+                    if (!file || !(file instanceof TFile)) return;
+                    if (this.handledTempFiles.has(file.path)) return;
+
+                    const content = await this.app.vault.read(file as TFile);
+
+                    // Attempt same URL extraction logic as create handler
+                    let url: string | null = null;
+                    if (content && content.includes(NOTE_MARKER)) {
+                        url = content.replace(NOTE_MARKER, '').trim();
+                    } else {
+                        const maybe = (content || '').trim();
+                        const ytRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=[A-Za-z0-9_-]{6,}|https?:\/\/(?:www\.)?youtu\.be\/[A-Za-z0-9_-]{6,})/i;
+                        const m = maybe.match(ytRegex);
+                        if (m && m[1]) {
+                            url = m[1].trim();
+                        } else if (file.name && file.name.startsWith('YouTube Clip -')) {
+                            const single = maybe.split('\n').map(s => s.trim()).find(Boolean) || '';
+                            if (ValidationUtils.isValidYouTubeUrl(single)) url = single;
+                        }
+                    }
+
+                    if (!url) {
+                        console.debug('YouTubeClipper: active-leaf-change - no url for', file.path);
+                        return;
+                    }
+
+                    console.debug('YouTubeClipper: active-leaf-change detected temp note', { path: file.path, url });
+                    this.handledTempFiles.add(file.path);
+
+                    // Open modal (don't delete the temp note automatically)
+                    setTimeout(() => {
+                        console.debug('YouTubeClipper: opening modal (active-leaf) for', url);
+                        void this.safeShowUrlModal(url!);
+                    }, 250);
+                } catch (e) {
+                    // ignore
+                }
+            }));
+
             this.logInfo('YoutubeClipper Plugin loaded successfully');
+            // Register a custom protocol handler so external apps (or the
+            // Chrome extension) can open an URI like:
+            // obsidian://youtube-clipper?vault=VAULT&url=<videoUrl>
+            try {
+                // `registerObsidianProtocolHandler` is available in Obsidian's
+                // Plugin API. It gives us a clean way to receive a URL directly
+                // from the extension without creating temporary notes.
+                // The handler receives a params object with query parameters.
+                // Example invocation: obsidian://youtube-clipper?vault=MyVault&url=<encoded>
+                // We'll open the modal with the provided URL.
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                this.registerObsidianProtocolHandler?.('youtube-clipper', (params: Record<string, string>) => {
+                    try {
+                        const url = params.url || params.content || params.path || '';
+                        if (url && ValidationUtils.isValidYouTubeUrl(url)) {
+                            // Defer into the plugin main loop
+                            setTimeout(() => {
+                                void this.safeShowUrlModal(url);
+                            }, 200);
+                        } else {
+                            console.debug('YouTubeClipper: protocol handler received no valid url', params);
+                        }
+                    } catch (e) {
+                        console.warn('YouTubeClipper: protocol handler error', e);
+                    }
+                });
+            } catch (e) {
+                // Not fatal if API missing
+            }
         } catch (error) {
             this.logError('Failed to load plugin', error as Error);
             ErrorHandler.handle(error as Error, 'Plugin initialization');
@@ -84,6 +213,51 @@ export default class YoutubeClipperPlugin extends Plugin {
             plugin: this,
             onSettingsChange: this.handleSettingsChange.bind(this)
         }));
+
+        // Command used by Advanced URI or other external callers. This command
+        // reads the clipboard (the Chrome extension copies the URL there) and
+        // opens the YouTube URL modal with that URL. This allows the extension
+        // to invoke the command without passing args.
+        this.addCommand({
+            id: `${PLUGIN_PREFIX}-open-url-from-clipboard`,
+            name: 'YouTube Clipper: Open URL Modal (from clipboard)',
+            callback: async () => {
+                try {
+                    // Try clipboard first
+                    let text = '';
+                    try {
+                        // navigator.clipboard may not be available in all hosts
+                        // (but usually is in Obsidian renderer).
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-ignore
+                        if (navigator && navigator.clipboard && navigator.clipboard.readText) {
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            text = (await navigator.clipboard.readText()) || '';
+                        }
+                    } catch (e) {
+                        text = '';
+                    }
+
+                    if (text && ValidationUtils.isValidYouTubeUrl(text.trim())) {
+                        void this.safeShowUrlModal(text.trim());
+                        return;
+                    }
+
+                    // No valid URL on clipboard — prompt the user to paste one.
+                    // Use a simple prompt since this is a fallback path.
+                    // eslint-disable-next-line no-alert
+                    const manual = window.prompt('Paste YouTube URL to open in YouTube Clipper:');
+                    if (manual && ValidationUtils.isValidYouTubeUrl(manual.trim())) {
+                        void this.safeShowUrlModal(manual.trim());
+                    } else {
+                        new Notice('No valid YouTube URL provided.');
+                    }
+                } catch (error) {
+                    ErrorHandler.handle(error as Error, 'Open URL from clipboard');
+                }
+            }
+        });
     }
 
     private cleanupUIElements(): void {
@@ -93,9 +267,9 @@ export default class YoutubeClipperPlugin extends Plugin {
         }
     }
 
-    private async safeShowUrlModal(): Promise<void> {
+    private async safeShowUrlModal(initialUrl?: string): Promise<void> {
         await this.safeOperation(async () => {
-            this.openYouTubeUrlModal();
+            this.openYouTubeUrlModal(initialUrl);
         }, 'Show URL Modal');
     }
 
@@ -119,7 +293,7 @@ export default class YoutubeClipperPlugin extends Plugin {
         }
     }
 
-    private openYouTubeUrlModal(): void {
+    private openYouTubeUrlModal(initialUrl?: string): void {
         if (this.isUnloading) {
             ConflictPrevention.log('Plugin is unloading, ignoring modal request');
             return;
@@ -140,6 +314,7 @@ export default class YoutubeClipperPlugin extends Plugin {
             new YouTubeUrlModal(this.app, {
                 onProcess: this.processYouTubeVideo.bind(this),
                 onOpenFile: this.openFileByPath.bind(this),
+                initialUrl: initialUrl,
                 providers,
                 modelOptions: modelOptionsMap,
                 fetchModels: async () => {

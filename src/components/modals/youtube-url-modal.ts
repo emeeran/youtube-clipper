@@ -67,6 +67,15 @@ export class YouTubeUrlModal extends BaseModal {
     onOpen(): void {
         this.createModalContent();
         this.setupEventHandlers();
+        // If an initial URL was provided, validate and focus the appropriate control
+        if (this.options.initialUrl) {
+            this.updateProcessButtonState();
+            const isValid = ValidationUtils.isValidYouTubeUrl((this.options.initialUrl || '').trim());
+            if (isValid && this.processButton) {
+                this.processButton.focus();
+                return;
+            }
+        }
         this.focusUrlInput();
     }
 

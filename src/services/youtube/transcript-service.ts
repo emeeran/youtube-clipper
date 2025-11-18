@@ -113,7 +113,7 @@ export class YouTubeTranscriptService {
         }
 
         const html = await response.text();
-        const transcriptData = this.extractTranscriptFromHTML(html);
+        const transcriptData = await this.extractTranscriptFromHTML(html);
 
         if (transcriptData) {
             return this.createTranscript(transcriptData, videoId, true);
@@ -171,7 +171,7 @@ export class YouTubeTranscriptService {
     /**
      * Extract transcript data from YouTube page HTML
      */
-    private extractTranscriptFromHTML(html: string): TranscriptSegment[] | null {
+    private async extractTranscriptFromHTML(html: string): Promise<TranscriptSegment[] | null> {
         // Look for transcript data in the page JavaScript
         const transcriptRegex = /"captions":\s*{[^}]*"playerCaptionsTracklistRenderer":\s*{[^}]*"captionTracks":\s*\[([^\]]+)\]/;
         const match = html.match(transcriptRegex);
@@ -194,11 +194,18 @@ export class YouTubeTranscriptService {
                 return null;
             }
 
-            // Fetch the transcript content
-            const response = await fetch(englishTrack.baseUrl);
-            const xmlText = await response.text();
-
-            return this.parseXMLTranscript(xmlText, '').segments;
+            // Fetch the transcript content (use promise chain to avoid top-level await
+            // parsing issues in some build environments)
+            return fetch(englishTrack.baseUrl)
+                .then((resp) => {
+                    if (!resp.ok) throw new Error('Failed to fetch caption track');
+                    return resp.text();
+                })
+                .then((xmlText) => this.parseXMLTranscript(xmlText, '').segments)
+                .catch((err) => {
+                    console.debug('Failed to fetch caption track:', err);
+                    return null;
+                });
         } catch (error) {
             console.debug('Failed to parse transcript from HTML:', error);
             return null;
