@@ -31,6 +31,9 @@ export default class YoutubeClipperPlugin extends Plugin {
     private operationCount = 0;
     // Track temp notes we've already handled to avoid duplicate modal opens
     private handledTempFiles: Set<string> = new Set();
+    // Track modal instances to prevent double opening
+    private isModalOpen = false;
+    private pendingModalUrl?: string;
 
     async onload(): Promise<void> {
         this.logInfo('Initializing YoutubeClipper Plugin v1.2.0...');
@@ -47,16 +50,117 @@ export default class YoutubeClipperPlugin extends Plugin {
             // Listen for notes created via Obsidian URI. The extension appends a
             // hidden marker to created notes so we can reliably detect them.
             const NOTE_MARKER = '<!-- ytc-extension:youtube-clipper -->';
+
+            // Create a debounced URL handler to prevent cycles
+            const pendingUrls = new Map<string, NodeJS.Timeout>();
+            const URL_HANDLER_DELAY = 500;
+
+            const isTempFile = (file: TFile, content: string): boolean => {
+                // Check if this is a temporary file created by the Chrome extension
+                // Be very strict to avoid treating processed video files as temp files
+
+                // 1. Contains the hidden marker (most reliable) - ALWAYS accept
+                if (content && content.includes(NOTE_MARKER)) {
+                    return true;
+                }
+
+                // 2. File name matches the Chrome extension pattern EXACTLY
+                if (file.name && file.name.startsWith('YouTube Clip -')) {
+                    return true;
+                }
+
+                // 3. Content is ONLY a YouTube URL and file is very new/small AND NOT in output path
+                const trimmedContent = content.trim();
+                const lines = trimmedContent.split('\n').filter(line => line.trim().length > 0);
+                const isUrlOnly = lines.length === 1 && ValidationUtils.isValidYouTubeUrl(lines[0]);
+
+                if (isUrlOnly && content.length < 200) { // very small file
+                    const fileAge = Date.now() - file.stat.ctime;
+                    const isInOutputPath = file.path.includes(this.settings.outputPath);
+
+                    // Only consider as temp file if:
+                    // - Very recent (within 5 seconds for immediate detection)
+                    // - AND NOT in the output path (to avoid processed video files)
+                    if (fileAge < 5000 && !isInOutputPath) {
+                        return true;
+                    }
+                }
+
+                return false;
+            };
+
+            const handleUrlSafely = (url: string, source: string, filePath?: string, file?: TFile, content?: string) => {
+                console.log(`YouTubeClipper: ${source} - handleUrlSafely called for URL:`, url, 'file:', filePath);
+
+                // Additional safety check: only process if this appears to be a temp file
+                if (file && content && !isTempFile(file, content)) {
+                    console.warn(`YouTubeClipper: ${source} - REJECTING URL in non-temp file: ${filePath}`);
+
+                    // Add specific reasons for rejection
+                    const fileAge = Date.now() - file.stat.ctime;
+                    const isInOutputPath = filePath?.includes(this.settings.outputPath);
+                    const hasMarker = content.includes(NOTE_MARKER);
+                    const hasClipPrefix = file.name?.startsWith('YouTube Clip -');
+
+                    console.warn(`YouTubeClipper: ${source} - Rejection details: age=${fileAge}ms, inOutputPath=${isInOutputPath}, hasMarker=${hasMarker}, hasClipPrefix=${hasClipPrefix}`);
+                    return;
+                }
+
+                if (this.handledTempFiles.has(url)) {
+                    console.log(`YouTubeClipper: ${source} - URL already handled: ${url}, skipping`);
+                    return;
+                }
+
+                // Cancel any pending handler for this URL
+                if (pendingUrls.has(url)) {
+                    console.log(`YouTubeClipper: ${source} - cancelling pending handler for URL:`, url);
+                    clearTimeout(pendingUrls.get(url)!);
+                }
+
+                // Mark as handled immediately to prevent duplicates
+                this.handledTempFiles.add(url);
+                if (filePath) {
+                    this.handledTempFiles.add(filePath);
+                }
+                console.log(`YouTubeClipper: ${source} - marked URL as handled:`, url);
+
+                // Debounce to handle rapid-fire events
+                const timeout = setTimeout(() => {
+                    console.log(`YouTubeClipper: ${source} - DEBOUNCED: opening modal for URL: ${url}`);
+                    console.log(`YouTubeClipper: ${source} - pendingUrls size before:`, pendingUrls.size);
+                    console.log(`YouTubeClipper: ${source} - handledTempFiles size:`, this.handledTempFiles.size);
+
+                    void this.safeShowUrlModal(url);
+                    pendingUrls.delete(url);
+
+                    console.log(`YouTubeClipper: ${source} - pendingUrls size after:`, pendingUrls.size);
+
+                    // Clean up old entries to prevent memory leaks
+                    if (this.handledTempFiles.size > 100) {
+                        const entries = Array.from(this.handledTempFiles);
+                        // Keep only the most recent 50 entries
+                        this.handledTempFiles.clear();
+                        entries.slice(-50).forEach(entry => this.handledTempFiles.add(entry));
+                        console.log(`YouTubeClipper: ${source} - cleaned up handledTempFiles, new size:`, this.handledTempFiles.size);
+                    }
+                }, URL_HANDLER_DELAY);
+
+                pendingUrls.set(url, timeout);
+                console.log(`YouTubeClipper: ${source} - set timeout for URL:`, url, 'delay:', URL_HANDLER_DELAY);
+            };
+
             this.registerEvent(this.app.vault.on('create', async (file) => {
                 try {
                     if (!(file instanceof TFile)) return;
                     const content = await this.app.vault.read(file as TFile);
 
-                    // Heuristics to detect temporary notes created by the Chrome extension:
-                    // - Contains the hidden marker, OR
-                    // - File name starts with the known prefix, OR
-                    // - The entire file content is a single YouTube URL (common when Obsidian
-                    //   opens an existing file or strips comments).
+                    // First check: Is this a temporary file?
+                    if (!isTempFile(file, content)) {
+                        console.debug('YouTubeClipper: create handler - ignoring existing file:', file.path);
+                        return;
+                    }
+
+                    // Extract URL from temporary file
                     let url: string | null = null;
 
                     if (content && content.includes(NOTE_MARKER)) {
@@ -77,18 +181,12 @@ export default class YoutubeClipperPlugin extends Plugin {
                     }
 
                     if (!url) {
-                        console.debug('YouTubeClipper: create handler - no url extracted for', file.path);
+                        console.debug('YouTubeClipper: create handler - no url extracted for temp file:', file.path);
                         return;
                     }
 
-                    console.debug('YouTubeClipper: detected temp note', { path: file.path, url });
-
-                    // Defer slightly so the UI settles, then open the modal with the URL
-                    setTimeout(() => {
-                        console.debug('YouTubeClipper: opening modal for', url);
-                        void this.safeShowUrlModal(url!);
-                        // Keep the temporary note for debugging. Do not delete it here.
-                    }, 300);
+                    console.log('YouTubeClipper: CREATE EVENT - detected temp note', { path: file.path, url });
+                    handleUrlSafely(url, 'create-handler', file.path, file, content);
                 } catch (e) {
                     // swallow; non-critical
                 }
@@ -106,7 +204,13 @@ export default class YoutubeClipperPlugin extends Plugin {
 
                     const content = await this.app.vault.read(file as TFile);
 
-                    // Attempt same URL extraction logic as create handler
+                    // First check: Is this a temporary file?
+                    if (!isTempFile(file, content)) {
+                        console.debug('YouTubeClipper: active-leaf-change - ignoring existing file:', file.path);
+                        return;
+                    }
+
+                    // Attempt URL extraction from temporary file
                     let url: string | null = null;
                     if (content && content.includes(NOTE_MARKER)) {
                         url = content.replace(NOTE_MARKER, '').trim();
@@ -123,18 +227,12 @@ export default class YoutubeClipperPlugin extends Plugin {
                     }
 
                     if (!url) {
-                        console.debug('YouTubeClipper: active-leaf-change - no url for', file.path);
+                        console.debug('YouTubeClipper: active-leaf-change - no url for temp file:', file.path);
                         return;
                     }
 
-                    console.debug('YouTubeClipper: active-leaf-change detected temp note', { path: file.path, url });
-                    this.handledTempFiles.add(file.path);
-
-                    // Open modal (don't delete the temp note automatically)
-                    setTimeout(() => {
-                        console.debug('YouTubeClipper: opening modal (active-leaf) for', url);
-                        void this.safeShowUrlModal(url!);
-                    }, 250);
+                    console.log('YouTubeClipper: ACTIVE-LEAF-CHANGE EVENT - detected temp note', { path: file.path, url });
+                    handleUrlSafely(url, 'active-leaf-handler', file.path, file, content);
                 } catch (e) {
                     // ignore
                 }
@@ -183,6 +281,10 @@ export default class YoutubeClipperPlugin extends Plugin {
         this.isUnloading = true;
 
         try {
+            // Reset modal state to prevent issues during unload
+            this.isModalOpen = false;
+            this.pendingModalUrl = undefined;
+
             this.serviceContainer?.clearServices();
             this.cleanupUIElements();
             ConflictPrevention.cleanupAllElements();
@@ -268,8 +370,38 @@ export default class YoutubeClipperPlugin extends Plugin {
     }
 
     private async safeShowUrlModal(initialUrl?: string): Promise<void> {
+        const callId = Math.random().toString(36).substr(2, 9);
+        console.log(`YouTubeClipper [${callId}]: safeShowUrlModal called with URL:`, initialUrl);
+        console.log(`YouTubeClipper [${callId}]: Current modal state - isModalOpen:`, this.isModalOpen, 'pendingModalUrl:', this.pendingModalUrl);
+
         await this.safeOperation(async () => {
+            // Strong modal deduplication - prevent multiple modals from opening
+            if (this.isModalOpen) {
+                console.warn(`YouTubeClipper [${callId}]: MODAL ALREADY OPEN - IGNORING request for:`, initialUrl);
+                console.warn(`YouTubeClipper [${callId}]: Current pending URL:`, this.pendingModalUrl);
+
+                // If this is a different URL than the pending one, update it
+                if (initialUrl && initialUrl !== this.pendingModalUrl) {
+                    console.warn(`YouTubeClipper [${callId}]: Updating pending modal URL from:`, this.pendingModalUrl, 'to:', initialUrl);
+                    this.pendingModalUrl = initialUrl;
+                } else {
+                    console.warn(`YouTubeClipper [${callId}]: Same URL as pending, completely ignoring`);
+                }
+                return;
+            }
+
+            // Mark that we're opening a modal
+            console.log(`YouTubeClipper [${callId}]: Setting isModalOpen = true for URL:`, initialUrl);
+            this.isModalOpen = true;
+            this.pendingModalUrl = initialUrl;
+
+            console.log(`YouTubeClipper [${callId}]: About to open YouTubeUrlModal for URL:`, initialUrl);
             this.openYouTubeUrlModal(initialUrl);
+
+            // Add a check to see if modal state changes immediately
+            setTimeout(() => {
+                console.log(`YouTubeClipper [${callId}]: Modal state after 100ms - isModalOpen:`, this.isModalOpen);
+            }, 100);
         }, 'Show URL Modal');
     }
 
@@ -311,7 +443,7 @@ export default class YoutubeClipperPlugin extends Plugin {
                 }
             }
 
-            new YouTubeUrlModal(this.app, {
+            const modal = new YouTubeUrlModal(this.app, {
                 onProcess: this.processYouTubeVideo.bind(this),
                 onOpenFile: this.openFileByPath.bind(this),
                 initialUrl: initialUrl,
@@ -329,7 +461,38 @@ export default class YoutubeClipperPlugin extends Plugin {
                         return modelOptionsMap;
                     }
                 }
-            }).open();
+            });
+
+            // Handle modal close to reset the modal state
+            modal.onClose = () => {
+                try {
+                    console.log(`YouTubeClipper: Modal onClose triggered for URL:`, initialUrl);
+                    console.log(`YouTubeClipper: Modal state before close - isModalOpen:`, this.isModalOpen, 'pendingModalUrl:', this.pendingModalUrl);
+
+                    this.isModalOpen = false;
+                    this.pendingModalUrl = undefined;
+
+                    console.log(`YouTubeClipper: Modal state after close - isModalOpen:`, this.isModalOpen, 'pendingModalUrl:', this.pendingModalUrl);
+                } catch (error) {
+                    console.warn('YouTubeClipper: Error resetting modal state:', error);
+                    // Force reset even if there's an error
+                    this.isModalOpen = false;
+                    this.pendingModalUrl = undefined;
+                    console.log(`YouTubeClipper: Force reset modal state after error - isModalOpen:`, this.isModalOpen);
+                }
+            };
+
+            // Fallback: Reset modal state after 10 seconds as a safety net
+            setTimeout(() => {
+                if (this.isModalOpen && this.pendingModalUrl === initialUrl) {
+                    console.warn('YouTubeClipper: Fallback modal state reset triggered for URL:', initialUrl);
+                    this.isModalOpen = false;
+                    this.pendingModalUrl = undefined;
+                    console.log('YouTubeClipper: Modal state after fallback reset - isModalOpen:', this.isModalOpen);
+                }
+            }, 10000);
+
+            modal.open();
         }, 'YouTube URL Modal').catch((error) => {
             ErrorHandler.handle(error as Error, 'Opening YouTube URL modal');
         });

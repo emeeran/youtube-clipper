@@ -35,7 +35,7 @@ export interface OptimizationGoals {
 export class AgentCoordinator {
     private agents: Map<string, Agent> = new Map();
     private executionHistory: AgentResult[] = [];
-    private currentContext: AgentContext;
+    private currentContext: LocalAgentContext;
 
     constructor(
         private projectRoot: string,
@@ -410,7 +410,7 @@ export class AgentCoordinator {
 }
 
 // Type definitions
-interface AgentContext {
+interface LocalAgentContext {
     projectRoot: string;
     timestamp: Date;
     goals: OptimizationGoals;

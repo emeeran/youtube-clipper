@@ -73,6 +73,7 @@ export interface AIProvider {
     model: string;
     process(prompt: string): Promise<string>;
     setModel?(model: string): void;
+    setTimeout?(timeout: number): void;
 }
 
 export interface VideoDataService {

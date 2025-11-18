@@ -141,7 +141,7 @@ export class VideoPreviewModal extends Modal {
                 this.videoData.description.substring(0, 300) + '...' :
                 this.videoData.description;
 
-            descEl.createP({ text: descText });
+            descEl.createEl('p', { text: descText });
         }
 
         // Video statistics

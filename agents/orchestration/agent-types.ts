@@ -82,11 +82,11 @@ export interface UXGoals {
 }
 
 export interface CodeChange {
-    type: 'add' | 'modify' | 'delete' | 'refactor';
+    type: 'add' | 'modify' | 'delete' | 'refactor' | 'config' | 'architecture';
     file: string;
     line?: number;
     description: string;
-    impact: 'low' | 'medium' | 'high';
+    impact: 'low' | 'medium' | 'high' | 'critical';
     automated?: boolean;
 }
 
@@ -326,4 +326,44 @@ export interface NotificationRouting {
     eventType: string;
     severity: string;
     channels: string[];
+}
+
+// Missing interfaces
+export interface OptimizationSummary {
+    overallScore: number;
+    totalAgents: number;
+    successfulAgents: number;
+    failedAgents: number;
+    criticalIssues: number;
+    warnings: number;
+    performanceImprovements: {
+        processingTimeReduction: number;
+        cacheHitRate: number;
+        memoryOptimization: number;
+    };
+    securityEnhancements: {
+        vulnerabilitiesFixed: number;
+        securityScore: number;
+        complianceLevel: number;
+    };
+    qualityImprovements: {
+        codeQualityImprovement: number;
+        testCoverageIncrease: number;
+        complexityReduction: number;
+    };
+}
+
+export interface AgentWorkflow {
+    id: string;
+    name: string;
+    description: string;
+    phases: WorkflowPhase[];
+}
+
+export interface WorkflowPhase {
+    name: string;
+    description: string;
+    agents: string[];
+    dependencies?: string[];
+    status?: 'pending' | 'running' | 'completed' | 'failed';
 }

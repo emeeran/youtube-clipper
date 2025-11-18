@@ -69,6 +69,13 @@ export class YouTubeUrlModal extends BaseModal {
         this.setupEventHandlers();
         // If an initial URL was provided, validate and focus the appropriate control
         if (this.options.initialUrl) {
+            // Prevent cycles - if the URL is already being processed, don't reprocess
+            if (this.url.trim() === this.options.initialUrl.trim()) {
+                console.debug('YouTubeUrlModal: Same URL already set, preventing cycle');
+            } else {
+                this.setUrl(this.options.initialUrl);
+            }
+
             this.updateProcessButtonState();
             const isValid = ValidationUtils.isValidYouTubeUrl((this.options.initialUrl || '').trim());
             if (isValid && this.processButton) {
@@ -877,6 +884,9 @@ export class YouTubeUrlModal extends BaseModal {
 
         if (this.urlInput) {
             this.urlInput.disabled = false;
+            // Clear the URL to prepare for next video and prevent cycles
+            this.urlInput.value = '';
+            this.url = '';
         }
         if (this.processButton) {
             this.processButton.disabled = false;
@@ -895,7 +905,7 @@ export class YouTubeUrlModal extends BaseModal {
         this.setValidationMessage("Note saved to today's folder. You can open it now or process another video.", 'success');
         this.focusUrlInput();
         this.updateQuickActionsState();
-        this.setUrlInputState(this.url.trim().length > 0 ? 'valid' : 'idle');
+        this.setUrlInputState('idle'); // Reset to idle since we cleared the URL
     }
 
     /**
@@ -945,6 +955,12 @@ export class YouTubeUrlModal extends BaseModal {
      * Set initial URL value
      */
     setUrl(url: string): void {
+        // Prevent cycles - don't set the same URL again
+        if (this.url.trim() === url.trim()) {
+            console.debug('YouTubeUrlModal: setUrl called with same URL, preventing cycle');
+            return;
+        }
+
         this.url = url;
         if (this.urlInput) {
             this.urlInput.value = url;

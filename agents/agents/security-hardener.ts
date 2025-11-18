@@ -5,6 +5,7 @@
 
 import { Agent, AgentContext, AgentExecutionResult, CodeChange, Artifact } from '../orchestration/agent-types';
 import * as fs from 'fs/promises';
+import * as fsSync from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
 
@@ -312,7 +313,7 @@ export class SecurityHardenerAgent implements Agent {
 
         // Check for data encryption
         const hasEncryption = sourceFiles.some(file => {
-            const content = fs.readFileSync(file, 'utf-8');
+            const content = fsSync.readFileSync(file, 'utf-8');
             return content.includes('crypto') || content.includes('encrypt');
         });
 
@@ -328,7 +329,7 @@ export class SecurityHardenerAgent implements Agent {
 
         // Check for data validation
         const hasValidation = sourceFiles.some(file => {
-            const content = fs.readFileSync(file, 'utf-8');
+            const content = fsSync.readFileSync(file, 'utf-8');
             return content.includes('validate') || content.includes('sanitize');
         });
 
@@ -395,7 +396,7 @@ export class SecurityHardenerAgent implements Agent {
                     vulnerabilities.push({
                         package: pkgName,
                         currentVersion: version as string,
-                        severity: vulnerable.severity,
+                        severity: vulnerable.severity as 'low' | 'medium' | 'high' | 'critical',
                         description: vulnerable.reason,
                         recommendation: `Update to latest stable version`,
                         cve: 'Check NVD for specific CVEs'
@@ -1293,7 +1294,7 @@ interface SecurityVulnerability {
 
 interface APISecurityIssue {
     type: 'headers' | 'encryption' | 'authentication' | 'error-handling' | 'performance';
-    severity: 'low' | 'medium' | 'high';
+    severity: 'low' | 'medium' | 'high' | 'critical';
     description: string;
     fix: string;
     location: string;
@@ -1301,7 +1302,7 @@ interface APISecurityIssue {
 
 interface DataProtectionIssue {
     type: 'encryption' | 'validation' | 'storage' | 'privacy';
-    severity: 'low' | 'medium' | 'high';
+    severity: 'low' | 'medium' | 'high' | 'critical';
     description: string;
     fix: string;
     location: string;
@@ -1310,7 +1311,7 @@ interface DataProtectionIssue {
 interface DependencyVulnerability {
     package: string;
     currentVersion: string;
-    severity: 'low' | 'medium' | 'high';
+    severity: 'low' | 'medium' | 'high' | 'critical';
     description: string;
     recommendation: string;
     cve?: string;

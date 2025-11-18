@@ -292,7 +292,7 @@ export class YouTubeTranscriptService {
         const totalSegments = meaningfulSegments.length;
         const step = Math.max(1, Math.floor(totalSegments / count));
 
-        const keyMoments = [];
+        const keyMoments: Array<{time: number, text: string}> = [];
         for (let i = 0; i < totalSegments && keyMoments.length < count; i += step) {
             const segment = meaningfulSegments[i];
             keyMoments.push({

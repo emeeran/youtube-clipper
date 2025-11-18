@@ -47,7 +47,7 @@ export class ServiceContainer implements IServiceContainer {
                 providers.push(new GroqProvider(this.settings.groqApiKey));
             }
             
-            this._aiService = new AIService(providers);
+            this._aiService = new AIService(providers, this.settings);
         }
         return this._aiService;
     }

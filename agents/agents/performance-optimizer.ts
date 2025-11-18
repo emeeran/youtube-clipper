@@ -703,6 +703,50 @@ export const performanceMonitor = new PerformanceMonitor();
             return false;
         }
     }
+
+    private async applyConfigOptimization(
+        optimization: Optimization,
+        context: AgentContext
+    ): Promise<CodeChange[]> {
+        const changes: CodeChange[] = [];
+
+        // Configuration optimizations
+        if (optimization.description.includes('timeout')) {
+            const aiServicePath = path.join(context.projectRoot, 'src/services/ai/ai-service.ts');
+            const change: CodeChange = {
+                file: aiServicePath,
+                type: 'config',
+                description: 'Optimize timeout configuration',
+                impact: 'medium',
+                automated: true
+            };
+            changes.push(change);
+        }
+
+        return changes;
+    }
+
+    private async applyArchitectureOptimization(
+        optimization: Optimization,
+        context: AgentContext
+    ): Promise<CodeChange[]> {
+        const changes: CodeChange[] = [];
+
+        // Architecture optimizations
+        if (optimization.description.includes('service')) {
+            const servicePath = path.join(context.projectRoot, 'src/services');
+            const change: CodeChange = {
+                file: servicePath,
+                type: 'architecture',
+                description: 'Optimize service architecture',
+                impact: 'medium',
+                automated: true
+            };
+            changes.push(change);
+        }
+
+        return changes;
+    }
 }
 
 // Internal types

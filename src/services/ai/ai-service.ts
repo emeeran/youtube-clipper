@@ -29,9 +29,9 @@ export class AIService implements IAIService {
         const timeouts = this.settings.customTimeouts || preset.timeouts;
 
         this.providers.forEach(provider => {
-            if (provider.name === 'Google Gemini') {
+            if (provider.name === 'Google Gemini' && provider.setTimeout) {
                 provider.setTimeout(timeouts.geminiTimeout);
-            } else if (provider.name === 'Groq') {
+            } else if (provider.name === 'Groq' && provider.setTimeout) {
                 provider.setTimeout(timeouts.groqTimeout);
             }
         });

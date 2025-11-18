@@ -6,7 +6,7 @@
 import { AgentCoordinator, OptimizationGoals } from '../orchestration/agent-coordinator';
 import { PerformanceOptimizerAgent } from '../agents/performance-optimizer';
 import { SecurityHardenerAgent } from '../agents/security-hardener';
-import { OptimizationReport } from '../orchestration/agent-types';
+import { OptimizationReport, Recommendation } from '../orchestration/agent-types';
 
 export class EndToEndOptimizer {
     private coordinator: AgentCoordinator;
@@ -36,13 +36,23 @@ export class EndToEndOptimizer {
             const duration = Date.now() - startTime;
 
             // Generate comprehensive report
+            // Convert string recommendations to Recommendation objects
+            const recommendationObjects: Recommendation[] = (recommendations as string[]).map((rec, index) => ({
+                category: 'quality' as const,
+                priority: 'medium' as const,
+                title: `Recommendation ${index + 1}`,
+                description: rec,
+                estimatedImpact: 'Improves overall system quality',
+                implementationComplexity: 'moderate' as const
+            }));
+
             const report: OptimizationReport = {
                 timestamp: new Date(),
                 duration,
                 agents: results,
                 summary,
-                recommendations,
-                nextSteps: this.generateNextSteps(recommendations, summary)
+                recommendations: recommendationObjects,
+                nextSteps: this.generateNextSteps(recommendationObjects, summary)
             };
 
             // Save report
@@ -62,7 +72,7 @@ export class EndToEndOptimizer {
     /**
      * Quick optimization for common use cases
      */
-    async quickOptimize(type: 'performance' | 'security' | 'quality' | 'full' = 'full'): Promise<void> {
+    async quickOptimize(type: 'performance' | 'security' | 'quality' | 'full' | 'quick' = 'full'): Promise<void> {
         const quickGoals = this.createQuickGoals(type);
         const quickCoordinator = new AgentCoordinator(this.projectRoot, quickGoals);
 
@@ -307,7 +317,7 @@ ${report.nextSteps
         projectRoot: string;
         lastOptimization?: Date;
         currentGoals: OptimizationGoals;
-        recommendations: string[];
+        recommendations: Recommendation[];
     }> {
         return {
             projectRoot: this.projectRoot,
@@ -319,23 +329,51 @@ ${report.nextSteps
     /**
      * Generate quick recommendations
      */
-    private generateQuickRecommendations(): string[] {
-        const recommendations: string[] = [];
+    private generateQuickRecommendations(): Recommendation[] {
+        const recommendations: Recommendation[] = [];
 
         if (this.goals.performance.targetProcessingTime > 15) {
-            recommendations.push('Consider more aggressive performance optimization for better speed');
+            recommendations.push({
+                category: 'performance',
+                priority: 'medium',
+                title: 'Optimize Performance',
+                description: 'Consider more aggressive performance optimization for better speed',
+                estimatedImpact: 'Reduces processing time by 20-30%',
+                implementationComplexity: 'moderate'
+            });
         }
 
         if (!this.goals.security.requireSecureApiCalls) {
-            recommendations.push('Enable secure API calls for better security');
+            recommendations.push({
+                category: 'security',
+                priority: 'high',
+                title: 'Enable Secure API Calls',
+                description: 'Enable secure API calls for better security',
+                estimatedImpact: 'Significantly improves security posture',
+                implementationComplexity: 'simple'
+            });
         }
 
         if (this.goals.quality.minTestCoverage < 80) {
-            recommendations.push('Increase test coverage for better code quality');
+            recommendations.push({
+                category: 'quality',
+                priority: 'medium',
+                title: 'Increase Test Coverage',
+                description: 'Increase test coverage for better code quality',
+                estimatedImpact: 'Improves code reliability and maintainability',
+                implementationComplexity: 'moderate'
+            });
         }
 
         if (!this.goals.ux.requireProgressFeedback) {
-            recommendations.push('Add progress feedback for better user experience');
+            recommendations.push({
+                category: 'ux',
+                priority: 'low',
+                title: 'Add Progress Feedback',
+                description: 'Add progress feedback for better user experience',
+                estimatedImpact: 'Improves user satisfaction and perceived performance',
+                implementationComplexity: 'simple'
+            });
         }
 
         return recommendations;
@@ -346,7 +384,7 @@ ${report.nextSteps
 export async function optimizeProject(
     projectRoot: string = process.cwd(),
     options: {
-        type?: 'performance' | 'security' | 'quality' | 'full';
+        type?: 'performance' | 'security' | 'quality' | 'full' | 'quick';
         goals?: Partial<OptimizationGoals>;
         quick?: boolean;
     } = {}

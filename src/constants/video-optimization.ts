@@ -216,7 +216,7 @@ export class VideoOptimizationEngine {
         baseTime: number
     ): { min: number; max: number; optimized: number } {
         const timeReduction = strategy.estimatedTimeReduction / 100;
-        const optimizedTime = baseTime * (1 - timeReduction);
+        let optimizedTime = baseTime * (1 - timeReduction);
 
         // Add time for transcript processing if required
         if (strategy.requiresTranscript) {
