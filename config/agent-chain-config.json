@@ -1,0 +1,162 @@
+{
+  "name": "Agent Chain Configuration",
+  "description": "Reusable configuration for code optimization agent chain",
+  "version": "1.0.0",
+
+  "paths": {
+    "root": ".",
+    "exclude": [
+      "node_modules",
+      ".git",
+      "dist",
+      "build",
+      "coverage",
+      ".obsidian",
+      ".vscode",
+      ".idea",
+      "*.cache",
+      "*.log"
+    ]
+  },
+
+  "agents": {
+    "rebasing": {
+      "enabled": true,
+      "rules": {
+        "imports": {
+          "sort": true,
+          "removeUnused": true,
+          "group": true
+        },
+        "functions": {
+          "convertToArrow": true,
+          "optimizeDeclarations": true,
+          "addTypeHints": true
+        },
+        "codeStyle": {
+          "removeConsoleLogs": true,
+          "addSemicolons": true,
+          "removeTrailingWhitespace": true,
+          "ensureFinalNewline": true
+        },
+        "deadCode": {
+          "removeUnused": true,
+          "removeComments": false
+        }
+      }
+    },
+    "reorganization": {
+      "enabled": true,
+      "targetStructure": {
+        "directories": [
+          "src",
+          "src/components",
+          "src/services",
+          "src/utils",
+          "src/types",
+          "src/hooks",
+          "src/constants",
+          "src/assets",
+          "tests",
+          "tests/unit",
+          "tests/integration",
+          "tests/e2e",
+          "docs",
+          "scripts",
+          "config",
+          "assets",
+          "assets/images",
+          "assets/styles"
+        ]
+      },
+      "fileMappings": {
+        "component": "src/components",
+        "service": "src/services",
+        "util": "src/utils",
+        "type": "src/types",
+        "test": "tests",
+        "doc": "docs",
+        "config": "config",
+        "script": "scripts",
+        "asset": "assets"
+      }
+    },
+    "performance": {
+      "enabled": true,
+      "focus": [
+        "loops",
+        "arrays",
+        "strings",
+        "functions",
+        "async",
+        "memory",
+        "dom"
+      ],
+      "optimizations": {
+        "cacheResults": true,
+        "batchOperations": true,
+        "parallelProcessing": true,
+        "memoizeFunctions": true
+      }
+    }
+  },
+
+  "execution": {
+    "parallel": false,
+    "maxConcurrency": 3,
+    "timeout": 300000,
+    "backup": true,
+    "dryRun": false
+  },
+
+  "reporting": {
+    "detailed": true,
+    "includeMetrics": true,
+    "generateRecommendations": true,
+    "outputFormats": ["json", "markdown"],
+    "saveToFile": true
+  },
+
+  "targets": {
+    "javascript": {
+      "extensions": ["js", "jsx", "ts", "tsx"],
+      "rules": {
+        "es6": true,
+        "modules": true,
+        "classes": true,
+        "async": true
+      }
+    },
+    "python": {
+      "extensions": ["py"],
+      "rules": {
+        "type_hints": true,
+        "imports": true,
+        "comprehensions": true
+      }
+    },
+    "compiled": {
+      "extensions": ["java", "cs", "go", "rs"],
+      "rules": {
+        "imports": true,
+        "classes": true
+      }
+    },
+    "styles": {
+      "extensions": ["css", "scss", "less"],
+      "rules": {
+        "optimize": true,
+        "prefix": true
+      }
+    }
+  },
+
+  "customRules": {
+    "noConsoleLogs": true,
+    "noUnusedVariables": true,
+    "preferConst": true,
+    "noMagicNumbers": false,
+    "maxLineLength": 120,
+    "maxFileLines": 500
+  }
+}

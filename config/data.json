@@ -1,0 +1,8 @@
+{
+  "geminiApiKey": "",
+  "groqApiKey": "",
+  "outputPath": "YouTube/Processed Videos",
+  "useEnvironmentVariables": false,
+  "environmentPrefix": "YTC",
+  "customPrompts": {}
+}

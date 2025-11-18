@@ -1,0 +1,2257 @@
+{
+  "timestamp": "2025-11-18T10:56:08.192Z",
+  "config": {
+    "rootPath": "/home/em/code/trial-field/test_vault/.obsidian/plugins/youtube-processor",
+    "excludeDirs": [
+      "node_modules",
+      ".git",
+      "dist",
+      "build",
+      "coverage",
+      ".obsidian",
+      ".vscode",
+      ".idea"
+    ],
+    "excludeFiles": [
+      "*.min.js",
+      "*.bundle.js",
+      "*.cache",
+      "*.lock",
+      "package-lock.json",
+      "yarn.lock"
+    ],
+    "fileTypes": [
+      "js",
+      "ts",
+      "jsx",
+      "tsx",
+      "vue",
+      "py",
+      "java",
+      "cs",
+      "go",
+      "rs"
+    ],
+    "dryRun": true,
+    "backup": true,
+    "parallel": false,
+    "maxConcurrency": 3,
+    "verbose": true,
+    "outputPath": null
+  },
+  "stats": {
+    "startTime": 1763463368087,
+    "filesScanned": 8,
+    "filesModified": 0,
+    "totalLines": 11282
+  },
+  "results": {
+    "rebasing": {
+      "processed": 4,
+      "errors": 0,
+      "changes": [
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "agent-chain-runner.js"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "import_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: #!/usr/bin/env node...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: excludeDirs: options.excludeDirs || [...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: '.obsidian', '.vscode', '.idea'...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: excludeFiles: options.excludeFiles || [...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 'package-lock.json', 'yarn.lock'...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: backup: options.backup !== false, // Default to tr...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: outputPath: options.outputPath || null...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: totalLines: 0...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: totalProcessed: this.results.rebasing.processed +...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.results.reorganization.processed +...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: totalErrors: this.results.rebasing.errors +...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.results.reorganization.errors +...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: totalChanges: this.results.rebasing.changes.length...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.results.reorganization.changes.length +...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.results.optimization.improvements.length...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case '--dry-run':...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case '--no-backup':...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case '--parallel':...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case '--verbose':...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case '--root':...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case '--output':...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case '--max-concurrency':...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case '--help':...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: console.log(`...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: Agent Chain Runner - Code Optimization System...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: Usage: node agent-chain-runner.js [options]...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: Options:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: --dry-run              Run without making actual c...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: --no-backup            Skip creating backup...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: --parallel             Process files in parallel...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: --verbose              Enable verbose logging...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: --root <path>          Root directory to process (...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: --output <path>        Output directory for report...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: --max-concurrency <n>  Maximum parallel processes ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: --help                 Show this help message...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: Examples:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: node agent-chain-runner.js --dry-run...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: node agent-chain-runner.js --root ./src --parallel...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: node agent-chain-runner.js --verbose --max-concurr...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "example-usage.js"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "import_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: runExamples",
+          "file": "function_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: example1_basicDryRun",
+          "file": "function_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: example2_parallelProcessing",
+          "file": "function_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: example3_javascriptOptimization",
+          "file": "function_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: example4_reorganizationOnly",
+          "file": "function_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: example5_performanceOnly",
+          "file": "function_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: example6_customConfiguration",
+          "file": "function_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: createCustomConfiguration",
+          "file": "function_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: #!/usr/bin/env node...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: verbose: true...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: excludeFiles: ['*.min.js', '*.bundle.js', '*.cache...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: excludeFiles: ['*.min.js', '*.bundle.js', '*.chunk...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: dryRun: false, // Actually perform the reorganizat...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: parallel: false, // Sequential processing for file...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: outputPath: './reorganization-report'...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: outputPath: './performance-report'...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: fileTypes: ['js', 'ts', 'jsx', 'tsx']...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: excludeDirs: options.excludeDirs || [...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \"node_modules\", \".git\", \"dist\", \"build\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: excludeFiles: options.excludeFiles || [...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \"*.min.js\", \"*.cache\", \"*.lock\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: focus: options.performanceFocus || [\"loops\", \"arra...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: outputFormat: options.outputFormat || \"json\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: performanceFocus: ['dom', 'memory', 'bundle-size']...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: performanceFocus: ['cpu', 'memory', 'io']...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: })...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: createCustomConfiguration...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: THIS IS A GENERATED/BUNDLED FILE BY ESBUILD...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: color: \"var(--text-accent)\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: lineHeight: \"1.5\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: justifyContent: \"flex-end\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: minWidth: \"100px\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: borderRadius: \"4px\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: value...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: display: MODAL_STYLES.display...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: CORS_PROXY: \"https://api.allorigins.win/raw\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: GROQ: \"llama-3.3-70b-versatile\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \"Google Gemini\": [...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \"Groq\": [...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ]...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \"Groq\": \"https://groq.com\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \"Groq\": /llama[-_\\.]?\\d+(?:\\.\\d+)?(?:-[a-z0-9\\-]+)...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: TITLE_MAX_LENGTH: 100...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: REPAINT_DELAY: 50...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ConfirmationModal: () => ConfirmationModal...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.cancelButton = this.createButton(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: () => this.handleCancel()...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.confirmButton = this.createButton(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: () => this.handleConfirm()...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.confirmButton = this.createButton(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: () => this.handleConfirm()...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.cancelButton = this.createButton(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: () => this.handleCancel()...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: input: \"ytc-modal-input\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: placeholder...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: isDangerous...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: default: () => YoutubeClipperPlugin...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const suspiciousElements = [...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: '[class*=\"clip\"]'...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"warn\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"error\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: default:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: NETWORK_ERROR: \"Network error occurred. Please che...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: AUTO_EXTRACTION: \"Video description could not be e...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: PROCESS: \"Process\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: OUTPUT_PATH: \"YouTube/Processed Videos\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"gemini\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"groq\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: default:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: errors...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: return text.replace(/\\\\n/g, \"\\n\").replace(/\\\\\"/g, ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: (match, code) => String.fromCharCode(parseInt(code...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ValidationUtils.URL_PATTERNS = [...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: /(?:https?:\\/\\/)?(?:m\\.)?youtube\\.com\\/watch\\?v=([...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: style.textContent = `...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.urlInput = this.createInput(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: MESSAGES.PLACEHOLDERS.YOUTUBE_URL + \" (Press Enter...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: text: \"Custom Prompt (this session only):\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const labels = [...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \"Save note\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const cancelBtn = this.createButton(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: () => this.close()...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.processButton = this.createButton(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: () => this.handleProcess()...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.openButton = this.createButton(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: () => this.handleOpenFile()...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.setupKeyHandlers(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: () => this.close()...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.setValidationMessage(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: isValid ? \"success\" : \"error\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.setValidationMessage(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: isValid ? \"success\" : \"error\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const shouldSwitch = await this.showConfirmationMo...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: `The selected model (${this.selectedModel}) may no...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: false...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const filePath = await this.options.onProcess(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: customPrompt...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"active\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"complete\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"error\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: default:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.setValidationMessage(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: isValid ? \"success\" : \"error\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: else if (this.lastValidResult)...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: else...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: thumbnail: data.thumbnail_url || \"\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: return `# YouTubeClipper Environment Variables...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: # Set these in your environment for secure API key...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: # Google Gemini API Key...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ${prefix}_GEMINI_API_KEY=your_gemini_api_key_here...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: # Groq API Key...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ${prefix}_GROQ_API_KEY=your_groq_api_key_here...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: # Usage:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: # 1. Set these variables in your shell profile (.b...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: # 2. Enable \"Use Environment Variables\" in plugin ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: # 3. Restart Obsidian to pick up the new environme...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: metadataTimeout: 5e3...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: fallbackModel: \"llama-3.1-8b-instant\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: metadataTimeout: 1e4...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: fallbackModel: \"llama-3.3-70b-versatile\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: metadataTimeout: 15e3...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: fallbackModel: \"gemini-2.0-flash\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: maxTokens: 2e3...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: maxTokens: 4e3...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: maxTokens: 4e3...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: maxTokens: 4e3...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: maxTokens: 4e3...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: maxTokens: 3e3...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: maxTokens: 4e3...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: maxTokens: 3e3...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: maxTokens: 4e3...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: maxTokens: 4e3...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: maxTokens: 4e3...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: maxTokens: 4e3...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"brief\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"executive-summary\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"detailed-guide\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: return alternatives.sort(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: (a, b) => MODEL_CHARACTERISTICS[a].estimatedLatenc...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \"custom\": 1...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: alternative: \"balanced\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: alternative: \"balanced\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: alternative: \"balanced\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: alternative: currentMode === \"balanced\" ? \"fast\" :...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: validation: \"ytc-settings-validation\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: cls: \"ytc-version-badge\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: cls: hasValidConfig ? \"ytc-status-good\" : \"ytc-sta...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: cls: \"ytc-docs-button\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const response = await fetch(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \"https://generativelanguage.googleapis.com/v1beta/...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const statusItems = [...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: `Groq Timeout: ${((_b = this.settings.customTimeou...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const recommendations = PerformanceOptimizer.getPe...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \"detailed-guide\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: cls: \"setting-item-description\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: instructions.innerHTML = `...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <p><strong>How to use:</strong></p>...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <ol>...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <li>Set your Gemini or Groq API key above</li>...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <li>Configure your preferred output directory</li>...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <li>Click the video icon in the ribbon or use the ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <li>Paste a YouTube URL and click Process</li>...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <li>The plugin will analyze the video and create a...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: </ol>...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <p><strong>API Key Information:</strong></p>...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <ul>...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <li><strong>Gemini API:</strong> Get your key from...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <li><strong>Groq API:</strong> Get your key from <...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <li>At least one API key is required for the plugi...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: </ul>...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <p><strong>Note:</strong> This plugin requires an ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <p><strong>Limitations:</strong> Due to CORS restr...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: model: provider.model...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: responseTime: Date.now()...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: responseTime: Date.now()...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: model: result.value.model...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: body: JSON.stringify(this.createRequestBody(prompt...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \"Content-Type\": \"application/json\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: parts: [{ text: prompt }]...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: candidateCount: 1...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: text: `You are an expert video content analyzer. P...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \\u2022 AUDIO STREAM: Transcribe all spoken content...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \\u2022 VIDEO STREAM: Analyze visual elements, text...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \\u2022 INTEGRATED INSIGHTS: Synthesize audio and v...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: For best results:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - Prioritize accuracy in transcription and speaker...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - Extract and explain key concepts shown visually...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - Note timing relationships between audio and visu...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - Identify visual cues that reinforce or clarify s...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: }]...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: parts: [{ fileData: { fileUri: gcsUri, mimeType: \"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: body: JSON.stringify(this.createRequestBody(prompt...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \"Authorization\": `Bearer ${this.apiKey}`...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: messages: [...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: content: \"You are an expert content analyzer speci...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: content: prompt...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: temperature: API_LIMITS.TEMPERATURE...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: autoGenerated: true...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const englishTrack = captionTracks.find(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: duration: seg.duration || 0...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: autoGenerated...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: text: segment.text...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: channelName: metadata.channelName...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: throw ErrorHandler.createUserFriendlyError(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \"fetch video data\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: \"User-Agent\": \"Obsidian YoutubeClipper Plugin\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: signal: controller.signal...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: author_name: data.author_name...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: channelName: enhancedData.author_name...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const patterns = [...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: /<meta property=\"og:description\" content=\"([^\"]*?)...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"overwrite\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"new-name\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: default:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: return new Promise(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: (resolve) => setTimeout(resolve, TIMEOUTS.FILE_CRE...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"fast\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"quality\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: default:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"executive-summary\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"brief\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case \"detailed-guide\":...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: default:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: OUTPUT FORMAT - BRIEF DESCRIPTION + RESOURCES:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: Use this EXACT template:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ---...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: created: \"${new Date().toISOString().split(\"T\")[0]...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: modified: \"${new Date().toISOString().split(\"T\")[0...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: description: \"One short paragraph (3-4 sentences) ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: type: youtube-note...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: format: brief...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: tags:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - youtube...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - brief...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: status: processed...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: duration: \"[Extract video duration]\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: channel: \"[Extract channel name]\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: video_id: \"${videoId || \"unknown\"}\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: processing_date: \"${new Date().toISOString()}\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ai_provider: \"__AI_PROVIDER__\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ai_model: \"__AI_MODEL__\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ---...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <iframe width=\"640\" height=\"360\" src=\"${embedUrl}\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ---...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ## Brief Description...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: [Provide a concise 3-4 sentence description that c...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ## Key Takeaways...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **[Takeaway 1]**: [Core insight or lesson from t...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **[Takeaway 2]**: [Core insight or lesson from t...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **[Takeaway 3]**: [Core insight or lesson from t...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ## Quick Actions...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 1. **[Immediate Action]**: [Specific action you ca...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 2. **[Next Step]**: [Follow-up action to apply wha...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ## Resources...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **Original Video:** [Watch on YouTube](${videoUr...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **Channel:** [Creator's Channel](https://youtube...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **Top resources mentioned or related (links):**...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - [Resource 1]...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - [Resource 2]...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - [Resource 3]...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: OUTPUT FORMAT - EXECUTIVE SUMMARY:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: Use this EXACT template:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ---...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: created: \"${new Date().toISOString().split(\"T\")[0]...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: modified: \"${new Date().toISOString().split(\"T\")[0...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: description: \"Single sentence capturing the core i...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: type: youtube-note...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: format: executive-summary...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: tags:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - youtube...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - executive-summary...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - tag_1...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - tag_2...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - tag_3...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: status: processed...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: duration: \"[Extract video duration]\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: channel: \"[Extract channel name]\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: video_id: \"${videoId || \"unknown\"}\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: processing_date: \"${new Date().toISOString()}\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: word_count: 250...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ai_provider: \"__AI_PROVIDER__\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ai_model: \"__AI_MODEL__\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ---...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <iframe width=\"640\" height=\"360\" src=\"${embedUrl}\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ---...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ## Executive Summary...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: [Provide a comprehensive executive summary in exac...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: Focus on strategic value, not tactical details. Ma...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ## Key Insights...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **[Strategic Insight 1]:** [Critical insight wit...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **[Strategic Insight 2]:** [Critical insight wit...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **[Strategic Insight 3]:** [Critical insight wit...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ## Action Items (3-5 items)...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 1. **[Immediate Priority - 0-30 days]**: [Specific...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 2. **[Short-term Priority - 1-3 months]**: [Specif...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 3. **[Strategic Priority - 3-6 months]**: [Specifi...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 4. **[Long-term Priority - 6+ months]**: [Specific...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 5. **[Optional Additional Priority]**: [Specific, ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ## Resources...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **Original Video:** [Watch on YouTube](${videoUr...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **Channel:** [Creator's Channel](https://youtube...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **Key Tools/Frameworks:** [List main tools or fr...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **Official Documentation:** [Links to official d...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **Further Reading:** [1-2 high-quality related a...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: CRITICAL:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - Keep the Executive Summary to exactly 250 words ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - Provide 3-5 specific, actionable items with time...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - Each action item should be measurable and direct...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: OUTPUT FORMAT - COMPREHENSIVE TUTORIAL:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: Use this EXACT template:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ---...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: created: \"${new Date().toISOString().split(\"T\")[0]...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: modified: \"${new Date().toISOString().split(\"T\")[0...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: description: \"Single sentence capturing the core i...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: type: youtube-note...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: format: detailed-tutorial...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: tags:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - youtube...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - tutorial...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - step-by-step...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - tag_1...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - tag_2...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - tag_3...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: status: processed...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: duration: \"[Extract video duration]\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: channel: \"[Extract channel name]\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: video_id: \"${videoId || \"unknown\"}\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: processing_date: \"${new Date().toISOString()}\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: word_count: \"[estimated word count]\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ai_provider: \"__AI_PROVIDER__\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ai_model: \"__AI_MODEL__\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: difficulty: \"[beginner/intermediate/advanced]\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: estimated_time: \"[time to complete]\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ---...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: <iframe width=\"640\" height=\"360\" src=\"${embedUrl}\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ---...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ## Comprehensive Tutorial...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ### Concise Summary...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: [Two-part response: a concise summary under 150 wo...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ## Step-by-Step Implementation Guide...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ### Step 1: [Action Title]...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - Detailed instruction 1...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - Detailed instruction 2...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - Key considerations or tips...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ### Step 2: [Action Title]...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - Detailed instruction 1...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - Detailed instruction 2...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - Key considerations or tips...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: [Continue with additional steps as needed - provid...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ## Action Items & Next Steps...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ### Immediate Actions (0-1 week)...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **[Action 1]**: [Specific, measurable task with ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **[Action 2]**: [Specific, measurable task with ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **[Action 3]**: [Specific, measurable task with ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ### Short-term Goals (1-4 weeks)...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **[Goal 1]**: [Specific outcome or milestone to ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **[Goal 2]**: [Specific outcome or milestone to ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ### Long-term Objectives (1-3 months)...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **[Objective 1]**: [Strategic objective with mea...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **[Objective 2]**: [Strategic objective with mea...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ## Resources...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **Original Video:** [Watch on YouTube](${videoUr...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **Channel:** [Creator's Channel](https://youtube...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **Related Documentation:** [If any tools/framewo...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **Additional Learning:** [Suggest 2-3 related hi...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **Tools & Software:** [List any tools mentioned ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - **Community:** [Relevant forums, Discord servers...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: IMPORTANT:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - Provide detailed, actionable steps that someone ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - Include 3-5 immediate action items and 2-4 longe...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: - Each action item should be specific, measurable,...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: return content.replace(/^---\\s*\\n/, `---...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ${key}: \"${value}\"...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: return `Create a concise summary for this YouTube ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: Please provide:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 1. A 2-paragraph summary (max 250 words)...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 2. 3-5 key takeaways...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 3. Main actionable insights...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: AIPromptService.COMPACT_BASE_TEMPLATE = `Analyze t...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: AIPromptService.BALANCED_BASE_TEMPLATE = `Analyze ...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: AIPromptService.COMPREHENSIVE_BASE_TEMPLATE = `Ana...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: MULTIMODAL ANALYSIS INSTRUCTIONS:...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 1. Watch the complete video using both audio and v...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 2. Extract insights from spoken content, music, so...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 3. Analyze visual elements including slides, diagr...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 4. Focus on practical, action-oriented information...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ttl...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: preferMultimodal: true...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: onSettingsChange: this.handleSettingsChange.bind(t...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const formattedContent = promptService.processAIRe...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: url...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const filePath = await fileService.saveToFile(...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.settings.outputPath...",
+          "file": "semicolon_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "whitespace_placeholder"
+        }
+      ]
+    },
+    "reorganization": {
+      "processed": 0,
+      "errors": 0,
+      "changes": []
+    },
+    "optimization": {
+      "processed": 3,
+      "errors": 4,
+      "improvements": []
+    }
+  },
+  "duration": "0.10",
+  "summary": {
+    "totalProcessed": 7,
+    "totalErrors": 4,
+    "totalChanges": 437
+  }
+}

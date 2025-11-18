@@ -9,19 +9,36 @@ interface YouTubePluginSettings {
   // API Keys
   geminiApiKey: string;           // Google Gemini API key
   groqApiKey: string;             // Groq API key (optional)
-  
+
   // Vault Configuration
   outputPath: string;             // Path to save generated notes
                                   // e.g., "📥 Inbox/Clippings/YouTube"
-  
+
   // Environment Variables
   useEnvironmentVariables: boolean; // Load API keys from env vars
   environmentPrefix: string;       // Prefix for env var names
-  
+
   // Caching & State
   modelOptionsCache?: Record<string, string[]>; // Cached model lists
   customPrompts?: Record<OutputFormat, string>; // Session-only custom prompts
+
+  // Performance Configuration
+  performanceMode: PerformanceMode; // 'fast' | 'balanced' | 'quality'
+  enableParallelProcessing: boolean; // Enable parallel processing when available
+  preferMultimodal: boolean;        // Prefer multimodal models when available
 }
+```
+
+### PerformanceMode
+
+```typescript
+type PerformanceMode = 'fast' | 'balanced' | 'quality';
+
+// Descriptions:
+// - 'fast': Prioritize speed over quality (faster models, simpler processing)
+// - 'balanced': Optimal balance of speed and quality
+// - 'quality': Prioritize quality over speed (more advanced models, detailed processing)
+```
 ```
 
 ### OutputFormat
@@ -379,9 +396,12 @@ interface YouTubeUrlModalOptions {
     format: OutputFormat,
     provider?: string,
     model?: string,
-    customPrompt?: string
+    customPrompt?: string,
+    performanceMode?: PerformanceMode,
+    enableParallel?: boolean,
+    preferMultimodal?: boolean
   ) => Promise<string>;  // Return file path
-  
+
   onOpenFile?: (filePath: string) => Promise<void>;
   initialUrl?: string;
   providers?: string[];
@@ -389,6 +409,10 @@ interface YouTubeUrlModalOptions {
   defaultProvider?: string;
   defaultModel?: string;
   fetchModels?: () => Promise<Record<string, string[]>>;
+  performanceMode?: PerformanceMode;
+  enableParallelProcessing?: boolean;
+  preferMultimodal?: boolean;
+  onPerformanceSettingsChange?: (performanceMode: PerformanceMode, enableParallel: boolean, preferMultimodal: boolean) => Promise<void>;
 }
 
 class YouTubeUrlModal extends BaseModal {
@@ -403,14 +427,48 @@ class YouTubeUrlModal extends BaseModal {
 
 // Usage
 new YouTubeUrlModal(this.app, {
-  onProcess: async (url, format, provider, model, customPrompt) => {
+  onProcess: async (url, format, provider, model, customPrompt, performanceMode, enableParallel, preferMultimodal) => {
     // Process video and return file path
     return '/path/to/created/note';
   },
   onOpenFile: async (filePath) => {
     // Open file in editor
+  },
+  performanceMode: 'balanced',
+  enableParallelProcessing: true,
+  preferMultimodal: true,
+  onPerformanceSettingsChange: async (performanceMode, enableParallel, preferMultimodal) => {
+    // Update plugin settings when changed
   }
 }).open();
+```
+
+### Core Plugin Functions
+
+```typescript
+// Main video processing function
+async function processYouTubeVideo(
+  url: string,
+  format: OutputFormat = 'detailed-guide',
+  providerName?: string,
+  model?: string,
+  customPrompt?: string,
+  performanceMode?: PerformanceMode,
+  enableParallel?: boolean,
+  preferMultimodal?: boolean
+): Promise<string>  // Returns file path of created note
+
+// Usage in plugin
+const filePath = await processYouTubeVideo(
+  'https://youtube.com/watch?v=abc123',
+  'executive-summary',
+  'Gemini',
+  'gemini-2.0-pro',
+  'Custom prompt here...',
+  'balanced',
+  true,
+  true
+);
 ```
 
 ### SettingsTab

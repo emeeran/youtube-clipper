@@ -1,0 +1,10 @@
+{
+  "geminiApiKey": "",
+  "groqApiKey": "",
+  "outputPath": "YouTube/Processed Videos",
+  "useEnvironmentVariables": false,
+  "environmentPrefix": "YTC",
+  "performanceMode": "balanced",
+  "enableParallelProcessing": true,
+  "preferMultimodal": true
+}

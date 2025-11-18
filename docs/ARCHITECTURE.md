@@ -42,6 +42,13 @@ The YoutubeClipper plugin follows a layered architecture pattern with clear sepa
 │  - YouTube oEmbed API                               │
 │  - CORS Proxy (optional)                            │
 └─────────────────────────────────────────────────────┘
+                         ↓
+┌─────────────────────────────────────────────────────┐
+│         Integration Layer (Extensions)              │
+│  - Chrome Extension (direct video processing)       │
+│  - Obsidian URI Protocol Handler                    │
+│  - Clipboard Integration                            │
+└─────────────────────────────────────────────────────┘
 ```
 
 ## Core Components
@@ -303,6 +310,8 @@ onload(): void {
   // Load settings
   // Initialize ServiceContainer
   // Create UI ribbon button
+  // Register Chrome extension integration (URI protocol handler)
+  // Set up temporary note detection (for Chrome extension compatibility)
 }
 
 // 2. Settings Updated
@@ -331,6 +340,25 @@ Settings are stored in Obsidian's plugin data directory:
 - **Format**: JSON with encrypted API keys (Obsidian handles encryption)
 - **Accessibility**: Via `SecureConfigService`
 
+### Chrome Extension Integration
+
+The plugin supports integration with a Chrome extension for seamless YouTube video processing:
+
+**URI Protocol Handler**:
+- registers `obsidian://youtube-clipper` protocol
+- receives video URLs directly from Chrome extension
+- bypasses temporary note creation for faster processing
+
+**Temporary Note Detection**:
+- monitors vault for notes containing YouTube URLs
+- detects notes created by Chrome extension (marked with `<!-- ytc-extension:youtube-clipper -->`)
+- automatically processes detected video URLs
+- prevents duplicate processing with file tracking system
+
+**Clipboard Integration**:
+- provides command to read YouTube URL from clipboard
+- allows manual invocation when Chrome extension isn't available
+
 ## Performance Optimizations
 
 ### 1. Caching Strategy
@@ -349,6 +377,11 @@ Settings are stored in Obsidian's plugin data directory:
 ### 4. Memoization
 - Metadata extraction cached per video ID
 - Avoids re-fetching for same video in session
+
+### 5. Runtime Performance Configuration
+- **Performance Mode**: Configurable between 'fast', 'balanced', 'quality' modes
+- **Parallel Processing**: Toggle for concurrent operations where supported
+- **Multimodal Preferences**: Option to prefer models that support video/audio analysis
 
 ## Error Handling Strategy
 

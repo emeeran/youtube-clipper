@@ -1,0 +1,10 @@
+{
+    "id": "youtube-clipper",
+    "name": "YoutubeClipper",
+    "version": "1.3.0",
+    "minAppVersion": "0.15.0",
+    "description": "AI-powered YouTube clipper that extracts key insights and generates structured, actionable notes with conflict-free operation",
+    "author": "YouTubeClipper Team",
+    "authorUrl": "https://github.com/youtube-clipper/obsidian-plugin",
+    "isDesktopOnly": false
+}

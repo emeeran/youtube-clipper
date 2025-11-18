@@ -1,0 +1,2587 @@
+{
+  "timestamp": "2025-11-18T11:21:31.976Z",
+  "config": {
+    "rootPath": "src",
+    "excludeDirs": [
+      "node_modules",
+      ".git",
+      "dist",
+      "build",
+      "coverage",
+      ".obsidian",
+      ".vscode",
+      ".idea"
+    ],
+    "excludeFiles": [
+      "*.min.js",
+      "*.bundle.js",
+      "*.cache",
+      "*.lock",
+      "package-lock.json",
+      "yarn.lock"
+    ],
+    "fileTypes": [
+      "js",
+      "ts",
+      "jsx",
+      "tsx",
+      "vue",
+      "py",
+      "java",
+      "cs",
+      "go",
+      "rs"
+    ],
+    "dryRun": true,
+    "backup": true,
+    "parallel": false,
+    "maxConcurrency": 3,
+    "verbose": false,
+    "outputPath": null
+  },
+  "stats": {
+    "startTime": 1763464891813,
+    "filesScanned": 92,
+    "filesModified": 0,
+    "totalLines": 38306
+  },
+  "results": {
+    "rebasing": {
+      "processed": 46,
+      "errors": 0,
+      "changes": [
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "agent-chain-runner.js"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('🚀 Starting Agent Chain Runner...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`📁 Target: ${this.config.rootPath}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`🔧 Dry Run: ${this.config.dryRun ? 'YES' : 'NO'}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`💾 Backup: ${this.config.backup ? 'YES' : 'NO'}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('\\n🔗 Phase 1: Code Rebasing');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('\\n📁 Phase 2: Code Reorganization');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('\\n⚡ Phase 3: Performance Optimization');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`\\n✅ Agent Chain completed in ${duration}s`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`📊 Files scanned: ${this.stats.filesScanned}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`📝 Files modified: ${this.stats.filesModified}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error('❌ Agent Chain failed:', error.message);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`💾 Creating backup: ${backupPath}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('✅ Backup created');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`📋 Processing ${files.length} files for rebasing...`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`✅ Rebasing complete - ${this.results.rebasing.processed} files processed`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('🔍 Analyzing project structure...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('📋 Generating reorganization plan...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('📄 Reorganization Plan:');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(JSON.stringify(plan, null, 2)",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('🔧 Applying reorganization...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`✅ Reorganization complete - ${results.changes.length} changes applied`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`📋 Processing ${files.length} files for optimization...`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`✅ Optimization complete - ${this.results.optimization.processed} files processed`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  Processing: ${path.relative(this.config.rootPath, file)",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error(`    ❌ Error: ${result.error}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error(`    ❌ Error processing ${file}:`, error.message);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  Processing: ${path.relative(this.config.rootPath, file)",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error(`    ❌ Error: ${result.error}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error(`    ❌ Error processing ${file}:`, error.message);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`\\n📊 Report generated: ${reportPath}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`📈 Summary: ${report.summary.totalProcessed} files processed`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`⚠️  Errors: ${report.summary.totalErrors}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`🔄 Changes: ${report.summary.totalChanges}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`\nAgent Chain Runner - Code Optimization System\n\nUsage: node agent-chain-runner.js [options]\n\nOptions:\n  --dry-run              Run without making actual changes\n  --no-backup            Skip creating backup\n  --parallel             Process files in parallel\n  --verbose              Enable verbose logging\n  --root <path>          Root directory to process (default: current directory)",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error('Agent Chain failed:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: #!/usr/bin/env node...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: excludeDirs: options.excludeDirs || [...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: '.obsidian', '.vscode', '.idea'...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: excludeFiles: options.excludeFiles || [...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 'package-lock.json', 'yarn.lock'...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: backup: options.backup !== false, // Default to tr...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: outputPath: options.outputPath || null...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: totalLines: 0...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: totalProcessed: this.results.rebasing.processed +...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.results.reorganization.processed +...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: totalErrors: this.results.rebasing.errors +...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.results.reorganization.errors +...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: totalChanges: this.results.rebasing.changes.length...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.results.reorganization.changes.length +...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: this.results.optimization.improvements.length...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case '--dry-run':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case '--no-backup':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case '--parallel':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case '--verbose':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case '--root':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case '--output':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case '--max-concurrency':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case '--help':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: --output <path>        Output directory for report...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: --max-concurrency <n>  Maximum parallel processes ...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: --help                 Show this help message...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: Examples:...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: node agent-chain-runner.js --dry-run...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: node agent-chain-runner.js --root ./src --parallel...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: node agent-chain-runner.js --verbose --max-concurr...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('🚀 Starting end-to-end optimization workflow...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`📋 Executing phase: ${phase.name}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error('❌ Critical failures detected, stopping workflow');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`🤖 Executing agent: ${agent.name}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`✅ ${agent.name} completed in ${executionTime}ms`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error(`❌ ${agent.name} failed:`, error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "base-modal.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error('Enter key handler error:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error('Escape key handler error:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('[youtube-clipper] Cleaning up modal');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('[youtube-clipper] Modal cleanup complete');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "base.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: if",
+          "file": "../function_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: deadCodeRemoved: 0...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: refactorings: changes.length...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: result.push(''); // Add blank line after imports...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, filePath...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: return [...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ...sortGroup(otherImports)...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, 'import_...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: return false; // Remove from original position...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, 'import_...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, 'console...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, 'functio...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: trimmed.endsWith(';') ||...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: trimmed.endsWith('{') ||...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: trimmed.endsWith('}') ||...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: trimmed.startsWith('if ') ||...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: trimmed.startsWith('for ') ||...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: trimmed.startsWith('while ') ||...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: trimmed.startsWith('function ') ||...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: trimmed.startsWith('//') ||...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: trimmed.startsWith('*') ||...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, 'semicol...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, 'whitesp...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: local: []...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: continue; // Skip blank lines in import section...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: result.push(''); // Blank line after imports...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, filePath...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, filePath...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, filePath...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, filePath...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const importLines = content.split('\\n').filter(lin...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: line.trim().startsWith('import ') ||...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: line.trim().startsWith('using ') ||...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: line.trim().startsWith('#include')...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, 'import_...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: removeUnused: true...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: addTypeHints: true...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ensureFinalNewline: true...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: removeComments: false...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: rules: this.rules...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('🔍 Analyzing project structure...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`Warning: Could not read directory ${dir}:`, error.message);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('🔗 Analyzing dependencies...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('📋 Generating reorganization plan...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('🔧 Applying reorganization...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('📄 Dry run - no changes will be made');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  Created directory: ${dir}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  Moved: ${move.from} → ${path.relative(rootPath, finalToPath)",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('🔄 Updating import paths...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`  Warning: Could not update imports in ${file.relativePath}: ${error.message}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  Updated import paths in ${updatedFiles} files`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: recommendations: []...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: avgDepth: 0...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: children: []...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: category: this.categorizeFile(name, ext, relativeP...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: system: []...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: resolved: resolvedPath...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: extension: ext...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: recommendations: []...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: directories: [...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: 'assets/styles'...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ]...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: action: 'Consolidate deeply nested directories'...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: action: 'Verify project structure and add source f...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const jsFilesInRoot = structure.files.filter(f =>...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: ['.js', '.jsx', '.ts', '.tsx'].includes(f.extensio...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: !f.relativePath.includes('/')...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: action: 'Move source files to src/ directory'...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: action: `Create ${expectedDir} directory`...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: reason: `Move ${file.category} file to appropriate...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case 'component':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case 'service':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case 'utility':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case 'type':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case 'test':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case 'documentation':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case 'config':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case 'script':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: case 'asset':...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: default:...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: errors: []...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: category: move.category...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: relativePath: path.relative(rootPath, fullPath)...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: return this.config.excludeDirs.includes(dirName) |...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: dirPath.includes('node_modules') ||...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: dirPath.includes('.git') ||...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: dirPath.includes('dist') ||...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(logMessage);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error(logMessage);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(logMessage);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "dom.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "end-to-end-optimizer.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('🚀 Starting End-to-End Optimization Workflow');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('Project:', this.projectRoot);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('Goals:', JSON.stringify(this.goals, null, 2)",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error('❌ End-to-end optimization failed:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`✅ Quick ${type} optimization completed`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`Agents executed: ${results.results.length}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`Overall score: ${results.summary.overallScore}/100`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`📊 Report saved: ${reportPath}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`📝 Summary saved: ${summaryPath}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn('Could not save report:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('\\n' + '='.repeat(60)",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('📊 OPTIMIZATION SUMMARY');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('='.repeat(60)",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`⏱️  Duration: ${Math.round(report.duration / 1000)",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`🎯 Overall Score: ${report.summary.overallScore}/100`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`✅ Successful Agents: ${report.summary.successfulAgents}/${report.summary.totalAgents}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`⚠️  Critical Issues: ${report.summary.criticalIssues}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('\\n📈 Key Improvements:');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`   • Processing Time: -${Math.round(report.summary.performanceImprovements.processingTimeReduction * 100)",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`   • Security Score: ${Math.round(report.summary.securityEnhancements.securityScore * 100)",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`   • Code Quality: +${Math.round(report.summary.qualityImprovements.codeQualityImprovement * 100)",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('\\n🔥 Top Recommendations:');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`   • ${r.title} (${r.priority})",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('\\n' + '='.repeat(60)",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('🚀 YoutubeClipper End-to-End Optimizer');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('=====================================\\n');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('\\n✅ Optimization completed successfully!');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error('\\n❌ Optimization failed:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: optimizeProject",
+          "file": "../function_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: runOptimizationCLI",
+          "file": "../function_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "example-usage.js"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('🚀 Agent Chain Runner - Example Usage\\n');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('=== Example 1: Basic Dry Run ===');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('\\n=== Example 2: Parallel Processing ===');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('\\n=== Example 3: JavaScript Optimization ===');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('\\n=== Example 4: Project Reorganization ===');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('\\n=== Example 5: Performance Optimization ===');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('\\n=== Example 6: Custom Configuration ===');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('📁 Analyzing project structure...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('📋 Generating reorganization plan...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('📄 Plan Summary:');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  - Files to move: ${plan.moves.length}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  - Directories to create: ${plan.creates?.length || 0}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  - Recommendations: ${plan.recommendations.length}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('\\n🔍 Dry Run - No changes will be made');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('\\n🔧 Applying reorganization...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`✅ Reorganization complete:`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  - Changes applied: ${results.changes}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  - Files moved: ${results.moves.length}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('⚡ Processing files for performance optimization...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`📋 Processing ${files.length} files...`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  Processing: ${path.relative(config.rootPath, file)",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`    ✓ ${result.improvements.length} improvements`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`    ❌ Error: ${result.error}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error(`    ❌ Error processing ${file}:`, error.message);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`\\n✅ Performance optimization complete:`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  - Files processed: ${processed}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  - Files improved: ${improved}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`\\n📊 Agent Statistics:`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(JSON.stringify(stats, null, 2)",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`📄 Loaded configuration from: ${configPath}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error(`❌ Error loading config: ${error.message}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`⚠️  Config file not found: ${configPath}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('    Using default configuration...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('📋 Configuration:');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  Root path: ${config.rootPath}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  Parallel: ${config.parallel}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  Dry run: ${config.dryRun}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`  Backup: ${config.backup}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error('❌ Example execution failed:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "file-confirm-modal.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('FileConfirmModal opened for file:', this.options.file.name);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('File path:', this.options.file.path);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('Yes button focused');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('User clicked Yes - attempting to open file');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('User clicked No - closing modal');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error('Error in onCancel callback:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('User pressed Escape - closing modal');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('Opening file in leaf:', leaf);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('File opened successfully');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('FileConfirmModal closing - cleaning up');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('FileConfirmModal cleanup complete');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "gemini.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "groq.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error(\"Enter key handler error:\", error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error(\"Escape key handler error:\", error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(\"[youtube-clipper] Cleaning up modal\");",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(\"[youtube-clipper] Modal cleanup complete\");",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(logMessage);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error(logMessage);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(logMessage);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(\"Failed to extract video ID from URL:\", url);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error(errorMessage, error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error(\"[SaveConfirmationModal] Error in onOpen:\", error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug(\"YouTubeUrlModal: Same URL already set, preventing cycle\");",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(\"[YouTubeUrlModal] model recommendation failed\", err);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug(\"YouTubeUrlModal: setUrl called with same URL, preventing cycle\");",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`Attempting to process with ${provider.name}...`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`${provider.name} failed:`, error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(\"Starting parallel provider racing...\");",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`${provider.name} failed in parallel race:`, error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`Parallel winner: ${result.value.provider} (${Date.now()",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(\"Failed to fetch transcript:\", error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug(\"YouTube API method failed:\", error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug(\"Page scraping method failed:\", error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug(\"Third-party method failed:\", error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug(\"Failed to fetch caption track:\", err);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug(\"Failed to parse transcript from HTML:\", error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug(\"Could not scrape additional metadata:\", error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(\"Failed to scrape video page:\", error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - handleUrlSafely called for URL:`, url, \"file:\", filePath);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`YouTubeClipper: ${source} - REJECTING URL in non-temp file: ${filePath}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`YouTubeClipper: ${source} - Rejection details: age=${fileAge}ms, inOutputPath=${isInOutputPath}, hasMarker=${hasMarker}, hasClipPrefix=${hasClipPrefix}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - URL already handled: ${url}, skipping`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - cancelling pending handler for URL:`, url);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - marked URL as handled:`, url);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - DEBOUNCED: opening modal for URL: ${url}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - pendingUrls size before:`, pendingUrls.size);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - handledTempFiles size:`, this.handledTempFiles.size);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - pendingUrls size after:`, pendingUrls.size);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - cleaned up handledTempFiles, new size:`, this.handledTempFiles.size);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - set timeout for URL:`, url, \"delay:\", URL_HANDLER_DELAY);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug(\"YouTubeClipper: create handler - ignoring existing file:\", file.path);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug(\"YouTubeClipper: create handler - no url extracted for temp file:\", file.path);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(\"YouTubeClipper: CREATE EVENT - detected temp note\", { path: file.path, url });",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug(\"YouTubeClipper: active-leaf-change - ignoring existing file:\", file.path);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug(\"YouTubeClipper: active-leaf-change - no url for temp file:\", file.path);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(\"YouTubeClipper: ACTIVE-LEAF-CHANGE EVENT - detected temp note\", { path: file.path, url });",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug(\"YouTubeClipper: protocol handler received no valid url\", params);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(\"YouTubeClipper: protocol handler error\", e);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(\"YouTubeClipper: Ribbon icon set successfully\");",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper [${callId}]: safeShowUrlModal called with URL:`, initialUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper [${callId}]: Current modal state - isModalOpen:`, this.isModalOpen, \"pendingModalUrl:\", this.pendingModalUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`YouTubeClipper [${callId}]: MODAL ALREADY OPEN - IGNORING request for:`, initialUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`YouTubeClipper [${callId}]: Current pending URL:`, this.pendingModalUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`YouTubeClipper [${callId}]: Updating pending modal URL from:`, this.pendingModalUrl, \"to:\", initialUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`YouTubeClipper [${callId}]: Same URL as pending, completely ignoring`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper [${callId}]: Setting isModalOpen = true for URL:`, initialUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper [${callId}]: About to open YouTubeUrlModal for URL:`, initialUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper [${callId}]: Modal state after 100ms - isModalOpen:`, this.isModalOpen);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: Modal onClose triggered for URL:`, initialUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: Modal state before close - isModalOpen:`, this.isModalOpen, \"pendingModalUrl:\", this.pendingModalUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: Modal state after close - isModalOpen:`, this.isModalOpen, \"pendingModalUrl:\", this.pendingModalUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(\"YouTubeClipper: Error resetting modal state:\", error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: Force reset modal state after error - isModalOpen:`, this.isModalOpen);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(\"YouTubeClipper: Fallback modal state reset triggered for URL:\", initialUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(\"YouTubeClipper: Modal state after fallback reset - isModalOpen:\", this.isModalOpen);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "main.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - handleUrlSafely called for URL:`, url, 'file:', filePath);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`YouTubeClipper: ${source} - REJECTING URL in non-temp file: ${filePath}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`YouTubeClipper: ${source} - Rejection details: age=${fileAge}ms, inOutputPath=${isInOutputPath}, hasMarker=${hasMarker}, hasClipPrefix=${hasClipPrefix}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - URL already handled: ${url}, skipping`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - cancelling pending handler for URL:`, url);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - marked URL as handled:`, url);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - DEBOUNCED: opening modal for URL: ${url}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - pendingUrls size before:`, pendingUrls.size);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - handledTempFiles size:`, this.handledTempFiles.size);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - pendingUrls size after:`, pendingUrls.size);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - cleaned up handledTempFiles, new size:`, this.handledTempFiles.size);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: ${source} - set timeout for URL:`, url, 'delay:', URL_HANDLER_DELAY);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug('YouTubeClipper: create handler - ignoring existing file:', file.path);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug('YouTubeClipper: create handler - no url extracted for temp file:', file.path);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('YouTubeClipper: CREATE EVENT - detected temp note', { path: file.path, url });",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug('YouTubeClipper: active-leaf-change - ignoring existing file:', file.path);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug('YouTubeClipper: active-leaf-change - no url for temp file:', file.path);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('YouTubeClipper: ACTIVE-LEAF-CHANGE EVENT - detected temp note', { path: file.path, url });",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug('YouTubeClipper: protocol handler received no valid url', params);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn('YouTubeClipper: protocol handler error', e);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('YouTubeClipper: Ribbon icon set successfully');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper [${callId}]: safeShowUrlModal called with URL:`, initialUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper [${callId}]: Current modal state - isModalOpen:`, this.isModalOpen, 'pendingModalUrl:', this.pendingModalUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`YouTubeClipper [${callId}]: MODAL ALREADY OPEN - IGNORING request for:`, initialUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`YouTubeClipper [${callId}]: Current pending URL:`, this.pendingModalUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`YouTubeClipper [${callId}]: Updating pending modal URL from:`, this.pendingModalUrl, 'to:', initialUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`YouTubeClipper [${callId}]: Same URL as pending, completely ignoring`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper [${callId}]: Setting isModalOpen = true for URL:`, initialUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper [${callId}]: About to open YouTubeUrlModal for URL:`, initialUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper [${callId}]: Modal state after 100ms - isModalOpen:`, this.isModalOpen);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: Modal onClose triggered for URL:`, initialUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: Modal state before close - isModalOpen:`, this.isModalOpen, 'pendingModalUrl:', this.pendingModalUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: Modal state after close - isModalOpen:`, this.isModalOpen, 'pendingModalUrl:', this.pendingModalUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn('YouTubeClipper: Error resetting modal state:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTubeClipper: Force reset modal state after error - isModalOpen:`, this.isModalOpen);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn('YouTubeClipper: Fallback modal state reset triggered for URL:', initialUrl);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('YouTubeClipper: Modal state after fallback reset - isModalOpen:', this.isModalOpen);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "obsidian-file.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: load",
+          "file": "../function_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: save",
+          "file": "../function_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: testSend",
+          "file": "../function_placeholder"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: errors: []...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: improvements: []...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: description: `Performance improved by ${improvemen...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: improvementPercentage: improvement...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: error: error.message...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, 'loop_pl...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const cachedLoop = match.replace(...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: `const len = ${arrayName}.length`...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, 'loop_pl...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, 'array_p...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, 'array_p...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, 'array_p...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, 'string_...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, 'regex_p...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, 'await_p...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const deadCodePatterns = [...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: /debugger\\s*\\([^)]*\\);?/g...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: file: path.relative(this.config.rootPath, 'dead_co...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: memoryAllocations: this.countMemoryAllocations(con...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: let complexity = 1; // Base complexity...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: totalSkipped: this.optimizations.skipped.length...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "performance-optimizer.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('🚀 Performance Optimizer Agent starting analysis...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('✅ Performance optimization completed:', result.message);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error('❌ Performance optimization failed:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn('Could not optimize parallel processing:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn('Could not optimize prompt generation:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn('Could not enhance caching:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn('Could not scan source files:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: scanDirectory",
+          "file": "../function_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error('[SaveConfirmationModal] Error in onOpen:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "security-hardener.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('🔒 Security Hardener Agent starting security analysis...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('✅ Security hardening completed:', result.message);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error('❌ Security hardening failed:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`Could not fix hardcoded secrets in ${vuln.location}:`, error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(\\`🚨 Security threat detected: \\${pattern.name}\\`, event);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn('Could not scan source files:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: scanDirectory",
+          "file": "../function_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "server.js"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('Appended clip to', filePath);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error('Failed to append clip', e);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`YouTube Clipper helper listening on port ${PORT}`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('Target file:', resolveTargetFile()",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: resolveTargetFile",
+          "file": "../function_placeholder"
+        },
+        {
+          "type": "function_optimization",
+          "description": "Converted function declaration: appendEntry",
+          "file": "../function_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const VAULT_FILE = process.env.VAULT_FILE || null;...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "semicolon_added",
+          "description": "Added semicolon to line: const VAULT_DIR = process.env.VAULT_DIR || null; /...",
+          "file": "../semicolon_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "services/ai-service.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`Attempting to process with ${provider.name}...`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`${provider.name} failed:`, error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log('Starting parallel provider racing...');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`${provider.name} failed in parallel race:`, error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`Parallel winner: ${result.value.provider} (${Date.now()",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.error(errorMessage, error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "services/optimized-ai-service.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.log(`Using ${strategy.name} strategy for video analysis`);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn('Chunked processing failed, falling back to standard processing:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn(`Chunk ${batch[index].description} failed:`, result.reason);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "services/prompt-service.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "services/service-container.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "services/transcript-service.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn('Failed to fetch transcript:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug('YouTube API method failed:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug('Page scraping method failed:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug('Third-party method failed:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug('Failed to fetch caption track:', err);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug('Failed to parse transcript from HTML:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "settings-tab.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn('Failed to extract video ID from URL:', url);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "video-data.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug('Could not scrape additional metadata:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn('Failed to scrape video page:', error);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "video-preview-modal.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "import_optimization",
+          "description": "Optimized and sorted import statements",
+          "file": "youtube-url-modal.ts"
+        },
+        {
+          "type": "imports_sorted",
+          "description": "Sorted import statements alphabetically",
+          "file": "../import_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug('YouTubeUrlModal: Same URL already set, preventing cycle');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.warn('[YouTubeUrlModal] model recommendation failed', err);",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "console_removed",
+          "description": "Removed console statement: console.debug('YouTubeUrlModal: setUrl called with same URL, preventing cycle');",
+          "file": "../console_placeholder"
+        },
+        {
+          "type": "whitespace_removed",
+          "description": "Removed trailing whitespace",
+          "file": "../whitespace_placeholder"
+        }
+      ]
+    },
+    "reorganization": {
+      "processed": 0,
+      "errors": 0,
+      "changes": []
+    },
+    "optimization": {
+      "processed": 42,
+      "errors": 46,
+      "improvements": []
+    }
+  },
+  "duration": "0.16",
+  "summary": {
+    "totalProcessed": 88,
+    "totalErrors": 46,
+    "totalChanges": 503
+  }
+}

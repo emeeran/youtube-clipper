@@ -24,10 +24,10 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/constants/styles.ts
+// src/styles.ts
 var MODAL_STYLES, INPUT_STYLES;
 var init_styles = __esm({
-  "src/constants/styles.ts"() {
+  "src/styles.ts"() {
     MODAL_STYLES = {
       zIndex: "10000",
       display: "flex",
@@ -60,10 +60,10 @@ var init_styles = __esm({
   }
 });
 
-// src/utils/dom.ts
+// src/dom.ts
 var DOMUtils;
 var init_dom = __esm({
-  "src/utils/dom.ts"() {
+  "src/dom.ts"() {
     init_styles();
     DOMUtils = class {
       /**
@@ -163,10 +163,10 @@ var init_dom = __esm({
   }
 });
 
-// src/constants/api.ts
+// src/api.ts
 var API_ENDPOINTS, AI_MODELS, PROVIDER_MODEL_OPTIONS, PROVIDER_MODEL_LIST_URLS, PROVIDER_MODEL_REGEX, API_LIMITS, TIMEOUTS;
 var init_api = __esm({
-  "src/constants/api.ts"() {
+  "src/api.ts"() {
     API_ENDPOINTS = {
       GEMINI: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent",
       GROQ: "https://api.groq.com/openai/v1/chat/completions",
@@ -227,14 +227,14 @@ var init_api = __esm({
   }
 });
 
-// src/components/modals/confirmation-modal.ts
+// src/confirmation-modal.ts
 var confirmation_modal_exports = {};
 __export(confirmation_modal_exports, {
   ConfirmationModal: () => ConfirmationModal
 });
 var ConfirmationModal;
 var init_confirmation_modal = __esm({
-  "src/components/modals/confirmation-modal.ts"() {
+  "src/confirmation-modal.ts"() {
     init_base_modal();
     ConfirmationModal = class extends BaseModal {
       constructor(app, options) {
@@ -359,10 +359,10 @@ var init_confirmation_modal = __esm({
   }
 });
 
-// src/components/modals/base-modal.ts
+// src/base-modal.ts
 var import_obsidian3, MODAL_CSS_CLASSES, BaseModal;
 var init_base_modal = __esm({
-  "src/components/modals/base-modal.ts"() {
+  "src/base-modal.ts"() {
     import_obsidian3 = require("obsidian");
     init_dom();
     init_styles();
@@ -534,17 +534,15 @@ var init_base_modal = __esm({
   }
 });
 
-// main.ts
+// src/main.ts
 var main_exports = {};
 __export(main_exports, {
-  default: () => YouTubeProcessorPlugin
+  default: () => YoutubeClipperPlugin
 });
 module.exports = __toCommonJS(main_exports);
-
-// src/main.ts
 var import_obsidian7 = require("obsidian");
 
-// src/utils/conflict-prevention.ts
+// src/conflict-prevention.ts
 var ConflictPrevention = class {
   /**
    * Check if another plugin might be conflicting
@@ -660,7 +658,7 @@ var ConflictPrevention = class {
 ConflictPrevention.PLUGIN_ID = "youtube-clipper";
 ConflictPrevention.CSS_PREFIX = "ytc";
 
-// src/constants/messages.ts
+// src/messages.ts
 var MESSAGES = {
   PROCESSING: "Processing YouTube video...",
   SUCCESS: (title) => `Successfully processed: ${title}`,
@@ -702,7 +700,7 @@ var MESSAGES = {
   }
 };
 
-// src/utils/validation.ts
+// src/validation.ts
 var ValidationUtils = class {
   /**
    * Clean and normalize YouTube URL
@@ -859,7 +857,7 @@ ValidationUtils.URL_PATTERNS = [
 ValidationUtils.VIDEO_ID_REGEX = /^[a-zA-Z0-9_-]{11}$/;
 ValidationUtils.URL_CACHE = /* @__PURE__ */ new Map();
 
-// src/utils/error-handler.ts
+// src/services/error-handler.ts
 var import_obsidian = require("obsidian");
 var ErrorHandler = class {
   /**
@@ -939,7 +937,7 @@ var ErrorHandler = class {
   }
 };
 
-// src/components/modals/save-confirmation-modal.ts
+// src/save-confirmation-modal.ts
 var import_obsidian2 = require("obsidian");
 var SaveConfirmationModal = class extends import_obsidian2.Modal {
   constructor(app, file, onConfirm) {
@@ -1090,7 +1088,7 @@ var SaveConfirmationModal = class extends import_obsidian2.Modal {
   }
 };
 
-// src/components/modals/youtube-url-modal.ts
+// src/youtube-url-modal.ts
 var import_obsidian4 = require("obsidian");
 init_base_modal();
 init_api();
@@ -1104,11 +1102,31 @@ var YouTubeUrlModal = class extends BaseModal {
     this.progressSteps = [];
     this.currentStepIndex = 0;
     this.isProcessing = false;
+    // Performance settings
+    this.performanceMode = "balanced";
+    this.enableParallelProcessing = false;
+    this.preferMultimodal = false;
     this.url = options.initialUrl || "";
+    this.performanceMode = options.performanceMode || "balanced";
+    this.enableParallelProcessing = options.enableParallelProcessing || false;
+    this.preferMultimodal = options.preferMultimodal || false;
   }
   onOpen() {
     this.createModalContent();
     this.setupEventHandlers();
+    if (this.options.initialUrl) {
+      if (this.url.trim() === this.options.initialUrl.trim()) {
+        console.debug("YouTubeUrlModal: Same URL already set, preventing cycle");
+      } else {
+        this.setUrl(this.options.initialUrl);
+      }
+      this.updateProcessButtonState();
+      const isValid = ValidationUtils.isValidYouTubeUrl((this.options.initialUrl || "").trim());
+      if (isValid && this.processButton) {
+        this.processButton.focus();
+        return;
+      }
+    }
     this.focusUrlInput();
   }
   /**
@@ -1117,10 +1135,216 @@ var YouTubeUrlModal = class extends BaseModal {
   createModalContent() {
     this.headerEl = this.createHeader(MESSAGES.MODALS.PROCESS_VIDEO);
     this.createUrlInputSection();
+    this.createPerformanceSection();
     this.createFormatSelectionSection();
     this.createProviderSelectionSection();
     this.createProgressSection();
     this.createActionButtons();
+  }
+  /**
+   * Create compact performance and speed settings section
+   */
+  createPerformanceSection() {
+    const container = this.contentEl.createDiv();
+    container.className = "ytc-performance-section";
+    container.style.marginTop = "12px";
+    container.style.padding = "10px";
+    container.style.backgroundColor = "var(--background-secondary)";
+    container.style.borderRadius = "6px";
+    container.style.border = "1px solid var(--interactive-accent)";
+    const headerContainer = container.createDiv();
+    headerContainer.style.display = "flex";
+    headerContainer.style.alignItems = "center";
+    headerContainer.style.justifyContent = "space-between";
+    headerContainer.style.marginBottom = "10px";
+    const sectionHeader = headerContainer.createEl("h3");
+    sectionHeader.textContent = "\u26A1 Performance";
+    sectionHeader.style.margin = "0";
+    sectionHeader.style.fontSize = "0.9rem";
+    sectionHeader.style.fontWeight = "600";
+    sectionHeader.style.color = "var(--text-accent)";
+    sectionHeader.style.display = "flex";
+    sectionHeader.style.alignItems = "center";
+    sectionHeader.style.gap = "6px";
+    const modeContainer = container.createDiv();
+    modeContainer.style.marginBottom = "8px";
+    this.performanceModeSelect = modeContainer.createEl("select");
+    this.performanceModeSelect.style.width = "100%";
+    this.performanceModeSelect.style.padding = "6px 8px";
+    this.performanceModeSelect.style.borderRadius = "4px";
+    this.performanceModeSelect.style.border = "1px solid var(--background-modifier-border)";
+    this.performanceModeSelect.style.backgroundColor = "var(--background-primary)";
+    this.performanceModeSelect.style.color = "var(--text-normal)";
+    this.performanceModeSelect.style.fontSize = "0.85rem";
+    this.performanceModeSelect.style.cursor = "pointer";
+    const fastOption = this.performanceModeSelect.createEl("option");
+    fastOption.value = "fast";
+    fastOption.textContent = "\u26A1 Fast (10-30s)";
+    const balancedOption = this.performanceModeSelect.createEl("option");
+    balancedOption.value = "balanced";
+    balancedOption.textContent = "\u2696\uFE0F Balanced (30-60s)";
+    const qualityOption = this.performanceModeSelect.createEl("option");
+    qualityOption.value = "quality";
+    qualityOption.textContent = "\u{1F3AF} Quality (60-120s)";
+    this.performanceModeSelect.value = this.performanceMode;
+    this.performanceModeSelect.addEventListener("change", () => {
+      this.performanceMode = this.performanceModeSelect.value;
+      this.handlePerformanceSettingsChange();
+    });
+    const togglesContainer = container.createDiv();
+    togglesContainer.style.display = "flex";
+    togglesContainer.style.gap = "16px";
+    togglesContainer.style.marginTop = "6px";
+    const parallelContainer = togglesContainer.createDiv();
+    const parallelLabel = parallelContainer.createEl("label");
+    parallelLabel.style.display = "flex";
+    parallelLabel.style.alignItems = "center";
+    parallelLabel.style.gap = "4px";
+    parallelLabel.style.fontSize = "0.8rem";
+    parallelLabel.style.cursor = "pointer";
+    parallelLabel.style.color = "var(--text-normal)";
+    const parallelToggle = parallelLabel.createEl("input");
+    parallelToggle.type = "checkbox";
+    parallelToggle.id = "parallel-toggle";
+    parallelToggle.checked = this.enableParallelProcessing;
+    parallelToggle.addEventListener("change", () => {
+      this.enableParallelProcessing = parallelToggle.checked;
+      this.handlePerformanceSettingsChange();
+    });
+    parallelLabel.appendChild(document.createTextNode("\u{1F504} Parallel"));
+    parallelContainer.appendChild(parallelLabel);
+    const multimodalContainer = togglesContainer.createDiv();
+    const multimodalLabel = multimodalContainer.createEl("label");
+    multimodalLabel.style.display = "flex";
+    multimodalLabel.style.alignItems = "center";
+    multimodalLabel.style.gap = "4px";
+    multimodalLabel.style.fontSize = "0.8rem";
+    multimodalLabel.style.cursor = "pointer";
+    multimodalLabel.style.color = "var(--text-normal)";
+    const multimodalToggle = multimodalLabel.createEl("input");
+    multimodalToggle.type = "checkbox";
+    multimodalToggle.id = "multimodal-toggle";
+    multimodalToggle.checked = this.preferMultimodal;
+    multimodalToggle.addEventListener("change", () => {
+      this.preferMultimodal = multimodalToggle.checked;
+      this.handlePerformanceSettingsChange();
+    });
+    multimodalLabel.appendChild(document.createTextNode("\u{1F3A5} Multimodal"));
+    multimodalContainer.appendChild(multimodalLabel);
+  }
+  /**
+   * Create enhanced performance toggle component
+   */
+  createPerformanceToggle(container, id, icon, label, checked, onChange, description) {
+    const toggleContainer = container.createDiv();
+    toggleContainer.style.padding = "12px";
+    toggleContainer.style.backgroundColor = "var(--background-primary)";
+    toggleContainer.style.borderRadius = "6px";
+    toggleContainer.style.border = "1px solid var(--background-modifier-border)";
+    toggleContainer.style.transition = "all 0.2s ease";
+    toggleContainer.style.cursor = "pointer";
+    const toggleHeader = toggleContainer.createDiv();
+    toggleHeader.style.display = "flex";
+    toggleHeader.style.alignItems = "center";
+    toggleHeader.style.justifyContent = "space-between";
+    toggleHeader.style.marginBottom = "4px";
+    const labelContainer = toggleHeader.createEl("div");
+    labelContainer.style.display = "flex";
+    labelContainer.style.alignItems = "center";
+    labelContainer.style.gap = "8px";
+    const iconSpan = labelContainer.createEl("span");
+    iconSpan.textContent = icon;
+    iconSpan.style.fontSize = "1rem";
+    const labelText = labelContainer.createEl("span");
+    labelText.textContent = label;
+    labelText.style.fontWeight = "500";
+    labelText.style.color = "var(--text-normal)";
+    const toggle = toggleContainer.createEl("input");
+    toggle.type = "checkbox";
+    toggle.id = id;
+    toggle.checked = checked;
+    toggle.style.width = "20px";
+    toggle.style.height = "20px";
+    toggle.style.cursor = "pointer";
+    const descriptionText = toggleContainer.createEl("div");
+    descriptionText.textContent = description;
+    descriptionText.style.fontSize = "0.8rem";
+    descriptionText.style.color = "var(--text-muted)";
+    descriptionText.style.marginTop = "4px";
+    descriptionText.style.lineHeight = "1.3";
+    toggleContainer.addEventListener("mouseenter", () => {
+      toggleContainer.style.backgroundColor = "var(--background-modifier-hover)";
+      toggleContainer.style.borderColor = "var(--interactive-accent)";
+      toggleContainer.style.transform = "translateY(-2px)";
+      toggleContainer.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
+    });
+    toggleContainer.addEventListener("mouseleave", () => {
+      toggleContainer.style.backgroundColor = "var(--background-primary)";
+      toggleContainer.style.borderColor = "var(--background-modifier-border)";
+      toggleContainer.style.transform = "translateY(0)";
+      toggleContainer.style.boxShadow = "none";
+    });
+    toggle.addEventListener("change", () => onChange(toggle.checked));
+  }
+  /**
+   * Add performance preview with mode descriptions
+   */
+  addPerformancePreview(container) {
+    const previewContainer = container.createDiv();
+    previewContainer.style.marginTop = "16px";
+    previewContainer.style.padding = "12px";
+    previewContainer.style.backgroundColor = "var(--background-modifier-hover)";
+    previewContainer.style.borderRadius = "6px";
+    previewContainer.style.border = "1px dashed var(--interactive-accent)";
+    const previewTitle = previewContainer.createEl("div");
+    previewTitle.textContent = "\u{1F4CB} Current Configuration";
+    previewTitle.style.fontWeight = "600";
+    previewTitle.style.marginBottom = "8px";
+    previewTitle.style.color = "var(--text-accent)";
+    const previewText = previewContainer.createEl("div");
+    previewText.className = "ytc-performance-preview";
+    previewText.style.fontSize = "0.85rem";
+    previewText.style.lineHeight = "1.4";
+    previewText.style.color = "var(--text-muted)";
+    this.updatePerformancePreview(previewText);
+  }
+  /**
+   * Update performance preview text
+   */
+  updatePerformancePreview(previewElement) {
+    const modeText = this.performanceMode === "fast" ? "\u26A1 Fast Mode" : this.performanceMode === "balanced" ? "\u2696\uFE0F Balanced Mode" : "\u{1F3AF} Quality Mode";
+    const parallelText = this.enableParallelProcessing ? "\u{1F504} Enabled" : "\u23F8\uFE0F Disabled";
+    const multimodalText = this.preferMultimodal ? "\u{1F3A5} Enabled" : "\u{1F4C4} Text Only";
+    previewElement.innerHTML = `
+            <strong>Mode:</strong> ${modeText}<br>
+            <strong>Parallel Processing:</strong> ${parallelText}<br>
+            <strong>Multimodal Analysis:</strong> ${multimodalText}
+        `;
+  }
+  /**
+   * Add subtle animation when performance mode changes
+   */
+  addPerformanceModeAnimation() {
+    const previewElement = document.querySelector(".ytc-performance-preview");
+    if (previewElement) {
+      previewElement.style.transition = "all 0.3s ease";
+      previewElement.style.transform = "scale(1.02)";
+      setTimeout(() => {
+        previewElement.style.transform = "scale(1)";
+      }, 200);
+    }
+  }
+  /**
+   * Handle performance settings change
+   */
+  async handlePerformanceSettingsChange() {
+    if (this.options.onPerformanceSettingsChange) {
+      await this.options.onPerformanceSettingsChange(
+        this.performanceMode,
+        this.enableParallelProcessing,
+        this.preferMultimodal
+      );
+    }
   }
   createProviderSelectionSection() {
     const container = this.contentEl.createDiv();
@@ -1311,13 +1535,13 @@ var YouTubeUrlModal = class extends BaseModal {
     this.setValidationMessage("Paste a YouTube link to begin processing.", "info");
     const preview = container.createDiv();
     preview.style.display = "flex";
-    preview.style.gap = "10px";
+    preview.style.gap = "8px";
     preview.style.alignItems = "center";
-    preview.style.marginTop = "8px";
+    preview.style.marginTop = "6px";
     this.thumbnailEl = preview.createEl("img");
     this.thumbnailEl.setAttribute("aria-label", "Video thumbnail");
-    this.thumbnailEl.style.width = "120px";
-    this.thumbnailEl.style.height = "68px";
+    this.thumbnailEl.style.width = "90px";
+    this.thumbnailEl.style.height = "50px";
     this.thumbnailEl.style.objectFit = "cover";
     this.thumbnailEl.style.borderRadius = "4px";
     this.thumbnailEl.style.display = "none";
@@ -1332,113 +1556,41 @@ var YouTubeUrlModal = class extends BaseModal {
     this.updateQuickActionsState();
   }
   /**
-   * Create format selection section with radio buttons
+   * Create compact format selection section
    */
   createFormatSelectionSection() {
     const container = this.contentEl.createDiv();
-    const label = container.createEl("label", { text: "Output Format:" });
+    container.className = "ytc-format-section";
+    container.style.marginTop = "12px";
+    container.style.padding = "8px";
+    container.style.backgroundColor = "var(--background-secondary)";
+    container.style.borderRadius = "6px";
+    container.style.border = "1px solid var(--background-modifier-border)";
+    const label = container.createEl("label", { text: "\u{1F4DD} Format" });
     label.id = "format-group-label";
+    label.style.display = "block";
+    label.style.marginBottom = "8px";
+    label.style.fontSize = "0.9rem";
+    label.style.fontWeight = "600";
+    label.style.color = "var(--text-normal)";
     const radioContainer = container.createDiv();
     radioContainer.setAttribute("role", "group");
     radioContainer.setAttribute("aria-labelledby", "format-group-label");
-    radioContainer.style.marginTop = "8px";
-    radioContainer.style.display = "flex";
-    radioContainer.style.gap = "20px";
-    radioContainer.style.flexWrap = "wrap";
-    const executiveContainer = radioContainer.createDiv();
-    executiveContainer.style.display = "flex";
-    executiveContainer.style.alignItems = "center";
-    executiveContainer.style.gap = "8px";
-    const executiveRadio = executiveContainer.createEl("input");
-    executiveRadio.type = "radio";
-    executiveRadio.name = "outputFormat";
-    executiveRadio.value = "executive-summary";
-    executiveRadio.id = "executive-radio";
-    executiveRadio.checked = this.format === "executive-summary";
-    executiveRadio.setAttribute("aria-label", "Executive Summary format");
-    const executiveLabel = executiveContainer.createEl("label");
-    executiveLabel.setAttribute("for", "executive-radio");
-    executiveLabel.textContent = "Executive";
-    executiveLabel.style.cursor = "pointer";
-    const tutorialContainer = radioContainer.createDiv();
-    tutorialContainer.style.display = "flex";
-    tutorialContainer.style.alignItems = "center";
-    tutorialContainer.style.gap = "8px";
-    const tutorialRadio = tutorialContainer.createEl("input");
-    tutorialRadio.type = "radio";
-    tutorialRadio.name = "outputFormat";
-    tutorialRadio.value = "detailed-guide";
-    tutorialRadio.id = "tutorial-radio";
-    tutorialRadio.checked = this.format === "detailed-guide";
-    tutorialRadio.setAttribute("aria-label", "Detailed Guide format");
-    const tutorialLabel = tutorialContainer.createEl("label");
-    tutorialLabel.setAttribute("for", "tutorial-radio");
-    tutorialLabel.textContent = "Tutorial";
-    tutorialLabel.style.cursor = "pointer";
-    executiveRadio.addEventListener("change", (e) => {
-      if (e.target.checked) {
-        this.format = "executive-summary";
-        if (this.customPromptContainer) {
-          this.customPromptContainer.style.display = "none";
-        }
-      }
-    });
-    tutorialRadio.addEventListener("change", (e) => {
-      if (e.target.checked) {
-        this.format = "detailed-guide";
-        if (this.customPromptContainer) {
-          this.customPromptContainer.style.display = "none";
-        }
-      }
-    });
-    const briefContainer = radioContainer.createDiv();
-    briefContainer.style.display = "flex";
-    briefContainer.style.alignItems = "center";
-    briefContainer.style.gap = "8px";
-    const briefRadio = briefContainer.createEl("input");
-    briefRadio.type = "radio";
-    briefRadio.name = "outputFormat";
-    briefRadio.value = "brief";
-    briefRadio.id = "brief-radio";
-    briefRadio.checked = this.format === "brief";
-    briefRadio.setAttribute("aria-label", "Brief format");
-    const briefLabel = briefContainer.createEl("label");
-    briefLabel.setAttribute("for", "brief-radio");
-    briefLabel.textContent = "Brief";
-    briefLabel.style.cursor = "pointer";
-    briefRadio.addEventListener("change", (e) => {
-      if (e.target.checked) {
-        this.format = "brief";
-        if (this.customPromptContainer) {
-          this.customPromptContainer.style.display = "none";
-        }
-      }
-    });
-    const customContainer = radioContainer.createDiv();
-    customContainer.style.display = "flex";
-    customContainer.style.alignItems = "center";
-    customContainer.style.gap = "8px";
-    const customRadio = customContainer.createEl("input");
-    customRadio.type = "radio";
-    customRadio.name = "outputFormat";
-    customRadio.value = "custom";
-    customRadio.id = "custom-radio";
-    customRadio.checked = this.format === "custom";
-    customRadio.setAttribute("aria-label", "Custom prompt format");
-    const customLabel = customContainer.createEl("label");
-    customLabel.setAttribute("for", "custom-radio");
-    customLabel.textContent = "Custom";
-    customLabel.style.cursor = "pointer";
-    customRadio.addEventListener("change", (e) => {
-      var _a;
-      if (e.target.checked) {
-        this.format = "custom";
-        if (this.customPromptContainer) {
-          this.customPromptContainer.style.display = "block";
-          (_a = this.customPromptInput) == null ? void 0 : _a.focus();
-        }
-      }
-    });
+    radioContainer.style.display = "grid";
+    radioContainer.style.gridTemplateColumns = "repeat(4, 1fr)";
+    radioContainer.style.gap = "8px";
+    try {
+      this.createCompactFormatRadio(radioContainer, "executive-radio", "executive-summary", "Executive", "", this.format === "executive-summary");
+      this.createCompactFormatRadio(radioContainer, "tutorial-radio", "detailed-guide", "Tutorial", "", this.format === "detailed-guide");
+      this.createCompactFormatRadio(radioContainer, "brief-radio", "brief", "Brief", "", this.format === "brief");
+      this.createCompactFormatRadio(radioContainer, "custom-radio", "custom", "Custom", "", this.format === "custom");
+    } catch (error) {
+      console.error("Error creating compact format radio buttons:", error);
+      this.createFormatRadio(radioContainer, "executive-radio", "executive-summary", "Executive", "Quick insights with action items", this.format === "executive-summary");
+      this.createFormatRadio(radioContainer, "tutorial-radio", "detailed-guide", "Tutorial", "\u{1F4DA} Step-by-step walkthrough", this.format === "detailed-guide");
+      this.createFormatRadio(radioContainer, "brief-radio", "brief", "Brief", "\u{1F4CB} Key points and takeaways", this.format === "brief");
+      this.createFormatRadio(radioContainer, "custom-radio", "custom", "Custom", "\u270F\uFE0F Your custom analysis", this.format === "custom");
+    }
     this.customPromptContainer = container.createDiv();
     this.customPromptContainer.style.marginTop = "12px";
     this.customPromptContainer.style.padding = "12px";
@@ -1474,9 +1626,166 @@ var YouTubeUrlModal = class extends BaseModal {
     helpText.style.fontSize = "11px";
   }
   /**
+   * Create enhanced format radio button
+   */
+  createFormatRadio(container, id, value, title, description, isChecked) {
+    const radioContainer = container.createDiv();
+    radioContainer.style.padding = "12px";
+    radioContainer.style.border = "2px solid var(--background-modifier-border)";
+    radioContainer.style.borderRadius = "8px";
+    radioContainer.style.backgroundColor = "var(--background-primary)";
+    radioContainer.style.cursor = "pointer";
+    radioContainer.style.transition = "all 0.2s ease";
+    radioContainer.style.textAlign = "center";
+    const radio = radioContainer.createEl("input");
+    radio.type = "radio";
+    radio.name = "outputFormat";
+    radio.value = value;
+    radio.id = id;
+    radio.checked = isChecked;
+    radio.style.marginBottom = "8px";
+    const icon = radioContainer.createEl("div");
+    icon.style.fontSize = "1.5rem";
+    icon.style.marginBottom = "4px";
+    if (value === "executive-summary") {
+      icon.textContent = "\u{1F3AF}";
+    } else if (value === "detailed-guide") {
+      icon.textContent = "\u{1F4DA}";
+    } else if (value === "brief") {
+      icon.textContent = "\u{1F4CB}";
+    } else if (value === "custom") {
+      icon.textContent = "\u270F\uFE0F";
+    }
+    const titleElement = radioContainer.createEl("div");
+    titleElement.textContent = title;
+    titleElement.style.fontWeight = "600";
+    titleElement.style.fontSize = "0.9rem";
+    titleElement.style.marginBottom = "2px";
+    const descElement = radioContainer.createEl("div");
+    descElement.textContent = description;
+    descElement.style.fontSize = "0.75rem";
+    descElement.style.color = "var(--text-muted)";
+    if (isChecked) {
+      radioContainer.style.borderColor = "var(--interactive-accent)";
+      radioContainer.style.backgroundColor = "var(--interactive-accent-hover)";
+    }
+    radioContainer.addEventListener("mouseenter", () => {
+      radioContainer.style.borderColor = "var(--interactive-accent)";
+      radioContainer.style.transform = "translateY(-2px)";
+      radioContainer.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
+    });
+    radioContainer.addEventListener("mouseleave", () => {
+      if (!radio.checked) {
+        radioContainer.style.borderColor = "var(--background-modifier-border)";
+        radioContainer.style.transform = "translateY(0)";
+        radioContainer.style.boxShadow = "none";
+      }
+    });
+    radio.addEventListener("change", (e) => {
+      var _a;
+      if (e.target.checked) {
+        this.format = value;
+        const allContainers = container.querySelectorAll("div");
+        allContainers.forEach((containerEl) => {
+          const divEl = containerEl;
+          divEl.style.borderColor = "var(--background-modifier-border)";
+          divEl.style.backgroundColor = "var(--background-primary)";
+        });
+        radioContainer.style.borderColor = "var(--interactive-accent)";
+        radioContainer.style.backgroundColor = "var(--interactive-accent-hover)";
+        if (this.customPromptContainer) {
+          if (value === "custom") {
+            this.customPromptContainer.style.display = "block";
+            (_a = this.customPromptInput) == null ? void 0 : _a.focus();
+          } else {
+            this.customPromptContainer.style.display = "none";
+          }
+        }
+      }
+    });
+    radioContainer.addEventListener("click", () => {
+      radio.checked = true;
+      radio.dispatchEvent(new Event("change"));
+    });
+  }
+  /**
+   * Create compact format radio button
+   */
+  createCompactFormatRadio(container, id, value, title, icon, isChecked) {
+    const radioContainer = container.createDiv();
+    radioContainer.style.padding = "8px 4px";
+    radioContainer.style.border = "1px solid var(--background-modifier-border)";
+    radioContainer.style.borderRadius = "4px";
+    radioContainer.style.backgroundColor = "var(--background-primary)";
+    radioContainer.style.cursor = "pointer";
+    radioContainer.style.transition = "all 0.2s ease";
+    radioContainer.style.textAlign = "center";
+    const radio = radioContainer.createEl("input");
+    radio.type = "radio";
+    radio.name = "outputFormat";
+    radio.value = value;
+    radio.id = id;
+    radio.checked = isChecked;
+    radio.style.marginBottom = "4px";
+    if (icon) {
+      const iconEl = radioContainer.createEl("div");
+      iconEl.textContent = icon;
+      iconEl.style.fontSize = "1.2rem";
+      iconEl.style.marginBottom = "2px";
+    }
+    const titleElement = radioContainer.createEl("div");
+    titleElement.textContent = title;
+    titleElement.style.fontWeight = "500";
+    titleElement.style.fontSize = "0.8rem";
+    if (isChecked) {
+      radioContainer.style.borderColor = "var(--interactive-accent)";
+      radioContainer.style.backgroundColor = "var(--interactive-accent-hover)";
+    }
+    radioContainer.addEventListener("mouseenter", () => {
+      radioContainer.style.borderColor = "var(--interactive-accent)";
+      radioContainer.style.transform = "translateY(-1px)";
+    });
+    radioContainer.addEventListener("mouseleave", () => {
+      if (!radio.checked) {
+        radioContainer.style.borderColor = "var(--background-modifier-border)";
+        radioContainer.style.transform = "translateY(0)";
+      }
+    });
+    radio.addEventListener("change", (e) => {
+      var _a;
+      if (e.target.checked) {
+        this.format = value;
+        const allContainers = container.querySelectorAll("div");
+        allContainers.forEach((containerEl) => {
+          const divEl = containerEl;
+          divEl.style.borderColor = "var(--background-modifier-border)";
+          divEl.style.backgroundColor = "var(--background-primary)";
+        });
+        radioContainer.style.borderColor = "var(--interactive-accent)";
+        radioContainer.style.backgroundColor = "var(--interactive-accent-hover)";
+        if (this.customPromptContainer) {
+          if (value === "custom") {
+            this.customPromptContainer.style.display = "block";
+            (_a = this.customPromptInput) == null ? void 0 : _a.focus();
+          } else {
+            this.customPromptContainer.style.display = "none";
+          }
+        }
+      }
+    });
+    radioContainer.addEventListener("click", () => {
+      radio.checked = true;
+      radio.dispatchEvent(new Event("change"));
+    });
+  }
+  /**
    * Create progress section
    */
   createProgressSection() {
+    if (this.progressContainer) {
+      this.progressContainer.remove();
+      this.progressSteps = [];
+    }
     this.progressContainer = this.contentEl.createDiv();
     this.progressContainer.setAttribute("role", "region");
     this.progressContainer.setAttribute("aria-label", "Processing progress");
@@ -1518,7 +1827,7 @@ var YouTubeUrlModal = class extends BaseModal {
       "Run AI analysis",
       "Save note"
     ];
-    this.progressSteps = labels.map((label) => {
+    this.progressSteps = labels.map((label, index) => {
       const item = stepList.createEl("li");
       item.setAttribute("role", "status");
       item.style.marginBottom = "4px";
@@ -1708,7 +2017,10 @@ Would you like to switch to a multimodal-capable model (${recommended}) for bett
         this.format,
         this.selectedProvider,
         this.selectedModel,
-        customPrompt
+        customPrompt,
+        this.performanceMode,
+        this.enableParallelProcessing,
+        this.preferMultimodal
       );
       this.setStepState(2, "complete");
       this.setStepState(3, "active");
@@ -1770,6 +2082,8 @@ Would you like to switch to a multimodal-capable model (${recommended}) for bett
     }
     if (this.urlInput) {
       this.urlInput.disabled = false;
+      this.urlInput.value = "";
+      this.url = "";
     }
     if (this.processButton) {
       this.processButton.disabled = false;
@@ -1786,7 +2100,7 @@ Would you like to switch to a multimodal-capable model (${recommended}) for bett
     this.setValidationMessage("Note saved to today's folder. You can open it now or process another video.", "success");
     this.focusUrlInput();
     this.updateQuickActionsState();
-    this.setUrlInputState(this.url.trim().length > 0 ? "valid" : "idle");
+    this.setUrlInputState("idle");
   }
   /**
    * Show error state
@@ -1829,6 +2143,10 @@ Would you like to switch to a multimodal-capable model (${recommended}) for bett
    * Set initial URL value
    */
   setUrl(url) {
+    if (this.url.trim() === url.trim()) {
+      console.debug("YouTubeUrlModal: setUrl called with same URL, preventing cycle");
+      return;
+    }
     this.url = url;
     if (this.urlInput) {
       this.urlInput.value = url;
@@ -1850,6 +2168,11 @@ Would you like to switch to a multimodal-capable model (${recommended}) for bett
       clearTimeout(this.validationTimer);
       this.validationTimer = void 0;
     }
+    if (this.progressContainer) {
+      this.progressContainer.remove();
+      this.progressContainer = void 0;
+    }
+    this.progressSteps = [];
     super.onClose();
   }
   /**
@@ -2111,10 +2434,10 @@ Would you like to switch to a multimodal-capable model (${recommended}) for bett
   }
 };
 
-// src/components/settings/settings-tab.ts
+// src/settings-tab.ts
 var import_obsidian5 = require("obsidian");
 
-// src/services/secure-config.ts
+// src/secure-config.ts
 var SecureConfigService = class {
   constructor(settings) {
     this.settings = settings;
@@ -2197,7 +2520,7 @@ ${prefix}_GROQ_API_KEY=your_groq_api_key_here
   }
 };
 
-// src/components/settings/settings-tab.ts
+// src/settings-tab.ts
 var SETTINGS_CSS_CLASSES = {
   container: "ytc-settings-container",
   section: "ytc-settings-section",
@@ -2220,7 +2543,6 @@ var YouTubeSettingsTab = class extends import_obsidian5.PluginSettingTab {
     this.createHeader();
     this.createAPISettings();
     this.createSecuritySettings();
-    this.createCustomPromptsSettings();
     this.createFileSettings();
     this.createValidationStatus();
     this.createUsageInstructions();
@@ -2231,6 +2553,16 @@ var YouTubeSettingsTab = class extends import_obsidian5.PluginSettingTab {
   createHeader() {
     const headerEl = this.containerEl.createDiv(SETTINGS_CSS_CLASSES.header);
     headerEl.createEl("h2", { text: "YouTubeClipper Settings" });
+    const noteEl = headerEl.createDiv();
+    noteEl.createEl("p", {
+      text: "\u{1F4CC} Performance settings have been moved to the URL input modal for easier access and better workflow integration.",
+      cls: "setting-item-description"
+    });
+    noteEl.style.marginBottom = "16px";
+    noteEl.style.padding = "8px 12px";
+    noteEl.style.backgroundColor = "var(--background-modifier-hover)";
+    noteEl.style.borderRadius = "4px";
+    noteEl.style.border = "1px solid var(--interactive-accent)";
     const versionEl = headerEl.createDiv("ytc-version-info");
     versionEl.createEl("span", {
       text: "v1.2.0 - Production Ready",
@@ -2288,7 +2620,7 @@ var YouTubeSettingsTab = class extends import_obsidian5.PluginSettingTab {
     noticeText.style.fontSize = "0.9em";
     noticeText.style.color = "var(--text-muted)";
     const geminiSetting = new import_obsidian5.Setting(containerEl).setName("Gemini API Key").setDesc("Your Google Gemini API key for content processing (password field - secured)").addText((text) => {
-      const inputEl = text.setPlaceholder("sk-... (your key is encrypted)").onChange(async (value) => {
+      const inputEl = text.setPlaceholder("sk-... (your key is encrypted)").setValue(this.settings.geminiApiKey || "").onChange(async (value) => {
         await this.updateSetting("geminiApiKey", value);
       }).inputEl;
       inputEl.type = "password";
@@ -2297,8 +2629,9 @@ var YouTubeSettingsTab = class extends import_obsidian5.PluginSettingTab {
       return text;
     });
     this.addKeyToggle(geminiSetting, this.settings.geminiApiKey);
+    this.addKeyClearButton(geminiSetting, "geminiApiKey");
     const groqSetting = new import_obsidian5.Setting(containerEl).setName("Groq API Key").setDesc("Your Groq API key for fallback processing (password field - secured)").addText((text) => {
-      const inputEl = text.setPlaceholder("gsk_... (your key is encrypted)").onChange(async (value) => {
+      const inputEl = text.setPlaceholder("gsk_... (your key is encrypted)").setValue(this.settings.groqApiKey || "").onChange(async (value) => {
         await this.updateSetting("groqApiKey", value);
       }).inputEl;
       inputEl.type = "password";
@@ -2307,6 +2640,7 @@ var YouTubeSettingsTab = class extends import_obsidian5.PluginSettingTab {
       return text;
     });
     this.addKeyToggle(groqSetting, this.settings.groqApiKey);
+    this.addKeyClearButton(groqSetting, "groqApiKey");
     const testSection = containerEl.createDiv("ytc-test-connection");
     testSection.style.marginTop = "16px";
     testSection.style.paddingTop = "12px";
@@ -2335,8 +2669,6 @@ var YouTubeSettingsTab = class extends import_obsidian5.PluginSettingTab {
    * Add show/hide toggle for sensitive API keys
    */
   addKeyToggle(setting, keyValue) {
-    if (!keyValue)
-      return;
     const toggleBtn = setting.addButton((btn) => btn.setButtonText("\u{1F441}\uFE0F Show").setTooltip("Toggle key visibility").onClick((e) => {
       const inputs = setting.settingEl.querySelectorAll('input[type="password"], input[type="text"]');
       if (inputs.length === 0)
@@ -2345,6 +2677,18 @@ var YouTubeSettingsTab = class extends import_obsidian5.PluginSettingTab {
       const isPassword = input.type === "password";
       input.type = isPassword ? "text" : "password";
       btn.setButtonText(isPassword ? "\u{1F441}\uFE0F\u200D\u{1F5E8}\uFE0F Hide" : "\u{1F441}\uFE0F Show");
+    }));
+  }
+  /**
+   * Add clear button to remove API key
+   */
+  addKeyClearButton(setting, settingKey) {
+    const clearBtn = setting.addButton((btn) => btn.setButtonText("\u{1F5D1}\uFE0F Clear").setTooltip("Remove this API key").onClick(async () => {
+      const keyName = settingKey === "geminiApiKey" ? "Gemini" : "Groq";
+      if (confirm(`Are you sure you want to clear the ${keyName} API key?`)) {
+        await this.updateSetting(settingKey, "");
+        this.display();
+      }
     }));
   }
   /**
@@ -2409,97 +2753,6 @@ var YouTubeSettingsTab = class extends import_obsidian5.PluginSettingTab {
     }
   }
   /**
-   * Create custom prompts settings
-   */
-  createCustomPromptsSettings() {
-    const { containerEl } = this;
-    containerEl.createEl("h3", { text: "Custom Output Formats" });
-    const promptsDesc = containerEl.createDiv("ytc-prompts-description");
-    promptsDesc.createEl("p", {
-      text: "Customize AI prompts for each output format. Use placeholders: __VIDEO_TITLE__, __VIDEO_DESCRIPTION__, __VIDEO_URL__",
-      cls: "setting-item-description"
-    });
-    if (!this.settings.customPrompts) {
-      this.settings.customPrompts = {};
-    }
-    const formats = [
-      "executive-summary",
-      "detailed-guide",
-      "brief",
-      "custom"
-    ];
-    formats.forEach((format) => {
-      var _a;
-      const currentPrompt = ((_a = this.settings.customPrompts) == null ? void 0 : _a[format]) || "";
-      const formatHeader = containerEl.createDiv("ytc-format-header");
-      formatHeader.style.display = "flex";
-      formatHeader.style.justifyContent = "space-between";
-      formatHeader.style.alignItems = "center";
-      formatHeader.style.marginTop = "15px";
-      formatHeader.style.marginBottom = "10px";
-      formatHeader.createEl("h4", {
-        text: this.formatDisplayName(format),
-        attr: { style: "margin: 0;" }
-      });
-      const resetBtn = formatHeader.createEl("button", {
-        text: "Reset to Default",
-        attr: {
-          style: "padding: 4px 12px; font-size: 12px; cursor: pointer;"
-        },
-        cls: "ytc-reset-prompt-btn"
-      });
-      resetBtn.addEventListener("click", () => {
-        if (this.settings.customPrompts) {
-          delete this.settings.customPrompts[format];
-          this.validateAndSaveSettings();
-        }
-      });
-      const textareaContainer = containerEl.createDiv("ytc-prompt-textarea-container");
-      textareaContainer.style.marginBottom = "10px";
-      const textarea = textareaContainer.createEl("textarea", {
-        attr: {
-          placeholder: `Enter custom prompt for ${this.formatDisplayName(format)}...`,
-          style: "width: 100%; height: 120px; padding: 8px; font-family: monospace; font-size: 12px; border: 1px solid var(--background-modifier-border); border-radius: 4px; resize: vertical;"
-        }
-      });
-      textarea.value = currentPrompt;
-      textarea.addEventListener("change", async () => {
-        if (textarea.value.trim()) {
-          if (!this.settings.customPrompts) {
-            this.settings.customPrompts = {};
-          }
-          this.settings.customPrompts[format] = textarea.value;
-        } else if (this.settings.customPrompts) {
-          delete this.settings.customPrompts[format];
-        }
-        await this.validateAndSaveSettings();
-      });
-      const helpText = textareaContainer.createEl("small", {
-        text: `Available placeholders: __VIDEO_TITLE__, __VIDEO_DESCRIPTION__, __VIDEO_URL__, __AI_PROVIDER__, __AI_MODEL__`,
-        attr: {
-          style: "display: block; margin-top: 6px; color: var(--text-muted); font-size: 11px;"
-        }
-      });
-    });
-  }
-  /**
-   * Convert format key to display name
-   */
-  formatDisplayName(format) {
-    switch (format) {
-      case "executive-summary":
-        return "\u{1F4CB} Executive Summary";
-      case "detailed-guide":
-        return "\u{1F4DA} Comprehensive Tutorial";
-      case "brief":
-        return "\u26A1 Brief Format";
-      case "custom":
-        return "\u2728 Custom Prompt (Session Only)";
-      default:
-        return format;
-    }
-  }
-  /**
    * Create file configuration settings
    */
   createFileSettings() {
@@ -2553,17 +2806,25 @@ var YouTubeSettingsTab = class extends import_obsidian5.PluginSettingTab {
                 <li>Set your Gemini or Groq API key above</li>
                 <li>Configure your preferred output directory</li>
                 <li>Click the video icon in the ribbon or use the command palette</li>
-                <li>Paste a YouTube URL and click Process</li>
-                <li>The plugin will analyze the video and create a structured note</li>
+                <li>Paste a YouTube URL and adjust performance settings in the modal</li>
+                <li>Click Process to analyze the video and create a structured note</li>
             </ol>
-            
+
+            <p><strong>Performance Settings:</strong></p>
+            <ul>
+                <li><strong>Speed & Performance:</strong> Available directly in the URL input modal for easy access</li>
+                <li><strong>Performance Mode:</strong> Choose between Fast, Balanced, or Quality processing</li>
+                <li><strong>Parallel Processing:</strong> Race multiple AI providers for faster responses</li>
+                <li><strong>Multimodal Analysis:</strong> Enable audio + visual analysis for video-aware models</li>
+            </ul>
+
             <p><strong>API Key Information:</strong></p>
             <ul>
                 <li><strong>Gemini API:</strong> Get your key from <a href="https://aistudio.google.com/app/apikey">Google AI Studio</a></li>
                 <li><strong>Groq API:</strong> Get your key from <a href="https://console.groq.com/keys">Groq Console</a></li>
                 <li>At least one API key is required for the plugin to function</li>
             </ul>
-            
+
             <p><strong>Note:</strong> This plugin requires an active internet connection and a valid API key.</p>
             <p><strong>Limitations:</strong> Due to CORS restrictions, full transcript extraction may be limited. The plugin works with available metadata and descriptions.</p>
         `;
@@ -2605,15 +2866,95 @@ var YouTubeSettingsTab = class extends import_obsidian5.PluginSettingTab {
   }
 };
 
-// src/services/ai/ai-service.ts
+// src/services/ai-service.ts
 init_api();
+
+// src/performance.ts
+var PERFORMANCE_PRESETS = {
+  fast: {
+    name: "Fast",
+    description: "Maximum speed with optimized models and parallel processing. Best for quick summaries.",
+    timeouts: {
+      geminiTimeout: 15e3,
+      groqTimeout: 1e4,
+      metadataTimeout: 5e3
+    },
+    enableParallel: true,
+    preferMultimodal: false,
+    modelStrategy: {
+      briefFormat: "llama-3.1-8b-instant",
+      executiveSummary: "llama-3.3-70b-versatile",
+      detailedGuide: "gemini-2.0-flash-lite",
+      fallbackModel: "llama-3.1-8b-instant"
+    }
+  },
+  balanced: {
+    name: "Balanced",
+    description: "Balanced speed and quality with multimodal analysis for detailed content.",
+    timeouts: {
+      geminiTimeout: 3e4,
+      groqTimeout: 2e4,
+      metadataTimeout: 1e4
+    },
+    enableParallel: true,
+    preferMultimodal: true,
+    modelStrategy: {
+      briefFormat: "llama-3.1-8b-instant",
+      executiveSummary: "gemini-2.0-flash-lite",
+      detailedGuide: "gemini-2.5-flash",
+      fallbackModel: "llama-3.3-70b-versatile"
+    }
+  },
+  quality: {
+    name: "Quality",
+    description: "Maximum quality with comprehensive multimodal analysis. Slower but most detailed.",
+    timeouts: {
+      geminiTimeout: 6e4,
+      groqTimeout: 3e4,
+      metadataTimeout: 15e3
+    },
+    enableParallel: false,
+    preferMultimodal: true,
+    modelStrategy: {
+      briefFormat: "gemini-2.0-flash-lite",
+      executiveSummary: "gemini-2.5-flash",
+      detailedGuide: "gemini-2.5-pro",
+      fallbackModel: "gemini-2.0-flash"
+    }
+  }
+};
+
+// src/services/ai-service.ts
 var AIService = class {
-  constructor(providers) {
+  constructor(providers, settings) {
     this.providers = [];
     if (!providers || providers.length === 0) {
       throw new Error(MESSAGES.ERRORS.MISSING_API_KEYS);
     }
     this.providers = providers;
+    this.settings = settings;
+    this.applyPerformanceSettings();
+  }
+  /**
+   * Apply performance settings to providers
+   */
+  applyPerformanceSettings() {
+    const preset = PERFORMANCE_PRESETS[this.settings.performanceMode] || PERFORMANCE_PRESETS.balanced;
+    const timeouts = this.settings.customTimeouts || preset.timeouts;
+    this.providers.forEach((provider) => {
+      if (provider.name === "Google Gemini" && provider.setTimeout) {
+        provider.setTimeout(timeouts.geminiTimeout);
+      } else if (provider.name === "Groq" && provider.setTimeout) {
+        provider.setTimeout(timeouts.groqTimeout);
+      }
+    });
+  }
+  /**
+   * Update settings and reapply performance configurations
+   */
+  updateSettings(newSettings) {
+    this.settings = newSettings;
+    this.applyPerformanceSettings();
   }
   /**
    * Return available model options for a provider name (from constants mapping)
@@ -2662,12 +3003,21 @@ var AIService = class {
     }
   }
   /**
-   * Process prompt with fallback support
+   * Process prompt with fallback support (original sequential method)
    */
   async process(prompt) {
     if (!prompt || typeof prompt !== "string") {
       throw new Error("Valid prompt is required");
     }
+    if (this.settings.enableParallelProcessing) {
+      return this.processParallel(prompt);
+    }
+    return this.processSequential(prompt);
+  }
+  /**
+   * Process prompt with sequential fallback (original method)
+   */
+  async processSequential(prompt) {
     let lastError = null;
     for (const provider of this.providers) {
       try {
@@ -2691,6 +3041,51 @@ var AIService = class {
       }
     }
     const errorMessage = lastError ? MESSAGES.ERRORS.AI_PROCESSING(lastError.message) : "All AI providers failed to process the request";
+    throw new Error(errorMessage);
+  }
+  /**
+   * Process prompt with parallel provider racing for maximum speed
+   */
+  async processParallel(prompt) {
+    console.log("Starting parallel provider racing...");
+    const providerPromises = this.providers.map(async (provider) => {
+      try {
+        const content = await provider.processWithTimeout(prompt);
+        if (content && content.trim().length > 0) {
+          return {
+            content,
+            provider: provider.name,
+            model: provider.model,
+            success: true,
+            responseTime: Date.now()
+          };
+        } else {
+          throw new Error("Empty response from AI provider");
+        }
+      } catch (error) {
+        console.warn(`${provider.name} failed in parallel race:`, error);
+        return {
+          error: error.message,
+          provider: provider.name,
+          model: provider.model,
+          success: false,
+          responseTime: Date.now()
+        };
+      }
+    });
+    const results = await Promise.allSettled(providerPromises);
+    for (const result of results) {
+      if (result.status === "fulfilled" && result.value.success) {
+        console.log(`Parallel winner: ${result.value.provider} (${Date.now() - result.value.responseTime}ms)`);
+        return {
+          content: result.value.content,
+          provider: result.value.provider,
+          model: result.value.model
+        };
+      }
+    }
+    const errors = results.filter((r) => r.status === "fulfilled" && !r.value.success).map((r) => r.value.error);
+    const errorMessage = errors.length > 0 ? MESSAGES.ERRORS.AI_PROCESSING(errors.join("; ")) : "All AI providers failed to process the request";
     throw new Error(errorMessage);
   }
   /**
@@ -2745,23 +3140,47 @@ var AIService = class {
   }
 };
 
-// src/services/ai/gemini.ts
+// src/gemini.ts
 init_api();
 
-// src/services/ai/base.ts
+// src/base.ts
 var BaseAIProvider = class {
-  constructor(apiKey, initialModel) {
+  constructor(apiKey, initialModel, timeout) {
     this.apiKey = apiKey;
+    this._timeout = 3e4;
     if (!apiKey) {
       throw new Error("API key is required for AI provider");
     }
     this._model = initialModel || "";
+    if (timeout) {
+      this._timeout = timeout;
+    }
   }
+  // Default 30s timeout
   get model() {
     return this._model;
   }
+  get timeout() {
+    return this._timeout;
+  }
   setModel(model) {
     this._model = model;
+  }
+  setTimeout(timeout) {
+    this._timeout = timeout;
+  }
+  /**
+   * Process with timeout support
+   */
+  async processWithTimeout(prompt, customTimeout) {
+    const timeoutMs = customTimeout || this._timeout;
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        reject(new Error(`${this.name} request timed out after ${timeoutMs}ms`));
+      }, timeoutMs);
+    });
+    const processPromise = this.process(prompt);
+    return Promise.race([processPromise, timeoutPromise]);
   }
   /**
    * Validate API response structure
@@ -2777,6 +3196,16 @@ var BaseAIProvider = class {
     return current !== null && current !== void 0;
   }
   /**
+   * Safely parse JSON response without throwing
+   */
+  async safeJsonParse(response) {
+    try {
+      return await response.json();
+    } catch (e) {
+      return null;
+    }
+  }
+  /**
    * Handle API errors consistently
    */
   async handleAPIError(response) {
@@ -2784,29 +3213,57 @@ var BaseAIProvider = class {
   }
 };
 
-// src/services/ai/gemini.ts
+// src/gemini.ts
 var GeminiProvider = class extends BaseAIProvider {
-  constructor(apiKey, model) {
-    super(apiKey, model || AI_MODELS.GEMINI);
+  constructor(apiKey, model, timeout) {
+    super(apiKey, model || AI_MODELS.GEMINI, timeout);
     this.name = "Google Gemini";
   }
   async process(prompt) {
-    const response = await fetch(`${API_ENDPOINTS.GEMINI}?key=${this.apiKey}`, {
-      method: "POST",
-      headers: this.createHeaders(),
-      body: JSON.stringify(this.createRequestBody(prompt))
-    });
-    if (response.status === 401) {
-      throw new Error(MESSAGES.ERRORS.GEMINI_INVALID_KEY);
+    var _a;
+    try {
+      if (!this.apiKey || this.apiKey.trim().length === 0) {
+        throw new Error(MESSAGES.ERRORS.GEMINI_INVALID_KEY);
+      }
+      const response = await fetch(`${API_ENDPOINTS.GEMINI}?key=${this.apiKey}`, {
+        method: "POST",
+        headers: this.createHeaders(),
+        body: JSON.stringify(this.createRequestBody(prompt))
+      });
+      if (response.status === 400) {
+        const errorData = await this.safeJsonParse(response);
+        const errorMessage = ((_a = errorData == null ? void 0 : errorData.error) == null ? void 0 : _a.message) || "Bad request";
+        throw new Error(`Gemini API error: ${errorMessage}. Try checking the model configuration.`);
+      }
+      if (response.status === 401) {
+        throw new Error(MESSAGES.ERRORS.GEMINI_INVALID_KEY);
+      }
+      if (response.status === 403) {
+        throw new Error("Gemini API access forbidden. Check API key permissions and billing.");
+      }
+      if (response.status === 429) {
+        throw new Error("Gemini API rate limit exceeded. Please wait and try again.");
+      }
+      if (!response.ok) {
+        await this.handleAPIError(response);
+      }
+      const data = await response.json();
+      if (!data.candidates || !data.candidates.length) {
+        throw new Error("No response candidates returned from Gemini API");
+      }
+      if (data.candidates[0].finishReason === "SAFETY") {
+        throw new Error("Response blocked by Gemini safety filters. Try rephrasing.");
+      }
+      if (!this.validateResponse(data, ["candidates", "0", "content", "parts", "0", "text"])) {
+        throw new Error("Invalid response format from Gemini API");
+      }
+      return this.extractContent(data);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error(`Gemini processing failed: ${error}`);
     }
-    if (!response.ok) {
-      await this.handleAPIError(response);
-    }
-    const data = await response.json();
-    if (!this.validateResponse(data, ["candidates", "0", "content", "parts", "0", "text"])) {
-      throw new Error("Invalid response format from Gemini API");
-    }
-    return this.extractContent(data);
   }
   createHeaders() {
     return {
@@ -2880,11 +3337,11 @@ For best results:
   }
 };
 
-// src/services/ai/groq.ts
+// src/groq.ts
 init_api();
 var GroqProvider = class extends BaseAIProvider {
-  constructor(apiKey, model) {
-    super(apiKey, model || AI_MODELS.GROQ);
+  constructor(apiKey, model, timeout) {
+    super(apiKey, model || AI_MODELS.GROQ, timeout);
     this.name = "Groq";
   }
   async process(prompt) {
@@ -2934,15 +3391,239 @@ var GroqProvider = class extends BaseAIProvider {
   }
 };
 
-// src/services/youtube/video-data.ts
+// src/video-data.ts
 init_api();
+
+// src/services/transcript-service.ts
+init_api();
+var YouTubeTranscriptService = class {
+  // 1 hour
+  constructor(cache) {
+    this.cache = cache;
+    this.transcriptTTL = 1e3 * 60 * 60;
+  }
+  /**
+   * Extract transcript for a YouTube video
+   */
+  async getTranscript(videoId) {
+    var _a, _b;
+    if (!videoId) {
+      throw new Error("Video ID is required");
+    }
+    const cacheKey = `transcript-${videoId}`;
+    const cached = (_a = this.cache) == null ? void 0 : _a.get(cacheKey);
+    if (cached) {
+      return cached;
+    }
+    try {
+      const transcript = await this.fetchTranscriptWithFallback(videoId);
+      if (transcript) {
+        (_b = this.cache) == null ? void 0 : _b.set(cacheKey, transcript, this.transcriptTTL);
+        return transcript;
+      }
+      return null;
+    } catch (error) {
+      console.warn("Failed to fetch transcript:", error);
+      return null;
+    }
+  }
+  /**
+   * Fetch transcript using multiple methods with fallback
+   */
+  async fetchTranscriptWithFallback(videoId) {
+    try {
+      const transcript = await this.fetchFromYouTubeAPI(videoId);
+      if (transcript)
+        return transcript;
+    } catch (error) {
+      console.debug("YouTube API method failed:", error);
+    }
+    try {
+      const transcript = await this.scrapeTranscriptFromPage(videoId);
+      if (transcript)
+        return transcript;
+    } catch (error) {
+      console.debug("Page scraping method failed:", error);
+    }
+    try {
+      const transcript = await this.fetchFromThirdParty(videoId);
+      if (transcript)
+        return transcript;
+    } catch (error) {
+      console.debug("Third-party method failed:", error);
+    }
+    return null;
+  }
+  /**
+   * Method 1: Official YouTube transcript API
+   */
+  async fetchFromYouTubeAPI(videoId) {
+    const url = `https://video.google.com/timedtext?lang=en&v=${videoId}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Transcript API failed: ${response.status}`);
+    }
+    const xmlText = await response.text();
+    return this.parseXMLTranscript(xmlText, videoId);
+  }
+  /**
+   * Method 2: Scrape transcript from YouTube page
+   */
+  async scrapeTranscriptFromPage(videoId) {
+    const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+    const proxyUrl = `${API_ENDPOINTS.CORS_PROXY}?url=${encodeURIComponent(videoUrl)}`;
+    const response = await fetch(proxyUrl);
+    if (!response.ok) {
+      throw new Error("Failed to fetch video page");
+    }
+    const html = await response.text();
+    const transcriptData = await this.extractTranscriptFromHTML(html);
+    if (transcriptData) {
+      return this.createTranscript(transcriptData, videoId, true);
+    }
+    return null;
+  }
+  /**
+   * Method 3: Third-party transcript service (optional)
+   */
+  async fetchFromThirdParty(videoId) {
+    return null;
+  }
+  /**
+   * Parse XML transcript from YouTube API
+   */
+  parseXMLTranscript(xmlText, videoId) {
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+    const textElements = xmlDoc.getElementsByTagName("text");
+    const segments = [];
+    let fullText = "";
+    for (let i = 0; i < textElements.length; i++) {
+      const element = textElements[i];
+      const text = element.textContent || "";
+      const start = parseFloat(element.getAttribute("start") || "0");
+      const duration = parseFloat(element.getAttribute("dur") || "0");
+      if (text.trim()) {
+        segments.push({ text: text.trim(), start, duration });
+        fullText += text.trim() + " ";
+      }
+    }
+    return {
+      segments,
+      fullText: fullText.trim(),
+      language: "en",
+      autoGenerated: true
+    };
+  }
+  /**
+   * Extract transcript data from YouTube page HTML
+   */
+  async extractTranscriptFromHTML(html) {
+    const transcriptRegex = /"captions":\s*{[^}]*"playerCaptionsTracklistRenderer":\s*{[^}]*"captionTracks":\s*\[([^\]]+)\]/;
+    const match = html.match(transcriptRegex);
+    if (!match || !match[1]) {
+      return null;
+    }
+    try {
+      const captionTracksJson = match[1];
+      const captionTracks = JSON.parse(`[${captionTracksJson}]`);
+      const englishTrack = captionTracks.find(
+        (track) => {
+          var _a;
+          return track.languageCode === "en" || ((_a = track.languageCode) == null ? void 0 : _a.startsWith("en"));
+        }
+      );
+      if (!englishTrack || !englishTrack.baseUrl) {
+        return null;
+      }
+      return fetch(englishTrack.baseUrl).then((resp) => {
+        if (!resp.ok)
+          throw new Error("Failed to fetch caption track");
+        return resp.text();
+      }).then((xmlText) => this.parseXMLTranscript(xmlText, "").segments).catch((err) => {
+        console.debug("Failed to fetch caption track:", err);
+        return null;
+      });
+    } catch (error) {
+      console.debug("Failed to parse transcript from HTML:", error);
+      return null;
+    }
+  }
+  /**
+   * Create transcript object from segments
+   */
+  createTranscript(segments, videoId, autoGenerated = false) {
+    if (!Array.isArray(segments)) {
+      segments = [segments];
+    }
+    const normalizedSegments = segments.map((seg) => ({
+      text: seg.text,
+      start: seg.start,
+      duration: seg.duration || 0
+    }));
+    const fullText = normalizedSegments.map((seg) => seg.text).join(" ").trim();
+    return {
+      segments: normalizedSegments,
+      fullText,
+      language: "en",
+      autoGenerated
+    };
+  }
+  /**
+   * Get transcript summary for quick analysis
+   */
+  async getTranscriptSummary(videoId, maxLength = 2e3) {
+    const transcript = await this.getTranscript(videoId);
+    if (!transcript) {
+      return null;
+    }
+    if (transcript.fullText.length <= maxLength) {
+      return transcript.fullText;
+    }
+    const keySegments = transcript.segments.filter((seg) => seg.text.length > 20).slice(0, 10).map((seg) => seg.text).join(" ");
+    return keySegments.length > maxLength ? keySegments.substring(0, maxLength) + "..." : keySegments;
+  }
+  /**
+   * Extract key time-stamped moments from transcript
+   */
+  async extractKeyMoments(videoId, count = 5) {
+    const transcript = await this.getTranscript(videoId);
+    if (!transcript || transcript.segments.length === 0) {
+      return null;
+    }
+    const meaningfulSegments = transcript.segments.filter((seg) => seg.text.length > 30);
+    if (meaningfulSegments.length === 0) {
+      return null;
+    }
+    const totalSegments = meaningfulSegments.length;
+    const step = Math.max(1, Math.floor(totalSegments / count));
+    const keyMoments = [];
+    for (let i = 0; i < totalSegments && keyMoments.length < count; i += step) {
+      const segment = meaningfulSegments[i];
+      keyMoments.push({
+        time: segment.start,
+        text: segment.text
+      });
+    }
+    return keyMoments;
+  }
+  /**
+   * Check if transcript is available for a video
+   */
+  async isTranscriptAvailable(videoId) {
+    const transcript = await this.getTranscript(videoId);
+    return transcript !== null && transcript.segments.length > 0;
+  }
+};
+
+// src/video-data.ts
 var YouTubeVideoService = class {
-  // 30 minutes
   constructor(cache) {
     this.cache = cache;
     this.metadataTTL = 1e3 * 60 * 30;
     // 30 minutes
     this.descriptionTTL = 1e3 * 60 * 30;
+    this.transcriptService = new YouTubeTranscriptService(cache);
   }
   /**
    * Extract video ID from YouTube URL
@@ -2964,14 +3645,21 @@ var YouTubeVideoService = class {
       return cached;
     }
     try {
-      const [metadata, description] = await Promise.all([
-        this.getVideoMetadata(videoId),
-        this.getVideoDescription(videoId)
-      ]);
+      const metadata = await this.getVideoMetadata(videoId);
       const result = {
         title: metadata.title || "Unknown Title",
-        description: description || "No description available"
+        description: metadata.description || "No description available",
+        duration: metadata.duration,
+        thumbnail: metadata.thumbnail,
+        channelName: metadata.channelName
       };
+      if (result.duration && result.duration < 1800) {
+        this.checkTranscriptAvailability(videoId).then((hasTranscript) => {
+          var _a2;
+          result.hasTranscript = hasTranscript;
+          (_a2 = this.cache) == null ? void 0 : _a2.set(cacheKey, result, this.metadataTTL);
+        });
+      }
       (_b = this.cache) == null ? void 0 : _b.set(cacheKey, result, this.metadataTTL);
       return result;
     } catch (error) {
@@ -2997,7 +3685,7 @@ var YouTubeVideoService = class {
       const timeoutId = setTimeout(() => controller.abort(), 1e4);
       const response = await fetch(oembedUrl, {
         headers: {
-          "User-Agent": "Obsidian YouTube Processor Plugin"
+          "User-Agent": "Obsidian YoutubeClipper Plugin"
         },
         signal: controller.signal
       });
@@ -3014,8 +3702,23 @@ var YouTubeVideoService = class {
         }
       }
       const data = await response.json();
+      let enhancedData = {
+        title: data.title || "Unknown Title",
+        thumbnail: data.thumbnail_url,
+        author_name: data.author_name
+      };
+      try {
+        const pageData = await this.scrapeAdditionalMetadata(videoId);
+        enhancedData = { ...enhancedData, ...pageData };
+      } catch (error) {
+        console.debug("Could not scrape additional metadata:", error);
+      }
       const metadata = {
-        title: data.title || "Unknown Title"
+        title: enhancedData.title,
+        description: enhancedData.description,
+        duration: enhancedData.duration,
+        thumbnail: enhancedData.thumbnail,
+        channelName: enhancedData.author_name
       };
       (_b = this.cache) == null ? void 0 : _b.set(cacheKey, metadata, this.metadataTTL);
       return metadata;
@@ -3028,6 +3731,31 @@ var YouTubeVideoService = class {
         throw new Error("Failed to parse YouTube response. The service may be temporarily unavailable.");
       }
       throw error;
+    }
+  }
+  /**
+   * Scrape additional metadata from YouTube page
+   */
+  async scrapeAdditionalMetadata(videoId) {
+    try {
+      const html = await this.fetchVideoPageHTML(videoId);
+      const durationMatch = html.match(/"lengthSeconds":"(\d+)"/);
+      const duration = durationMatch ? parseInt(durationMatch[1]) : void 0;
+      const descriptionMatch = html.match(/"shortDescription":"([^"]+)"/);
+      const description = descriptionMatch ? descriptionMatch[1].replace(/\\u0026/g, "&").replace(/\\n/g, "\n") : void 0;
+      return { description, duration };
+    } catch (error) {
+      return {};
+    }
+  }
+  /**
+   * Check if transcript is available for this video
+   */
+  async checkTranscriptAvailability(videoId) {
+    try {
+      return await this.transcriptService.isTranscriptAvailable(videoId);
+    } catch (error) {
+      return false;
     }
   }
   /**
@@ -3101,11 +3829,11 @@ var YouTubeVideoService = class {
   }
 };
 
-// src/services/file/obsidian-file.ts
+// src/obsidian-file.ts
 var import_obsidian6 = require("obsidian");
 init_api();
 
-// src/components/modals/file-conflict-modal.ts
+// src/file-conflict-modal.ts
 init_base_modal();
 var COPY_WARNING = "A note with this title already exists. Choose how to proceed.";
 var FileConflictModal = class extends BaseModal {
@@ -3152,7 +3880,7 @@ Existing note: ${this.file.path}`);
   }
 };
 
-// src/services/file/obsidian-file.ts
+// src/obsidian-file.ts
 var ObsidianFileService = class {
   constructor(app) {
     this.app = app;
@@ -3306,20 +4034,33 @@ var ObsidianFileService = class {
 // src/services/prompt-service.ts
 var _AIPromptService = class {
   /**
-   * Create analysis prompt for YouTube video content with format selection (optimized)
+   * Create analysis prompt for YouTube video content with performance optimization
    */
-  createAnalysisPrompt(videoData, videoUrl, format = "detailed-guide", customPrompt) {
+  createAnalysisPrompt(videoData, videoUrl, format = "detailed-guide", customPrompt, performanceMode = "balanced") {
     if (customPrompt && customPrompt.trim()) {
       return this.applyCustomPrompt(customPrompt, videoData, videoUrl);
     }
-    const baseContent = _AIPromptService.BASE_TEMPLATE.replace("{{TITLE}}", videoData.title).replace("{{URL}}", videoUrl).replace("{{DESCRIPTION}}", videoData.description);
-    if (format === "executive-summary") {
-      return this.createExecutiveSummaryPrompt(baseContent, videoUrl);
+    let baseTemplate;
+    switch (performanceMode) {
+      case "fast":
+        baseTemplate = _AIPromptService.COMPACT_BASE_TEMPLATE;
+        break;
+      case "quality":
+        baseTemplate = _AIPromptService.COMPREHENSIVE_BASE_TEMPLATE;
+        break;
+      default:
+        baseTemplate = _AIPromptService.BALANCED_BASE_TEMPLATE;
     }
-    if (format === "brief") {
-      return this.createBriefPrompt(baseContent, videoUrl);
+    const baseContent = baseTemplate.replace("{{TITLE}}", videoData.title).replace("{{URL}}", videoUrl).replace("{{DESCRIPTION}}", videoData.description);
+    switch (format) {
+      case "executive-summary":
+        return this.createExecutiveSummaryPrompt(baseContent, videoUrl, performanceMode);
+      case "brief":
+        return this.createBriefPrompt(baseContent, videoUrl, performanceMode);
+      case "detailed-guide":
+      default:
+        return this.createDetailedGuidePrompt(baseContent, videoUrl, performanceMode);
     }
-    return this.createDetailedGuidePrompt(baseContent, videoUrl);
   }
   /**
    * Apply custom prompt template with placeholder substitution
@@ -3332,7 +4073,7 @@ var _AIPromptService = class {
   /**
    * Create a brief prompt: short description plus resources list
    */
-  createBriefPrompt(baseContent, videoUrl) {
+  createBriefPrompt(baseContent, videoUrl, performanceMode = "balanced") {
     const videoId = ValidationUtils.extractVideoId(videoUrl);
     const embedUrl = videoId ? `https://www.youtube-nocookie.com/embed/${videoId}` : videoUrl;
     return `${baseContent}
@@ -3368,6 +4109,15 @@ var _AIPromptService = class {
         ## Brief Description
         [Provide a concise 3-4 sentence description that captures the core message of the video]
 
+        ## Key Takeaways
+        - **[Takeaway 1]**: [Core insight or lesson from the video]
+        - **[Takeaway 2]**: [Core insight or lesson from the video]
+        - **[Takeaway 3]**: [Core insight or lesson from the video]
+
+        ## Quick Actions
+        1. **[Immediate Action]**: [Specific action you can take right away]
+        2. **[Next Step]**: [Follow-up action to apply what you learned]
+
         ## Resources
         - **Original Video:** [Watch on YouTube](${videoUrl})
         - **Channel:** [Creator's Channel](https://youtube.com/channel/[extract-channel-id])
@@ -3376,12 +4126,12 @@ var _AIPromptService = class {
           - [Resource 2]
           - [Resource 3]
 
-        IMPORTANT: Keep the Brief Description short and focused. Provide 2-3 high-quality resource links that help the reader explore the topic further.`;
+        IMPORTANT: Keep the Brief Description short and focused. Provide 2-3 high-quality resource links that help the reader explore the topic further. Action items should be simple and immediately applicable.`;
   }
   /**
    * Create executive summary prompt (≤250 words)
    */
-  createExecutiveSummaryPrompt(baseContent, videoUrl) {
+  createExecutiveSummaryPrompt(baseContent, videoUrl, performanceMode = "balanced") {
     const videoId = ValidationUtils.extractVideoId(videoUrl);
     const embedUrl = videoId ? `https://www.youtube-nocookie.com/embed/${videoId}` : videoUrl;
     return `${baseContent}
@@ -3418,13 +4168,26 @@ var _AIPromptService = class {
 
         ---
 
-        ## Key Insights
-        - [Critical insight 1 with specific detail]
-        - [Critical insight 2 with specific detail]
-        - [Critical insight 3 with specific detail]
+        ## Executive Summary
+        [Provide a comprehensive executive summary in exactly 250 words or fewer. Focus on strategic insights, business implications, and high-level takeaways. Structure it as follows:
 
-        ## Concise Summary
-        [Provide a concise, cohesive summary in exactly two paragraphs, maximum 250 words total. Focus on the core value, main insights, and key actionable takeaways. Make every word count.]
+        **First Paragraph:** Core problem/opportunity and the video's main thesis
+        **Second Paragraph:** Key strategic insights and competitive advantages
+        **Third Paragraph:** Business implications and recommendation priority
+
+        Focus on strategic value, not tactical details. Make every word count.]
+
+        ## Key Insights
+        - **[Strategic Insight 1]:** [Critical insight with business impact and specific example from video]
+        - **[Strategic Insight 2]:** [Critical insight with business impact and specific example from video]
+        - **[Strategic Insight 3]:** [Critical insight with business impact and specific example from video]
+
+        ## Action Items (3-5 items)
+        1. **[Immediate Priority - 0-30 days]**: [Specific, measurable action with clear success criteria]
+        2. **[Short-term Priority - 1-3 months]**: [Specific, measurable action with clear success criteria]
+        3. **[Strategic Priority - 3-6 months]**: [Specific, measurable action with clear success criteria]
+        4. **[Long-term Priority - 6+ months]**: [Specific, measurable action with clear success criteria]
+        5. **[Optional Additional Priority]**: [Specific, measurable action with clear success criteria]
 
         ## Resources
         - **Original Video:** [Watch on YouTube](${videoUrl})
@@ -3433,12 +4196,16 @@ var _AIPromptService = class {
         - **Official Documentation:** [Links to official docs for mentioned technologies]
         - **Further Reading:** [1-2 high-quality related articles or resources]
 
-        CRITICAL: Keep the Executive Summary section to exactly 250 words or fewer. Be concise but comprehensive.`;
+        CRITICAL:
+        - Keep the Executive Summary to exactly 250 words or fewer
+        - Provide 3-5 specific, actionable items with timeframes and success criteria
+        - Each action item should be measurable and directly tied to video content
+        - Focus on strategic business value, not just technical details`;
   }
   /**
    * Create detailed guide prompt
    */
-  createDetailedGuidePrompt(baseContent, videoUrl) {
+  createDetailedGuidePrompt(baseContent, videoUrl, performanceMode = "balanced") {
     const videoId = ValidationUtils.extractVideoId(videoUrl);
     const embedUrl = videoId ? `https://www.youtube-nocookie.com/embed/${videoId}` : videoUrl;
     return `${baseContent}
@@ -3497,6 +4264,20 @@ var _AIPromptService = class {
 
         [Continue with additional steps as needed - provide comprehensive coverage]
 
+        ## Action Items & Next Steps
+        ### Immediate Actions (0-1 week)
+        - **[Action 1]**: [Specific, measurable task with clear success criteria]
+        - **[Action 2]**: [Specific, measurable task with clear success criteria]
+        - **[Action 3]**: [Specific, measurable task with clear success criteria]
+
+        ### Short-term Goals (1-4 weeks)
+        - **[Goal 1]**: [Specific outcome or milestone to achieve]
+        - **[Goal 2]**: [Specific outcome or milestone to achieve]
+
+        ### Long-term Objectives (1-3 months)
+        - **[Objective 1]**: [Strategic objective with measurable results]
+        - **[Objective 2]**: [Strategic objective with measurable results]
+
         ## Resources
         - **Original Video:** [Watch on YouTube](${videoUrl})
         - **Channel:** [Creator's Channel](https://youtube.com/channel/[extract-channel-id])
@@ -3505,7 +4286,11 @@ var _AIPromptService = class {
         - **Tools & Software:** [List any tools mentioned with download/setup links]
         - **Community:** [Relevant forums, Discord servers, or communities]
 
-        IMPORTANT: Provide detailed, actionable steps that someone could follow to implement the concepts from the video.`;
+        IMPORTANT:
+        - Provide detailed, actionable steps that someone could follow to implement the concepts from the video
+        - Include 3-5 immediate action items and 2-4 longer-term goals
+        - Each action item should be specific, measurable, and directly tied to video content
+        - Success criteria should be clear and achievable`;
   }
   /**
    * Process AI response and inject provider information
@@ -3561,28 +4346,30 @@ ${key}: "${value}"
   }
 };
 var AIPromptService = _AIPromptService;
-// Pre-compiled template fragments for hot paths (performance optimization)
-AIPromptService.BASE_TEMPLATE = `Analyze this YouTube video using comprehensive multimodal analysis with audio_video_tokens=True:
+// Optimized prompt templates for different performance modes
+AIPromptService.COMPACT_BASE_TEMPLATE = `Analyze this YouTube video:
+Title: {{TITLE}}
+URL: {{URL}}
+Description: {{DESCRIPTION}}
 
-        VIDEO INFORMATION:
-        Title: {{TITLE}}
-        URL: {{URL}}
-        Description/Context: {{DESCRIPTION}}
+Focus on extracting the key information and insights.`;
+AIPromptService.BALANCED_BASE_TEMPLATE = `Analyze this YouTube video with multimodal analysis:
+Title: {{TITLE}}
+URL: {{URL}}
+Description: {{DESCRIPTION}}
 
-        MULTIMODAL ANALYSIS INSTRUCTIONS:
-        1. Watch the complete video using both audio and visual analysis capabilities with audio_video_tokens=True
-        2. Extract insights from spoken content, music, sound effects, and ambient audio
-        3. Analyze visual elements including:
-           - Slides, presentations, and text overlays
-           - Diagrams, charts, and visual demonstrations
-           - Body language, gestures, and facial expressions
-           - Screen recordings, code examples, or software demos
-           - Any visual aids or props used
-        4. Before responding, perform a web search to find relevant insights or highlights about this topic
-        5. Use web search results only when they directly enhance the response by adding clarity, depth, or useful context
-        6. Focus on practical, action-oriented information that viewers can implement
-        7. Maintain accuracy and cite specific examples from the video when relevant
-        8. Identify the main value proposition and key learning objectives`;
+Extract insights from both spoken content and visual elements, focusing on practical information.`;
+AIPromptService.COMPREHENSIVE_BASE_TEMPLATE = `Analyze this YouTube video using comprehensive multimodal analysis:
+Title: {{TITLE}}
+URL: {{URL}}
+Description: {{DESCRIPTION}}
+
+MULTIMODAL ANALYSIS INSTRUCTIONS:
+1. Watch the complete video using both audio and visual analysis capabilities
+2. Extract insights from spoken content, music, sound effects, and ambient audio
+3. Analyze visual elements including slides, diagrams, charts, body language, and demonstrations
+4. Focus on practical, action-oriented information with specific examples
+5. Maintain accuracy and cite specific examples from the video when relevant`;
 
 // src/services/cache/memory-cache.ts
 var MemoryCacheService = class {
@@ -3691,7 +4478,7 @@ var ServiceContainer = class {
       if (this.settings.groqApiKey) {
         providers.push(new GroqProvider(this.settings.groqApiKey));
       }
-      this._aiService = new AIService(providers);
+      this._aiService = new AIService(providers, this.settings);
     }
     return this._aiService;
   }
@@ -3745,17 +4532,26 @@ var DEFAULT_SETTINGS = {
   groqApiKey: "",
   outputPath: "YouTube/Processed Videos",
   useEnvironmentVariables: false,
-  environmentPrefix: "YTC"
+  environmentPrefix: "YTC",
+  // Performance settings with smart defaults
+  performanceMode: "balanced",
+  enableParallelProcessing: true,
+  preferMultimodal: true
 };
-var YouTubeProcessorPlugin = class extends import_obsidian7.Plugin {
+var YoutubeClipperPlugin = class extends import_obsidian7.Plugin {
   constructor() {
     super(...arguments);
     this.settings = DEFAULT_SETTINGS;
     this.isUnloading = false;
     this.operationCount = 0;
+    // Track temp notes we've already handled to avoid duplicate modal opens
+    this.handledTempFiles = /* @__PURE__ */ new Set();
+    // Track modal instances to prevent double opening
+    this.isModalOpen = false;
   }
   async onload() {
-    this.logInfo("Initializing YouTube Processor Plugin v1.2.0...");
+    var _a;
+    this.logInfo("Initializing YoutubeClipper Plugin v1.2.0...");
     const conflicts = ConflictPrevention.checkForPotentialConflicts();
     if (conflicts.length > 0) {
       this.logWarning(`Potential conflicts detected but proceeding: ${conflicts.join(", ")}`);
@@ -3764,22 +4560,174 @@ var YouTubeProcessorPlugin = class extends import_obsidian7.Plugin {
       await this.loadSettings();
       await this.initializeServices();
       this.registerUIComponents();
-      this.logInfo("YouTube Processor Plugin loaded successfully");
+      const NOTE_MARKER = "<!-- ytc-extension:youtube-clipper -->";
+      const pendingUrls = /* @__PURE__ */ new Map();
+      const URL_HANDLER_DELAY = 500;
+      const isTempFile = (file, content) => {
+        if (content && content.includes(NOTE_MARKER)) {
+          return true;
+        }
+        if (file.name && file.name.startsWith("YouTube Clip -")) {
+          return true;
+        }
+        const trimmedContent = content.trim();
+        const lines = trimmedContent.split("\n").filter((line) => line.trim().length > 0);
+        const isUrlOnly = lines.length === 1 && ValidationUtils.isValidYouTubeUrl(lines[0]);
+        if (isUrlOnly && content.length < 200) {
+          const fileAge = Date.now() - file.stat.ctime;
+          const isInOutputPath = file.path.includes(this.settings.outputPath);
+          if (fileAge < 5e3 && !isInOutputPath) {
+            return true;
+          }
+        }
+        return false;
+      };
+      const handleUrlSafely = (url, source, filePath, file, content) => {
+        var _a2;
+        console.log(`YouTubeClipper: ${source} - handleUrlSafely called for URL:`, url, "file:", filePath);
+        if (file && content && !isTempFile(file, content)) {
+          console.warn(`YouTubeClipper: ${source} - REJECTING URL in non-temp file: ${filePath}`);
+          const fileAge = Date.now() - file.stat.ctime;
+          const isInOutputPath = filePath == null ? void 0 : filePath.includes(this.settings.outputPath);
+          const hasMarker = content.includes(NOTE_MARKER);
+          const hasClipPrefix = (_a2 = file.name) == null ? void 0 : _a2.startsWith("YouTube Clip -");
+          console.warn(`YouTubeClipper: ${source} - Rejection details: age=${fileAge}ms, inOutputPath=${isInOutputPath}, hasMarker=${hasMarker}, hasClipPrefix=${hasClipPrefix}`);
+          return;
+        }
+        if (this.handledTempFiles.has(url)) {
+          console.log(`YouTubeClipper: ${source} - URL already handled: ${url}, skipping`);
+          return;
+        }
+        if (pendingUrls.has(url)) {
+          console.log(`YouTubeClipper: ${source} - cancelling pending handler for URL:`, url);
+          clearTimeout(pendingUrls.get(url));
+        }
+        this.handledTempFiles.add(url);
+        if (filePath) {
+          this.handledTempFiles.add(filePath);
+        }
+        console.log(`YouTubeClipper: ${source} - marked URL as handled:`, url);
+        const timeout = setTimeout(() => {
+          console.log(`YouTubeClipper: ${source} - DEBOUNCED: opening modal for URL: ${url}`);
+          console.log(`YouTubeClipper: ${source} - pendingUrls size before:`, pendingUrls.size);
+          console.log(`YouTubeClipper: ${source} - handledTempFiles size:`, this.handledTempFiles.size);
+          void this.safeShowUrlModal(url);
+          pendingUrls.delete(url);
+          console.log(`YouTubeClipper: ${source} - pendingUrls size after:`, pendingUrls.size);
+          if (this.handledTempFiles.size > 100) {
+            const entries = Array.from(this.handledTempFiles);
+            this.handledTempFiles.clear();
+            entries.slice(-50).forEach((entry) => this.handledTempFiles.add(entry));
+            console.log(`YouTubeClipper: ${source} - cleaned up handledTempFiles, new size:`, this.handledTempFiles.size);
+          }
+        }, URL_HANDLER_DELAY);
+        pendingUrls.set(url, timeout);
+        console.log(`YouTubeClipper: ${source} - set timeout for URL:`, url, "delay:", URL_HANDLER_DELAY);
+      };
+      this.registerEvent(this.app.vault.on("create", async (file) => {
+        try {
+          if (!(file instanceof import_obsidian7.TFile))
+            return;
+          const content = await this.app.vault.read(file);
+          if (!isTempFile(file, content)) {
+            console.debug("YouTubeClipper: create handler - ignoring existing file:", file.path);
+            return;
+          }
+          let url = null;
+          if (content && content.includes(NOTE_MARKER)) {
+            url = content.replace(NOTE_MARKER, "").trim();
+          } else {
+            const maybe = (content || "").trim();
+            const ytRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=[A-Za-z0-9_-]{6,}|https?:\/\/(?:www\.)?youtu\.be\/[A-Za-z0-9_-]{6,})/i;
+            const m = maybe.match(ytRegex);
+            if (m && m[1]) {
+              url = m[1].trim();
+            } else if (file.name && file.name.startsWith("YouTube Clip -")) {
+              const single = maybe.split("\n").map((s) => s.trim()).find(Boolean) || "";
+              if (ValidationUtils.isValidYouTubeUrl(single))
+                url = single;
+            }
+          }
+          if (!url) {
+            console.debug("YouTubeClipper: create handler - no url extracted for temp file:", file.path);
+            return;
+          }
+          console.log("YouTubeClipper: CREATE EVENT - detected temp note", { path: file.path, url });
+          handleUrlSafely(url, "create-handler", file.path, file, content);
+        } catch (e) {
+        }
+      }));
+      this.registerEvent(this.app.workspace.on("active-leaf-change", async () => {
+        try {
+          const file = this.app.workspace.getActiveFile();
+          if (!file || !(file instanceof import_obsidian7.TFile))
+            return;
+          if (this.handledTempFiles.has(file.path))
+            return;
+          const content = await this.app.vault.read(file);
+          if (!isTempFile(file, content)) {
+            console.debug("YouTubeClipper: active-leaf-change - ignoring existing file:", file.path);
+            return;
+          }
+          let url = null;
+          if (content && content.includes(NOTE_MARKER)) {
+            url = content.replace(NOTE_MARKER, "").trim();
+          } else {
+            const maybe = (content || "").trim();
+            const ytRegex = /(https?:\/\/(?:www\.)?youtube\.com\/watch\?v=[A-Za-z0-9_-]{6,}|https?:\/\/(?:www\.)?youtu\.be\/[A-Za-z0-9_-]{6,})/i;
+            const m = maybe.match(ytRegex);
+            if (m && m[1]) {
+              url = m[1].trim();
+            } else if (file.name && file.name.startsWith("YouTube Clip -")) {
+              const single = maybe.split("\n").map((s) => s.trim()).find(Boolean) || "";
+              if (ValidationUtils.isValidYouTubeUrl(single))
+                url = single;
+            }
+          }
+          if (!url) {
+            console.debug("YouTubeClipper: active-leaf-change - no url for temp file:", file.path);
+            return;
+          }
+          console.log("YouTubeClipper: ACTIVE-LEAF-CHANGE EVENT - detected temp note", { path: file.path, url });
+          handleUrlSafely(url, "active-leaf-handler", file.path, file, content);
+        } catch (e) {
+        }
+      }));
+      this.logInfo("YoutubeClipper Plugin loaded successfully");
+      try {
+        (_a = this.registerObsidianProtocolHandler) == null ? void 0 : _a.call(this, "youtube-clipper", (params) => {
+          try {
+            const url = params.url || params.content || params.path || "";
+            if (url && ValidationUtils.isValidYouTubeUrl(url)) {
+              setTimeout(() => {
+                void this.safeShowUrlModal(url);
+              }, 200);
+            } else {
+              console.debug("YouTubeClipper: protocol handler received no valid url", params);
+            }
+          } catch (e) {
+            console.warn("YouTubeClipper: protocol handler error", e);
+          }
+        });
+      } catch (e) {
+      }
     } catch (error) {
       this.logError("Failed to load plugin", error);
       ErrorHandler.handle(error, "Plugin initialization");
-      new import_obsidian7.Notice("Failed to load YouTube Processor Plugin. Check console for details.");
+      new import_obsidian7.Notice("Failed to load YoutubeClipper Plugin. Check console for details.");
     }
   }
   onunload() {
     var _a;
-    this.logInfo("Unloading YouTube Processor Plugin...");
+    this.logInfo("Unloading YoutubeClipper Plugin...");
     this.isUnloading = true;
     try {
+      this.isModalOpen = false;
+      this.pendingModalUrl = void 0;
       (_a = this.serviceContainer) == null ? void 0 : _a.clearServices();
       this.cleanupUIElements();
       ConflictPrevention.cleanupAllElements();
-      this.logInfo("YouTube Processor Plugin unloaded successfully");
+      this.logInfo("YoutubeClipper Plugin unloaded successfully");
     } catch (error) {
       this.logError("Error during plugin unload", error);
     }
@@ -3788,9 +4736,10 @@ var YouTubeProcessorPlugin = class extends import_obsidian7.Plugin {
     this.serviceContainer = new ServiceContainer(this.settings, this.app);
   }
   registerUIComponents() {
-    this.ribbonIcon = this.addRibbonIcon("video", "Process YouTube Video", () => {
+    this.ribbonIcon = this.addRibbonIcon("film", "Process YouTube Video", () => {
       void this.safeShowUrlModal();
     });
+    console.log("YouTubeClipper: Ribbon icon set successfully");
     this.addCommand({
       id: `${PLUGIN_PREFIX}-process-youtube-video`,
       name: "Process YouTube Video",
@@ -3802,6 +4751,34 @@ var YouTubeProcessorPlugin = class extends import_obsidian7.Plugin {
       plugin: this,
       onSettingsChange: this.handleSettingsChange.bind(this)
     }));
+    this.addCommand({
+      id: `${PLUGIN_PREFIX}-open-url-from-clipboard`,
+      name: "YouTube Clipper: Open URL Modal (from clipboard)",
+      callback: async () => {
+        try {
+          let text = "";
+          try {
+            if (navigator && navigator.clipboard && navigator.clipboard.readText) {
+              text = await navigator.clipboard.readText() || "";
+            }
+          } catch (e) {
+            text = "";
+          }
+          if (text && ValidationUtils.isValidYouTubeUrl(text.trim())) {
+            void this.safeShowUrlModal(text.trim());
+            return;
+          }
+          const manual = window.prompt("Paste YouTube URL to open in YouTube Clipper:");
+          if (manual && ValidationUtils.isValidYouTubeUrl(manual.trim())) {
+            void this.safeShowUrlModal(manual.trim());
+          } else {
+            new import_obsidian7.Notice("No valid YouTube URL provided.");
+          }
+        } catch (error) {
+          ErrorHandler.handle(error, "Open URL from clipboard");
+        }
+      }
+    });
   }
   cleanupUIElements() {
     if (this.ribbonIcon) {
@@ -3809,9 +4786,30 @@ var YouTubeProcessorPlugin = class extends import_obsidian7.Plugin {
       this.ribbonIcon = void 0;
     }
   }
-  async safeShowUrlModal() {
+  async safeShowUrlModal(initialUrl) {
+    const callId = Math.random().toString(36).substr(2, 9);
+    console.log(`YouTubeClipper [${callId}]: safeShowUrlModal called with URL:`, initialUrl);
+    console.log(`YouTubeClipper [${callId}]: Current modal state - isModalOpen:`, this.isModalOpen, "pendingModalUrl:", this.pendingModalUrl);
     await this.safeOperation(async () => {
-      this.openYouTubeUrlModal();
+      if (this.isModalOpen) {
+        console.warn(`YouTubeClipper [${callId}]: MODAL ALREADY OPEN - IGNORING request for:`, initialUrl);
+        console.warn(`YouTubeClipper [${callId}]: Current pending URL:`, this.pendingModalUrl);
+        if (initialUrl && initialUrl !== this.pendingModalUrl) {
+          console.warn(`YouTubeClipper [${callId}]: Updating pending modal URL from:`, this.pendingModalUrl, "to:", initialUrl);
+          this.pendingModalUrl = initialUrl;
+        } else {
+          console.warn(`YouTubeClipper [${callId}]: Same URL as pending, completely ignoring`);
+        }
+        return;
+      }
+      console.log(`YouTubeClipper [${callId}]: Setting isModalOpen = true for URL:`, initialUrl);
+      this.isModalOpen = true;
+      this.pendingModalUrl = initialUrl;
+      console.log(`YouTubeClipper [${callId}]: About to open YouTubeUrlModal for URL:`, initialUrl);
+      this.openYouTubeUrlModal(initialUrl);
+      setTimeout(() => {
+        console.log(`YouTubeClipper [${callId}]: Modal state after 100ms - isModalOpen:`, this.isModalOpen);
+      }, 100);
     }, "Show URL Modal");
   }
   async safeOperation(operation, operationName) {
@@ -3831,7 +4829,7 @@ var YouTubeProcessorPlugin = class extends import_obsidian7.Plugin {
       return null;
     }
   }
-  openYouTubeUrlModal() {
+  openYouTubeUrlModal(initialUrl) {
     if (this.isUnloading) {
       ConflictPrevention.log("Plugin is unloading, ignoring modal request");
       return;
@@ -3846,9 +4844,10 @@ var YouTubeProcessorPlugin = class extends import_obsidian7.Plugin {
           modelOptionsMap[p] = aiService.getProviderModels(p) || [];
         }
       }
-      new YouTubeUrlModal(this.app, {
+      const modal = new YouTubeUrlModal(this.app, {
         onProcess: this.processYouTubeVideo.bind(this),
         onOpenFile: this.openFileByPath.bind(this),
+        initialUrl,
         providers,
         modelOptions: modelOptionsMap,
         fetchModels: async () => {
@@ -3860,19 +4859,53 @@ var YouTubeProcessorPlugin = class extends import_obsidian7.Plugin {
           } catch (error) {
             return modelOptionsMap;
           }
+        },
+        // Performance settings from plugin settings
+        performanceMode: this.settings.performanceMode || "balanced",
+        enableParallelProcessing: this.settings.enableParallelProcessing || false,
+        preferMultimodal: this.settings.preferMultimodal || false,
+        onPerformanceSettingsChange: async (performanceMode, enableParallel, preferMultimodal) => {
+          this.settings.performanceMode = performanceMode;
+          this.settings.enableParallelProcessing = enableParallel;
+          this.settings.preferMultimodal = preferMultimodal;
+          await this.saveSettings();
+          this.serviceContainer = new ServiceContainer(this.settings, this.app);
         }
-      }).open();
+      });
+      modal.onClose = () => {
+        try {
+          console.log(`YouTubeClipper: Modal onClose triggered for URL:`, initialUrl);
+          console.log(`YouTubeClipper: Modal state before close - isModalOpen:`, this.isModalOpen, "pendingModalUrl:", this.pendingModalUrl);
+          this.isModalOpen = false;
+          this.pendingModalUrl = void 0;
+          console.log(`YouTubeClipper: Modal state after close - isModalOpen:`, this.isModalOpen, "pendingModalUrl:", this.pendingModalUrl);
+        } catch (error) {
+          console.warn("YouTubeClipper: Error resetting modal state:", error);
+          this.isModalOpen = false;
+          this.pendingModalUrl = void 0;
+          console.log(`YouTubeClipper: Force reset modal state after error - isModalOpen:`, this.isModalOpen);
+        }
+      };
+      setTimeout(() => {
+        if (this.isModalOpen && this.pendingModalUrl === initialUrl) {
+          console.warn("YouTubeClipper: Fallback modal state reset triggered for URL:", initialUrl);
+          this.isModalOpen = false;
+          this.pendingModalUrl = void 0;
+          console.log("YouTubeClipper: Modal state after fallback reset - isModalOpen:", this.isModalOpen);
+        }
+      }, 1e4);
+      modal.open();
     }, "YouTube URL Modal").catch((error) => {
       ErrorHandler.handle(error, "Opening YouTube URL modal");
     });
   }
-  async processYouTubeVideo(url, format = "detailed-guide", providerName, model, customPrompt) {
+  async processYouTubeVideo(url, format = "detailed-guide", providerName, model, customPrompt, performanceMode, enableParallel, preferMultimodal) {
     if (this.isUnloading) {
       ConflictPrevention.log("Plugin is unloading, cancelling video processing");
       throw new Error("Plugin is shutting down");
     }
     const result = await ConflictPrevention.safeOperation(async () => {
-      var _a;
+      var _a, _b;
       new import_obsidian7.Notice(MESSAGES.PROCESSING);
       const validation = ValidationUtils.validateSettings(this.settings);
       if (!validation.isValid) {
@@ -3894,11 +4927,27 @@ var YouTubeProcessorPlugin = class extends import_obsidian7.Plugin {
         promptToUse = (_a = this.settings.customPrompts) == null ? void 0 : _a[format];
       }
       const prompt = promptService.createAnalysisPrompt(videoData, url, format, promptToUse);
+      console.log("AI Processing Debug:");
+      console.log("- Provider selected:", providerName || "Auto");
+      console.log("- Model override:", model || "Default");
+      console.log("- Providers available:", aiService.getProviderNames());
       let aiResponse;
-      if (providerName) {
-        aiResponse = await aiService.processWith(providerName, prompt, model);
-      } else {
-        aiResponse = await aiService.process(prompt);
+      try {
+        if (providerName) {
+          console.log(`Processing with provider: ${providerName}, model: ${model || "default"}`);
+          aiResponse = await aiService.processWith(providerName, prompt, model);
+        } else {
+          console.log("Processing with auto-selected provider");
+          aiResponse = await aiService.process(prompt);
+        }
+        console.log("AI Response received:", {
+          provider: aiResponse.provider,
+          model: aiResponse.model,
+          contentLength: ((_b = aiResponse.content) == null ? void 0 : _b.length) || 0
+        });
+      } catch (error) {
+        console.error("AI Processing failed:", error);
+        throw error;
       }
       const formattedContent = promptService.processAIResponse(
         aiResponse.content,

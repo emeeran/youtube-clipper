@@ -11,13 +11,13 @@ import {
     FileService,
     CacheService,
     PromptService
-} from '../interfaces/types';
+} from '../types/types';
 
-import { AIService } from './ai/ai-service';
-import { GeminiProvider } from './ai/gemini';
-import { GroqProvider } from './ai/groq';
-import { YouTubeVideoService } from './youtube/video-data';
-import { ObsidianFileService } from './file/obsidian-file';
+import { AIService } from './ai-service';
+import { GeminiProvider } from './../gemini';
+import { GroqProvider } from './../groq';
+import { YouTubeVideoService } from './../video-data';
+import { ObsidianFileService } from './../obsidian-file';
 import { AIPromptService } from './prompt-service';
 import { MemoryCacheService } from './cache/memory-cache';
 
@@ -47,7 +47,7 @@ export class ServiceContainer implements IServiceContainer {
                 providers.push(new GroqProvider(this.settings.groqApiKey));
             }
             
-            this._aiService = new AIService(providers);
+            this._aiService = new AIService(providers, this.settings);
         }
         return this._aiService;
     }
