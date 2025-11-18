@@ -65,6 +65,9 @@ export class YouTubeUrlModal extends BaseModal {
     }
 
     onOpen(): void {
+        // Clear any existing modal content to prevent duplicates
+        this.contentEl.empty();
+
         this.createModalContent();
         this.setupEventHandlers();
         this.focusUrlInput();
@@ -514,6 +517,12 @@ export class YouTubeUrlModal extends BaseModal {
      * Create progress section
      */
     private createProgressSection(): void {
+        // Clean up existing progress container if it exists
+        if (this.progressContainer) {
+            this.progressContainer.remove();
+            this.progressSteps = [];
+        }
+
         this.progressContainer = this.contentEl.createDiv();
         this.progressContainer.setAttribute('role', 'region');
         this.progressContainer.setAttribute('aria-label', 'Processing progress');
@@ -959,7 +968,14 @@ export class YouTubeUrlModal extends BaseModal {
             clearTimeout(this.validationTimer);
             this.validationTimer = undefined;
         }
-        
+
+        // Clean up progress container and steps
+        if (this.progressContainer) {
+            this.progressContainer.remove();
+            this.progressContainer = undefined;
+        }
+        this.progressSteps = [];
+
         // Call parent cleanup
         super.onClose();
     }
