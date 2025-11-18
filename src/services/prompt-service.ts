@@ -180,9 +180,34 @@ You are an expert technical analyst and executive summarizer. Your task is to ex
 
 ---
 
-### Embed Media here
+Use this EXACT template:
 
-**Remove Stricken through words below:**
+---
+title: {{TITLE}}
+source: ${videoUrl}
+created: "${new Date().toISOString().split('T')[0]}"
+modified: "${new Date().toISOString().split('T')[0]}"
+description: "Single sentence capturing the core insight"
+type: youtube-note
+format: executive-summary
+tags:
+  - youtube
+  - executive-summary
+  - technology
+  - strategy
+status: processed
+duration: "[Extract video duration]"
+channel: "[Extract channel name]"
+video_id: "${videoId || 'unknown'}"
+processing_date: "${new Date().toISOString()}"
+word_count: 250
+ai_provider: "__AI_PROVIDER__"
+ai_model: "__AI_MODEL__"
+---
+
+<iframe width="640" height="360" src="${embedUrl}" title="{{TITLE}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+---
 
 ## Executive Summary
 
@@ -243,9 +268,7 @@ Analyze this YouTube video in **${processingMode}**:
 Title: {{TITLE}}
 URL: ${videoUrl}
 Description: {{DESCRIPTION}}
-Return a structured Obsidian-ready note with strategic insights and developer-aligned action steps.
-
-<iframe width="640" height="360" src="${embedUrl}" title="{Video Title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+Return a structured Obsidian-ready note with strategic insights and developer-aligned action steps.`;
     }
 
     /**
