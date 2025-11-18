@@ -304,87 +304,190 @@ Return a structured Obsidian-ready note with strategic insights and developer-al
         
         return `${baseContent}
 
-        OUTPUT FORMAT - COMPREHENSIVE TUTORIAL:
+        OUTPUT FORMAT - COMPREHENSIVE STEP-BY-STEP TUTORIAL:
 
         Use this EXACT template:
 
         ---
-        title: {Video Title}
+        title: {{TITLE}}
         source: ${videoUrl}
         created: "${new Date().toISOString().split('T')[0]}"
         modified: "${new Date().toISOString().split('T')[0]}"
-        description: "Single sentence capturing the core insight"
-        type: youtube-note
-        format: detailed-tutorial
+        description: "Step-by-step implementation guide based on video tutorial"
+        type: youtube-tutorial
+        format: comprehensive-guide
         tags:
           - youtube
           - tutorial
           - step-by-step
-          - tag_1
-          - tag_2
-          - tag_3
+          - implementation
+          - practical
+          - technology
         status: processed
         duration: "[Extract video duration]"
         channel: "[Extract channel name]"
         video_id: "${videoId || 'unknown'}"
         processing_date: "${new Date().toISOString()}"
         word_count: "[estimated word count]"
-    ai_provider: "__AI_PROVIDER__"
-    ai_model: "__AI_MODEL__"
+        ai_provider: "__AI_PROVIDER__"
+        ai_model: "__AI_MODEL__"
         difficulty: "[beginner/intermediate/advanced]"
         estimated_time: "[time to complete]"
+        steps_count: "[number of steps]"
+        prerequisites: "[required knowledge/tools]"
         ---
 
-        <iframe width="640" height="360" src="${embedUrl}" title="{Video Title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <div style="text-align: center; margin-bottom: 24px;">
+        <iframe width="640" height="360" src="${embedUrl}" title="{{TITLE}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
 
         ---
 
-        ## Comprehensive Tutorial
+        # 📚 Comprehensive Step-by-Step Tutorial
 
-        ### Concise Summary
+        > **🎯 Learning Objective:** [Primary skill or concept that will be mastered]
+        >
+        > **⏱️ Time Investment:** [Estimated time to complete the tutorial]
+        >
+        > **📋 Prerequisites:** [Required knowledge, tools, or skills]
 
-        [Two-part response: a concise summary under 150 words that captures the video's core value and main insights]
+        ## 📖 Quick Overview
 
-        ## Step-by-Step Implementation Guide
-        ### Step 1: [Action Title]
-        - Detailed instruction 1
-        - Detailed instruction 2
-        - Key considerations or tips
-        
-        ### Step 2: [Action Title]
-        - Detailed instruction 1
-        - Detailed instruction 2
-        - Key considerations or tips
+        [Two-part response: a concise overview under 150 words that captures the video's core value, main learning outcomes, and what the reader will be able to accomplish]
 
-        [Continue with additional steps as needed - provide comprehensive coverage]
+        ---
 
-        ## Action Items & Next Steps
-        ### Immediate Actions (0-1 week)
-        - **[Action 1]**: [Specific, measurable task with clear success criteria]
-        - **[Action 2]**: [Specific, measurable task with clear success criteria]
-        - **[Action 3]**: [Specific, measurable task with clear success criteria]
+        ## 🚀 Step-by-Step Implementation Guide
 
-        ### Short-term Goals (1-4 weeks)
-        - **[Goal 1]**: [Specific outcome or milestone to achieve]
-        - **[Goal 2]**: [Specific outcome or milestone to achieve]
+        ### 🎯 Step 1: [Action Title] - [Estimated Time]
+        **Objective:** [Clear goal for this step]
 
-        ### Long-term Objectives (1-3 months)
-        - **[Objective 1]**: [Strategic objective with measurable results]
-        - **[Objective 2]**: [Strategic objective with measurable results]
+        #### 📋 What You'll Need
+        - [Required tool/resource 1]
+        - [Required tool/resource 2]
 
-        ## Resources
+        #### 🔧 Instructions
+        1. **[First action]**: [Detailed instruction with specific steps]
+        2. **[Second action]**: [Detailed instruction with specific steps]
+        3. **[Third action]**: [Detailed instruction with specific steps]
+
+        > **💡 Pro Tip:** [Expert tip or common pitfall to avoid]
+        >
+        > **✅ Success Check:** [How to verify this step is completed correctly]
+
+        ---
+
+        ### 🎯 Step 2: [Action Title] - [Estimated Time]
+        **Objective:** [Clear goal for this step]
+
+        #### 📋 What You'll Need
+        - [Required tool/resource 1]
+        - [Required tool/resource 2]
+
+        #### 🔧 Instructions
+        1. **[First action]**: [Detailed instruction with specific steps]
+        2. **[Second action]**: [Detailed instruction with specific steps]
+        3. **[Third action]**: [Detailed instruction with specific steps]
+
+        > **💡 Pro Tip:** [Expert tip or common pitfall to avoid]
+        >
+        > **✅ Success Check:** [How to verify this step is completed correctly]
+
+        ---
+
+        ### 🎯 Step 3: [Action Title] - [Estimated Time]
+        **Objective:** [Clear goal for this step]
+
+        #### 📋 What You'll Need
+        - [Required tool/resource 1]
+        - [Required tool/resource 2]
+
+        #### 🔧 Instructions
+        1. **[First action]**: [Detailed instruction with specific steps]
+        2. **[Second action]**: [Detailed instruction with specific steps]
+        3. **[Third action]**: [Detailed instruction with specific steps]
+
+        > **💡 Pro Tip:** [Expert tip or common pitfall to avoid]
+        >
+        > **✅ Success Check:** [How to verify this step is completed correctly]
+
+        > **🔄 Continue with additional steps as needed - provide comprehensive coverage of the tutorial content**
+
+        ---
+
+        ## 🎯 Implementation Roadmap & Next Steps
+
+        ### ⚡ Quick Wins (0-1 week)
+        - **[Action 1]:** [Specific, measurable task with clear success criteria]
+        - **[Action 2]:** [Specific, measurable task with clear success criteria]
+        - **[Action 3]:** [Specific, measurable task with clear success criteria]
+
+        ### 📈 Skill Development (1-4 weeks)
+        - **[Goal 1]:** [Specific skill or capability to develop]
+        - **[Goal 2]:** [Specific skill or capability to develop]
+        - **[Goal 3]:** [Specific skill or capability to develop]
+
+        ### 🎖️ Mastery Objectives (1-3 months)
+        - **[Objective 1]:** [Advanced skill or achievement to master]
+        - **[Objective 2]:** [Advanced skill or achievement to master]
+
+        ---
+
+        ## 🛠️ Complete Resource Toolkit
+
+        ### 🎥 Primary Learning Sources
         - **Original Video:** [Watch on YouTube](${videoUrl})
         - **Channel:** [Creator's Channel](https://youtube.com/channel/[extract-channel-id])
-        - **Related Documentation:** [If any tools/frameworks mentioned, provide official docs links]
-        - **Additional Learning:** [Suggest 2-3 related high-quality resources]
-        - **Tools & Software:** [List any tools mentioned with download/setup links]
-        - **Community:** [Relevant forums, Discord servers, or communities]
 
-        IMPORTANT:
-        - Provide detailed, actionable steps that someone could follow to implement the concepts from the video
-        - Include 3-5 immediate action items and 2-4 longer-term goals
-        - Each action item should be specific, measurable, and directly tied to video content
-        - Success criteria should be clear and achievable`;
+        ### 📚 Essential Documentation
+        - **[Tool/Framework 1]:** [Official documentation link]
+        - **[Tool/Framework 2]:** [Official documentation link]
+        - **[Tool/Framework 3]:** [Official documentation link]
+
+        ### 🌟 Recommended Learning
+        - **Beginner Resources:** [1-2 foundational resources]
+        - **Advanced Topics:** [1-2 specialized resources]
+        - **Community Discussions:** [Relevant forums or discussions]
+
+        ### 🛒 Required Tools & Software
+        - **[Tool 1]:** [Download/setup link with version requirements]
+        - **[Tool 2]:** [Download/setup link with version requirements]
+        - **[Tool 3]:** [Download/setup link with version requirements]
+
+        ### 👥 Community & Support
+        - **[Community 1]:** [Forum, Discord, or support channel]
+        - **[Community 2]:** [Forum, Discord, or support channel]
+
+        ---
+
+        ### 🎓 Tutorial Completion Checklist
+
+        #### ✅ Before You Start
+        - [ ] Prerequisites completed
+        - [ ] Tools and software installed
+        - [ ] Working environment prepared
+
+        #### ✅ During Tutorial
+        - [ ] Each step completed successfully
+        - [ ] Success checks passed for each step
+        - [ ] Notes and questions documented
+
+        #### ✅ After Completion
+        - [ ] Project/implementation tested
+        - [ ] Documentation updated
+        - [ ] Skills practiced and reinforced
+
+        ---
+
+        ### 🎯 Critical Success Requirements
+
+        - **Step-by-Step Approach:** Provide detailed, actionable steps that someone can realistically follow
+        - **Measurable Outcomes:** Include 3-5 immediate action items with clear success criteria
+        - **Video-Aligned Content:** All instructions must be directly tied to video content
+        - **Achievable Goals:** Success criteria should be clear, realistic, and verifiable
+        - **Complete Coverage:** Ensure comprehensive coverage of all tutorial concepts
+
+        > **🚀 Final Note:** This tutorial should empower readers to successfully implement the concepts from the video and achieve measurable learning outcomes.`;
     }
 
     /**

@@ -4269,87 +4269,190 @@ Return a structured Obsidian-ready note with strategic insights and developer-al
     const embedUrl = videoId ? `https://www.youtube-nocookie.com/embed/${videoId}` : videoUrl;
     return `${baseContent}
 
-        OUTPUT FORMAT - COMPREHENSIVE TUTORIAL:
+        OUTPUT FORMAT - COMPREHENSIVE STEP-BY-STEP TUTORIAL:
 
         Use this EXACT template:
 
         ---
-        title: {Video Title}
+        title: {{TITLE}}
         source: ${videoUrl}
         created: "${new Date().toISOString().split("T")[0]}"
         modified: "${new Date().toISOString().split("T")[0]}"
-        description: "Single sentence capturing the core insight"
-        type: youtube-note
-        format: detailed-tutorial
+        description: "Step-by-step implementation guide based on video tutorial"
+        type: youtube-tutorial
+        format: comprehensive-guide
         tags:
           - youtube
           - tutorial
           - step-by-step
-          - tag_1
-          - tag_2
-          - tag_3
+          - implementation
+          - practical
+          - technology
         status: processed
         duration: "[Extract video duration]"
         channel: "[Extract channel name]"
         video_id: "${videoId || "unknown"}"
         processing_date: "${new Date().toISOString()}"
         word_count: "[estimated word count]"
-    ai_provider: "__AI_PROVIDER__"
-    ai_model: "__AI_MODEL__"
+        ai_provider: "__AI_PROVIDER__"
+        ai_model: "__AI_MODEL__"
         difficulty: "[beginner/intermediate/advanced]"
         estimated_time: "[time to complete]"
+        steps_count: "[number of steps]"
+        prerequisites: "[required knowledge/tools]"
         ---
 
-        <iframe width="640" height="360" src="${embedUrl}" title="{Video Title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <div style="text-align: center; margin-bottom: 24px;">
+        <iframe width="640" height="360" src="${embedUrl}" title="{{TITLE}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
 
         ---
 
-        ## Comprehensive Tutorial
+        # \u{1F4DA} Comprehensive Step-by-Step Tutorial
 
-        ### Concise Summary
+        > **\u{1F3AF} Learning Objective:** [Primary skill or concept that will be mastered]
+        >
+        > **\u23F1\uFE0F Time Investment:** [Estimated time to complete the tutorial]
+        >
+        > **\u{1F4CB} Prerequisites:** [Required knowledge, tools, or skills]
 
-        [Two-part response: a concise summary under 150 words that captures the video's core value and main insights]
+        ## \u{1F4D6} Quick Overview
 
-        ## Step-by-Step Implementation Guide
-        ### Step 1: [Action Title]
-        - Detailed instruction 1
-        - Detailed instruction 2
-        - Key considerations or tips
-        
-        ### Step 2: [Action Title]
-        - Detailed instruction 1
-        - Detailed instruction 2
-        - Key considerations or tips
+        [Two-part response: a concise overview under 150 words that captures the video's core value, main learning outcomes, and what the reader will be able to accomplish]
 
-        [Continue with additional steps as needed - provide comprehensive coverage]
+        ---
 
-        ## Action Items & Next Steps
-        ### Immediate Actions (0-1 week)
-        - **[Action 1]**: [Specific, measurable task with clear success criteria]
-        - **[Action 2]**: [Specific, measurable task with clear success criteria]
-        - **[Action 3]**: [Specific, measurable task with clear success criteria]
+        ## \u{1F680} Step-by-Step Implementation Guide
 
-        ### Short-term Goals (1-4 weeks)
-        - **[Goal 1]**: [Specific outcome or milestone to achieve]
-        - **[Goal 2]**: [Specific outcome or milestone to achieve]
+        ### \u{1F3AF} Step 1: [Action Title] - [Estimated Time]
+        **Objective:** [Clear goal for this step]
 
-        ### Long-term Objectives (1-3 months)
-        - **[Objective 1]**: [Strategic objective with measurable results]
-        - **[Objective 2]**: [Strategic objective with measurable results]
+        #### \u{1F4CB} What You'll Need
+        - [Required tool/resource 1]
+        - [Required tool/resource 2]
 
-        ## Resources
+        #### \u{1F527} Instructions
+        1. **[First action]**: [Detailed instruction with specific steps]
+        2. **[Second action]**: [Detailed instruction with specific steps]
+        3. **[Third action]**: [Detailed instruction with specific steps]
+
+        > **\u{1F4A1} Pro Tip:** [Expert tip or common pitfall to avoid]
+        >
+        > **\u2705 Success Check:** [How to verify this step is completed correctly]
+
+        ---
+
+        ### \u{1F3AF} Step 2: [Action Title] - [Estimated Time]
+        **Objective:** [Clear goal for this step]
+
+        #### \u{1F4CB} What You'll Need
+        - [Required tool/resource 1]
+        - [Required tool/resource 2]
+
+        #### \u{1F527} Instructions
+        1. **[First action]**: [Detailed instruction with specific steps]
+        2. **[Second action]**: [Detailed instruction with specific steps]
+        3. **[Third action]**: [Detailed instruction with specific steps]
+
+        > **\u{1F4A1} Pro Tip:** [Expert tip or common pitfall to avoid]
+        >
+        > **\u2705 Success Check:** [How to verify this step is completed correctly]
+
+        ---
+
+        ### \u{1F3AF} Step 3: [Action Title] - [Estimated Time]
+        **Objective:** [Clear goal for this step]
+
+        #### \u{1F4CB} What You'll Need
+        - [Required tool/resource 1]
+        - [Required tool/resource 2]
+
+        #### \u{1F527} Instructions
+        1. **[First action]**: [Detailed instruction with specific steps]
+        2. **[Second action]**: [Detailed instruction with specific steps]
+        3. **[Third action]**: [Detailed instruction with specific steps]
+
+        > **\u{1F4A1} Pro Tip:** [Expert tip or common pitfall to avoid]
+        >
+        > **\u2705 Success Check:** [How to verify this step is completed correctly]
+
+        > **\u{1F504} Continue with additional steps as needed - provide comprehensive coverage of the tutorial content**
+
+        ---
+
+        ## \u{1F3AF} Implementation Roadmap & Next Steps
+
+        ### \u26A1 Quick Wins (0-1 week)
+        - **[Action 1]:** [Specific, measurable task with clear success criteria]
+        - **[Action 2]:** [Specific, measurable task with clear success criteria]
+        - **[Action 3]:** [Specific, measurable task with clear success criteria]
+
+        ### \u{1F4C8} Skill Development (1-4 weeks)
+        - **[Goal 1]:** [Specific skill or capability to develop]
+        - **[Goal 2]:** [Specific skill or capability to develop]
+        - **[Goal 3]:** [Specific skill or capability to develop]
+
+        ### \u{1F396}\uFE0F Mastery Objectives (1-3 months)
+        - **[Objective 1]:** [Advanced skill or achievement to master]
+        - **[Objective 2]:** [Advanced skill or achievement to master]
+
+        ---
+
+        ## \u{1F6E0}\uFE0F Complete Resource Toolkit
+
+        ### \u{1F3A5} Primary Learning Sources
         - **Original Video:** [Watch on YouTube](${videoUrl})
         - **Channel:** [Creator's Channel](https://youtube.com/channel/[extract-channel-id])
-        - **Related Documentation:** [If any tools/frameworks mentioned, provide official docs links]
-        - **Additional Learning:** [Suggest 2-3 related high-quality resources]
-        - **Tools & Software:** [List any tools mentioned with download/setup links]
-        - **Community:** [Relevant forums, Discord servers, or communities]
 
-        IMPORTANT:
-        - Provide detailed, actionable steps that someone could follow to implement the concepts from the video
-        - Include 3-5 immediate action items and 2-4 longer-term goals
-        - Each action item should be specific, measurable, and directly tied to video content
-        - Success criteria should be clear and achievable`;
+        ### \u{1F4DA} Essential Documentation
+        - **[Tool/Framework 1]:** [Official documentation link]
+        - **[Tool/Framework 2]:** [Official documentation link]
+        - **[Tool/Framework 3]:** [Official documentation link]
+
+        ### \u{1F31F} Recommended Learning
+        - **Beginner Resources:** [1-2 foundational resources]
+        - **Advanced Topics:** [1-2 specialized resources]
+        - **Community Discussions:** [Relevant forums or discussions]
+
+        ### \u{1F6D2} Required Tools & Software
+        - **[Tool 1]:** [Download/setup link with version requirements]
+        - **[Tool 2]:** [Download/setup link with version requirements]
+        - **[Tool 3]:** [Download/setup link with version requirements]
+
+        ### \u{1F465} Community & Support
+        - **[Community 1]:** [Forum, Discord, or support channel]
+        - **[Community 2]:** [Forum, Discord, or support channel]
+
+        ---
+
+        ### \u{1F393} Tutorial Completion Checklist
+
+        #### \u2705 Before You Start
+        - [ ] Prerequisites completed
+        - [ ] Tools and software installed
+        - [ ] Working environment prepared
+
+        #### \u2705 During Tutorial
+        - [ ] Each step completed successfully
+        - [ ] Success checks passed for each step
+        - [ ] Notes and questions documented
+
+        #### \u2705 After Completion
+        - [ ] Project/implementation tested
+        - [ ] Documentation updated
+        - [ ] Skills practiced and reinforced
+
+        ---
+
+        ### \u{1F3AF} Critical Success Requirements
+
+        - **Step-by-Step Approach:** Provide detailed, actionable steps that someone can realistically follow
+        - **Measurable Outcomes:** Include 3-5 immediate action items with clear success criteria
+        - **Video-Aligned Content:** All instructions must be directly tied to video content
+        - **Achievable Goals:** Success criteria should be clear, realistic, and verifiable
+        - **Complete Coverage:** Ensure comprehensive coverage of all tutorial concepts
+
+        > **\u{1F680} Final Note:** This tutorial should empower readers to successfully implement the concepts from the video and achieve measurable learning outcomes.`;
   }
   /**
    * Process AI response and inject provider information
