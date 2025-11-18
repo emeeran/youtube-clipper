@@ -4129,78 +4129,100 @@ var _AIPromptService = class {
         IMPORTANT: Keep the Brief Description short and focused. Provide 2-3 high-quality resource links that help the reader explore the topic further. Action items should be simple and immediately applicable.`;
   }
   /**
-   * Create executive summary prompt (≤250 words)
+   * Create executive summary prompt (≤250 words, tech/developer focused)
    */
   createExecutiveSummaryPrompt(baseContent, videoUrl, performanceMode = "balanced") {
     const videoId = ValidationUtils.extractVideoId(videoUrl);
     const embedUrl = videoId ? `https://www.youtube-nocookie.com/embed/${videoId}` : videoUrl;
-    return `${baseContent}
+    const modeMap = {
+      "fast": "Fast Mode: transcript only",
+      "balanced": "Balanced Mode: transcript + primary visuals",
+      "quality": "Quality Mode: full multimodal analysis (audio, visuals, diagrams, slides, demonstrations)"
+    };
+    const processingMode = modeMap[performanceMode] || modeMap["balanced"];
+    return `## \u{1F3AF} YouTube \u2192 Obsidian Executive Summary Prompt (Tech/Developer Focus)
 
-        OUTPUT FORMAT - EXECUTIVE SUMMARY:
-        
-        Use this EXACT template:
+**ROLE:**
+You are an expert technical analyst and executive summarizer. Your task is to extract high-value strategic insights from a technology-focused YouTube video and produce a concise, structured note for Obsidian.
 
-        ---
-        title: {Video Title}
-        source: ${videoUrl}
-        created: "${new Date().toISOString().split("T")[0]}"
-        modified: "${new Date().toISOString().split("T")[0]}"
-        description: "Single sentence capturing the core insight"
-        type: youtube-note
-        format: executive-summary
-        tags:
-          - youtube
-          - executive-summary
-          - tag_1
-          - tag_2
-          - tag_3
-        status: processed
-        duration: "[Extract video duration]"
-        channel: "[Extract channel name]"
-        video_id: "${videoId || "unknown"}"
-        processing_date: "${new Date().toISOString()}"
-        word_count: 250
-    ai_provider: "__AI_PROVIDER__"
-    ai_model: "__AI_MODEL__"
-        ---
+---
 
-        <iframe width="640" height="360" src="${embedUrl}" title="{Video Title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+### YAML Frontmatter
+\`\`\`yaml
+title: "{{TITLE}}"
+source: "${videoUrl}"
+channel: "[Extract channel name]"
+tags: [youtube-summary, technology, strategy]
+date: ${new Date().toISOString().split("T")[0]}
+\`\`\`
 
-        ---
+------
 
-        ## Executive Summary
-        [Provide a comprehensive executive summary in exactly 250 words or fewer. Focus on strategic insights, business implications, and high-level takeaways. Structure it as follows:
+## Executive Summary (\u2264 250 words, exactly 3 paragraphs)
 
-        **First Paragraph:** Core problem/opportunity and the video's main thesis
-        **Second Paragraph:** Key strategic insights and competitive advantages
-        **Third Paragraph:** Business implications and recommendation priority
+**Paragraph 1 \u2013 Core Thesis**
+Explain the main problem/opportunity and the central argument of the video.
 
-        Focus on strategic value, not tactical details. Make every word count.]
+**Paragraph 2 \u2013 Strategic Insights**
+Summarize the most important concepts, frameworks, or differentiators that create impact.
 
-        ## Key Insights
-        - **[Strategic Insight 1]:** [Critical insight with business impact and specific example from video]
-        - **[Strategic Insight 2]:** [Critical insight with business impact and specific example from video]
-        - **[Strategic Insight 3]:** [Critical insight with business impact and specific example from video]
+**Paragraph 3 \u2013 Business/Technical Implications**
+Provide recommendations, risks, and priority actions based on the insights.
 
-        ## Action Items (3-5 items)
-        1. **[Immediate Priority - 0-30 days]**: [Specific, measurable action with clear success criteria]
-        2. **[Short-term Priority - 1-3 months]**: [Specific, measurable action with clear success criteria]
-        3. **[Strategic Priority - 3-6 months]**: [Specific, measurable action with clear success criteria]
-        4. **[Long-term Priority - 6+ months]**: [Specific, measurable action with clear success criteria]
-        5. **[Optional Additional Priority]**: [Specific, measurable action with clear success criteria]
+> Focus on strategic value, not narration or surface-level recap.
 
-        ## Resources
-        - **Original Video:** [Watch on YouTube](${videoUrl})
-        - **Channel:** [Creator's Channel](https://youtube.com/channel/[extract-channel-id])
-        - **Key Tools/Frameworks:** [List main tools or frameworks mentioned]
-        - **Official Documentation:** [Links to official docs for mentioned technologies]
-        - **Further Reading:** [1-2 high-quality related articles or resources]
+------
 
-        CRITICAL:
-        - Keep the Executive Summary to exactly 250 words or fewer
-        - Provide 3-5 specific, actionable items with timeframes and success criteria
-        - Each action item should be measurable and directly tied to video content
-        - Focus on strategic business value, not just technical details`;
+## Key Insights
+
+- **Insight 1 \u2013 Why it matters:** Specific example from video
+- **Insight 2 \u2013 Why it matters:** Specific example from video
+- **Insight 3 \u2013 Why it matters:** Specific example from video
+
+(Optional: add 4\u20135 if they provide real value)
+
+------
+
+## Action Items (3\u20135, measurable & tied to video)
+
+1. **0\u201330 days (Immediate):**
+2. **1\u20133 months (Short-term):**
+3. **3\u20136 months (Mid-term):**
+4. **6+ months (Long-term):**
+5. *(optional)*
+
+Each item MUST include a clear success metric.
+
+------
+
+## Resources
+
+- Original Video: [Watch on YouTube](${videoUrl})
+- Channel: [Creator's Channel](https://youtube.com/channel/[extract-channel-id])
+- Key Tools / Technologies Mentioned:
+- Official Docs:
+- Further Reading (1\u20132 high-quality links):
+
+---
+
+### Non-Negotiable Rules
+
+- Executive Summary \u2264 250 words
+- Insights & action items must reference the video
+- Focus on strategy and developer/business value
+- Avoid fluff and storytelling\u2014prioritize usable analysis
+
+---
+
+### Suggested Prompt Invocation
+
+Analyze this YouTube video in **${processingMode}**:
+Title: {{TITLE}}
+URL: ${videoUrl}
+Description: {{DESCRIPTION}}
+Return a structured Obsidian-ready note with strategic insights and developer-aligned action steps.
+
+<iframe width="640" height="360" src="${embedUrl}" title="{Video Title}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
   }
   /**
    * Create detailed guide prompt
