@@ -180,48 +180,38 @@ You are an expert technical analyst and executive summarizer. Your task is to ex
 
 ---
 
-### YAML Frontmatter
-\`\`\`yaml
-title: "{{TITLE}}"
-source: "${videoUrl}"
-channel: "[Extract channel name]"
-tags: [youtube-summary, technology, strategy]
-date: ${new Date().toISOString().split('T')[0]}
-\`\`\`
+### Embed Media here
 
-------
+**Remove Stricken through words below:**
 
-## Executive Summary (≤ 250 words, exactly 3 paragraphs)
+## Executive Summary
 
-**Paragraph 1 – Core Thesis**
-Explain the main problem/opportunity and the central argument of the video.
+The video discusses [explain the main problem/opportunity and the central argument of the video].
 
-**Paragraph 2 – Strategic Insights**
-Summarize the most important concepts, frameworks, or differentiators that create impact.
+Key concepts include [summarize the most important concepts, frameworks, or differentiators that create impact].
 
-**Paragraph 3 – Business/Technical Implications**
-Provide recommendations, risks, and priority actions based on the insights.
+To implement these insights, [provide recommendations, risks, and priority actions based on the insights].
 
-> Focus on strategic value, not narration or surface-level recap.
+Focus on strategic value, not narration or surface-level recap.
 
 ------
 
 ## Key Insights
 
-- **Insight 1 – Why it matters:** Specific example from video
-- **Insight 2 – Why it matters:** Specific example from video
-- **Insight 3 – Why it matters:** Specific example from video
+- **Technical Strategy:** [Critical insight with business impact and specific example from video]
+- **Design Thinking:** [Critical insight with business impact and specific example from video]
+- **Continuous Learning:** [Critical insight with business impact and specific example from video]
 
 (Optional: add 4–5 if they provide real value)
 
 ------
 
-## Action Items (3–5, measurable & tied to video)
+## Action Items
 
-1. **0–30 days (Immediate):**
-2. **1–3 months (Short-term):**
-3. **3–6 months (Mid-term):**
-4. **6+ months (Long-term):**
+1. **Immediate (0-30 days):** [Specific, measurable action with clear success criteria]
+2. **Short-term (1-3 months):** [Specific, measurable action with clear success criteria]
+3. **Mid-term (3-6 months):** [Specific, measurable action with clear success criteria]
+4. **Long-term (6+ months):** [Specific, measurable action with clear success criteria]
 5. *(optional)*
 
 Each item MUST include a clear success metric.
