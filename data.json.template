@@ -1,10 +1,12 @@
 {
   "geminiApiKey": "",
   "groqApiKey": "",
+  "openaiApiKey": "",
   "outputPath": "YouTube/Processed Videos",
   "useEnvironmentVariables": false,
   "environmentPrefix": "YTC",
   "performanceMode": "balanced",
   "enableParallelProcessing": true,
-  "preferMultimodal": true
+  "preferMultimodal": true,
+  "customPrompts": {}
 }
