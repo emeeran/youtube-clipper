@@ -304,37 +304,22 @@ Return a structured Obsidian-ready note with strategic insights and developer-al
         
         return `${baseContent}
 
-        OUTPUT FORMAT - COMPREHENSIVE STEP-BY-STEP TUTORIAL:
+        OUTPUT FORMAT - EFFICIENT STEP-BY-STEP TUTORIAL:
 
-        Use this EXACT template:
+        Create a concise step-by-step tutorial following this structure:
 
         ---
         title: {{TITLE}}
         source: ${videoUrl}
         created: "${new Date().toISOString().split('T')[0]}"
-        modified: "${new Date().toISOString().split('T')[0]}"
-        description: "Step-by-step implementation guide based on video tutorial"
         type: youtube-tutorial
-        format: comprehensive-guide
-        tags:
-          - youtube
-          - tutorial
-          - step-by-step
-          - implementation
-          - practical
-          - technology
+        format: step-by-step
+        tags: [youtube, tutorial, implementation, practical]
         status: processed
-        duration: "[Extract video duration]"
         channel: "[Extract channel name]"
         video_id: "${videoId || 'unknown'}"
-        processing_date: "${new Date().toISOString()}"
-        word_count: "[estimated word count]"
         ai_provider: "__AI_PROVIDER__"
         ai_model: "__AI_MODEL__"
-        difficulty: "[beginner/intermediate/advanced]"
-        estimated_time: "[time to complete]"
-        steps_count: "[number of steps]"
-        prerequisites: "[required knowledge/tools]"
         ---
 
         <div style="text-align: center; margin-bottom: 24px;">
@@ -343,241 +328,60 @@ Return a structured Obsidian-ready note with strategic insights and developer-al
 
         ---
 
-        # 📚 Comprehensive Step-by-Step Tutorial
+        # [Title] - Practical Tutorial
 
-        > **🎯 Learning Objective:** [Primary skill or concept that will be mastered]
-        >
-        > **⏱️ Time Investment:** [Estimated time to complete the tutorial]
-        >
-        > **📋 Prerequisites:** [Required knowledge, tools, or skills]
+        ## Overview
+        **Goal:** [Main learning objective]
+        **Duration:** [Estimated time]
+        **Level:** [Difficulty]
 
-        ## 📖 Quick Overview
+        **Video:** [{{TITLE}}](${videoUrl})
 
-        [Two-part response: a concise overview under 150 words that captures the video's core value, main learning outcomes, and what the reader will be able to accomplish]
+        ## Prerequisites
+        - [Requirement 1]
+        - [Requirement 2]
+        - [Requirement 3]
 
-        ---
+        ## Step-by-Step Guide
 
-        ## 🚀 Step-by-Step Implementation Guide
+        ### Step 1: [Action/Setup]
+        **Objective:** [Clear goal]
 
-        ### 🎯 Step 1: [Action Title] - [Estimated Time]
-        **Objective:** [Clear goal for this step]
+        **Actions:**
+        1. [Specific instruction]
+        2. [Follow-up instruction]
+        3. [Verification step]
 
-        #### 📋 What You'll Need
-        - [Required tool/resource 1]
-        - [Required tool/resource 2]
+        ✅ **Success:** [How to confirm it worked]
 
-        #### 🔧 Instructions
-        1. **[First action]**: [Detailed instruction with specific steps]
-        2. **[Second action]**: [Detailed instruction with specific steps]
-        3. **[Third action]**: [Detailed instruction with specific steps]
+        ### Step 2: [Core Implementation]
+        **Objective:** [Clear goal]
 
-        > **💡 Pro Tip:** [Expert tip or common pitfall to avoid]
-        >
-        > **✅ Success Check:** [How to verify this step is completed correctly]
+        [Continue with remaining steps...]
 
-        ---
+        ### Step 3: [Final Touches]
+        **Objective:** [Clear goal]
 
-        ### 🎯 Step 2: [Action Title] - [Estimated Time]
-        **Objective:** [Clear goal for this step]
+        ## Learning Outcomes
+        Upon completion, you will:
+- [Achieved skill 1]
+- [Achieved skill 2]
+- [Achieved skill 3]
 
-        #### 📋 What You'll Need
-        - [Required tool/resource 1]
-        - [Required tool/resource 2]
+        ## Required Tools
+        - **[Tool/Resource 1]:** [Where to get it]
+        - **[Tool/Resource 2]:** [Where to get it]
 
-        #### 🔧 Instructions
-        1. **[First action]**: [Detailed instruction with specific steps]
-        2. **[Second action]**: [Detailed instruction with specific steps]
-        3. **[Third action]**: [Detailed instruction with specific steps]
+        ## Pro Tips
+        💡 **Tip 1:** [Key insight from video]
+        💡 **Tip 2:** [Best practice]
+        ⚠️ **Avoid:** [Common mistake]
 
-        > **💡 Pro Tip:** [Expert tip or common pitfall to avoid]
-        >
-        > **✅ Success Check:** [How to verify this step is completed correctly]
+        ## Verification
+        **Final Check:** [How to verify complete success]
+        **Expected Result:** [What you should see/accomplish]
 
-        ---
-
-        ### 🎯 Step 3: [Action Title] - [Estimated Time]
-        **Objective:** [Clear goal for this step]
-
-        #### 📋 What You'll Need
-        - [Required tool/resource 1]
-        - [Required tool/resource 2]
-
-        #### 🔧 Instructions
-        1. **[First action]**: [Detailed instruction with specific steps]
-        2. **[Second action]**: [Detailed instruction with specific steps]
-        3. **[Third action]**: [Detailed instruction with specific steps]
-
-        > **💡 Pro Tip:** [Expert tip or common pitfall to avoid]
-        >
-        > **✅ Success Check:** [How to verify this step is completed correctly]
-
-        > **🔄 Continue with additional steps as needed - provide comprehensive coverage of the tutorial content**
-
-        ---
-
-        ## 🎯 Implementation Roadmap & Next Steps
-
-        ### ⚡ Quick Wins (0-1 week)
-        - **[Action 1]:** [Specific, measurable task with clear success criteria]
-        - **[Action 2]:** [Specific, measurable task with clear success criteria]
-        - **[Action 3]:** [Specific, measurable task with clear success criteria]
-
-        ### 📈 Skill Development (1-4 weeks)
-        - **[Goal 1]:** [Specific skill or capability to develop]
-        - **[Goal 2]:** [Specific skill or capability to develop]
-        - **[Goal 3]:** [Specific skill or capability to develop]
-
-        ### 🎖️ Mastery Objectives (1-3 months)
-        - **[Objective 1]:** [Advanced skill or achievement to master]
-        - **[Objective 2]:** [Advanced skill or achievement to master]
-
-        ---
-
-        ## 🛠️ Complete Resource Toolkit
-
-        ### 🎥 Primary Learning Sources
-        - **Original Video:** [Watch on YouTube](${videoUrl})
-        - **Channel:** [Creator's Channel](https://youtube.com/channel/[extract-channel-id])
-
-        ### 📚 Essential Documentation
-        - **[Tool/Framework 1]:** [Official documentation link]
-        - **[Tool/Framework 2]:** [Official documentation link]
-        - **[Tool/Framework 3]:** [Official documentation link]
-
-        ### 🌟 Recommended Learning
-        - **Beginner Resources:** [1-2 foundational resources]
-        - **Advanced Topics:** [1-2 specialized resources]
-        - **Community Discussions:** [Relevant forums or discussions]
-
-        ### 🛒 Required Tools & Software
-        - **[Tool 1]:** [Download/setup link with version requirements]
-        - **[Tool 2]:** [Download/setup link with version requirements]
-        - **[Tool 3]:** [Download/setup link with version requirements]
-
-        ### 👥 Community & Support
-        - **[Community 1]:** [Forum, Discord, or support channel]
-        - **[Community 2]:** [Forum, Discord, or support channel]
-
-        ---
-
-        ### 🎓 Tutorial Completion Checklist
-
-        #### ✅ Before You Start
-        - [ ] Prerequisites completed
-        - [ ] Tools and software installed
-        - [ ] Working environment prepared
-
-        #### ✅ During Tutorial
-        - [ ] Each step completed successfully
-        - [ ] Success checks passed for each step
-        - [ ] Notes and questions documented
-
-        #### ✅ After Completion
-        - [ ] Project/implementation tested
-        - [ ] Documentation updated
-        - [ ] Skills practiced and reinforced
-
-        ---
-
-        ### 🎯 Critical Success Requirements
-
-        - **Step-by-Step Approach:** Provide detailed, actionable steps that someone can realistically follow
-        - **Measurable Outcomes:** Include 3-5 immediate action items with clear success criteria
-        - **Video-Aligned Content:** All instructions must be directly tied to video content
-        - **Achievable Goals:** Success criteria should be clear, realistic, and verifiable
-        - **Complete Coverage:** Ensure comprehensive coverage of all tutorial concepts
-
-        > **🚀 Final Note:** This tutorial should empower readers to successfully implement the concepts from the video and achieve measurable learning outcomes.
-
-        ---
-
-        ## 💡 Pro Tips & Best Practices
-
-        ### 🎓 Learning Strategies
-        - **Take notes** while watching the video to capture key concepts
-        **Practice** each step immediately after learning it
-        **Review** your work against the success criteria provided
-        **Ask questions** in relevant communities when stuck
-
-        ### 🔍 Common Pitfalls to Avoid
-        - **Skipping prerequisites** - ensure you have the required knowledge/tools
-        - **Rushing through steps** - take time to understand each concept
-        **Ignoring success checks** - verify each step before proceeding
-        **Not documenting** - keep notes of your process for future reference
-
-        ### 📚 Additional Resources
-        - **Video Transcript:** [Link to video transcript if available]
-        -Slides/Presentation:** [Link to slides or presentation materials]
-        **Code Examples:** [Link to GitHub repositories or code samples]
-        **Related Videos:** [Suggested follow-up videos on similar topics]
-
-        ---
-
-        ## 🏆 Troubleshooting & FAQ
-
-        ### 🔧 Common Issues & Solutions
-        **Problem:** [Common issue users might face]
-        **Solution:** [Step-by-step solution to resolve the issue]
-
-        **Problem:** [Another common issue]
-        **Solution:** [Step-by-step solution to resolve the issue]
-
-        ### ❓ Frequently Asked Questions
-        **Q:** [Common question about the tutorial]
-        **A:** [Clear, concise answer]
-
-        **Q:** [Another common question]
-        **A:** [Clear, concise answer]
-
-        ---
-
-        ## 🎊 Congratulations & Next Steps
-
-        ### 🎉 You've Completed the Tutorial!
-        - ✅ **Skill Mastered:** [Primary skill learned]
-        - ✅ **Project Created:** [What you've built or implemented]
-        - ✅ **Knowledge Gained:** [Key concepts understood]
-
-        ### 🚀 Where to Go From Here
-        1. **Practice** your new skills on personal projects
-        2. **Explore** advanced topics related to this tutorial
-        3. **Share** your work with the community
-        4. **Teach** others what you've learned
-        5. **Stay updated** with new developments in this field
-
-        ### 📞 Get Help & Support
-        - **GitHub Issues:** [Link to project repository issues]
-        - **Discord Community:** [Link to community Discord]
-        - **Stack Overflow:** [Tag questions with relevant keywords]
-        - **Email Support:** [Contact information if available]
-
-        ---
-
-        ## 📝 Template Attribution
-
-        This tutorial was generated using the YouTube Clipper Obsidian Plugin with the comprehensive step-by-step template. The template is designed to create professional, educational content that follows best practices in instructional design and technical documentation.
-
-        **Template Features:**
-        - Professional formatting and visual hierarchy
-        - Step-by-step learning progression
-        - Interactive completion checklists
-        - Comprehensive resource organization
-        - Success validation and verification
-        - Accessibility and readability best practices
-
-        ---
-
-        ### 🎯 Critical Success Requirements
-
-        - **Step-by-Step Approach:** Provide detailed, actionable steps that someone can realistically follow
-        - **Measurable Outcomes:** Include 3-5 immediate action items with clear success criteria
-        - **Video-Aligned Content:** All instructions must be directly tied to video content
-        - **Achievable Goals:** Success criteria should be clear, realistic, and verifiable
-        - **Complete Coverage:** Ensure comprehensive coverage of all tutorial concepts
-        - **Professional Quality:** Maintain high standards for technical accuracy and clarity
-        - **User Success:** Design content to empower successful implementation and learning
-
-        > **🚀 Final Empowering Note:** You now have the knowledge and skills to [primary achievement]. Take pride in your accomplishment, apply what you've learned, and continue your learning journey. The world needs your expertise!`;
+              *Generated from YouTube video content*`;
     }
 
     /**

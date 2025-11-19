@@ -57,7 +57,7 @@ export const PROVIDER_MODEL_REGEX: Record<string, RegExp> = {
 };
 
 export const API_LIMITS = {
-    MAX_TOKENS: 2000,
+    MAX_TOKENS: 8000,  // Increased from 2000 to handle comprehensive tutorials
     TEMPERATURE: 0.7,
     DESCRIPTION_MAX_LENGTH: 1000,
     TITLE_MAX_LENGTH: 100
